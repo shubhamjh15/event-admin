@@ -10,6 +10,10 @@ async function _POST(req: NextRequest) {
   const err = requireFields(data, ["name", "email", "phone", "eventDate"]);
   if (err) return fail(err);
   if (data.kind === "appointment" && !data.time) return fail("Please choose a preferred time.");
+  const day = new Date(data.eventDate);
+  const yesterday = new Date(Date.now() - 86400000);
+  if (Number.isNaN(day.getTime())) return fail("Please choose a valid date.");
+  if (day < yesterday) return fail("Please choose a date in the future.");
   const doc = await withDb(() => Booking.create({ ...data, status: "pending" }));
   return json({ ok: true, id: String(doc._id) }, 201);
 }

@@ -18,7 +18,12 @@ async function _PUT(req: NextRequest) {
     }
     if (name) user.name = String(name).slice(0, 100);
     if (email) user.email = String(email).toLowerCase().trim();
-    await user.save();
+    try {
+      await user.save();
+    } catch (e: any) {
+      if (e?.code === 11000) return fail("Another admin already uses that email.", 409);
+      throw e;
+    }
     return json({ ok: true });
   });
 }

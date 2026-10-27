@@ -87,7 +87,7 @@ export function EnquiryForm({ eventTypes, source = "contact", compact = false, d
       </Field>
       {!compact && (
         <>
-          <Field tone={tone} label="Event date"><input name="eventDate" type="date" className={f} /></Field>
+          <Field tone={tone} label="Event date"><input name="eventDate" type="date" min={new Date().toISOString().slice(0, 10)} suppressHydrationWarning className={f} /></Field>
           <Field tone={tone} label="Guests"><input name="guests" inputMode="numeric" className={f} placeholder="Approx. number" /></Field>
           <Field tone={tone} label="Budget">
             <select name="budget" className={f} defaultValue="">
@@ -165,7 +165,7 @@ export function BookingForm({ events, payments, defaultPackage, defaultKind = "b
         ) : (
           <Field label="Preferred time *"><input name="time" type="time" required className="field" defaultValue="11:00" /></Field>
         )}
-        <Field label={kind === "booking" ? "Event date *" : "Preferred date *"}><input name="eventDate" type="date" required className="field" /></Field>
+        <Field label={kind === "booking" ? "Event date *" : "Preferred date *"}><input name="eventDate" type="date" required min={new Date().toISOString().slice(0, 10)} suppressHydrationWarning className="field" /></Field>
         {kind === "booking" && <Field label="Guests"><input name="guests" inputMode="numeric" className="field" /></Field>}
 
         <fieldset className="sm:col-span-2">
