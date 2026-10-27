@@ -15,7 +15,7 @@ export default async function ServicesPage() {
   const [s, banners, services] = await Promise.all([getSettings(), getBanners("services"), getServices()]);
   return (
     <>
-      <BannerCarousel slides={banners} label="Our services" />
+      <BannerCarousel slides={banners.length ? banners : [{ url: s.heroPoster, title: "White-glove, end to end" }]} label="Our services" />
 
       {/* Intro + index */}
       <section className="wrap py-24 md:py-32">

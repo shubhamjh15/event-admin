@@ -18,7 +18,7 @@ export default async function AboutPage() {
   return (
     <>
       {/* Carousel */}
-      <BannerCarousel slides={banners} label="About Lit Concierge" />
+      <BannerCarousel slides={banners.length ? banners : [{ url: s.heroPoster, title: "Lighting up celebrations" }]} label="About Lit Concierge" />
 
       {/* Brief about company */}
       <section className="wrap py-24 md:py-36">

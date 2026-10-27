@@ -103,7 +103,7 @@ export default async function EventsPage({ searchParams }: Props) {
   return (
     <>
       {/* 2.1 Luxury carousel */}
-      <BannerCarousel slides={banners} label="Events & packages" />
+      <BannerCarousel slides={banners.length ? banners : [{ url: s.heroPoster, title: "Events for every story" }]} label="Events & packages" />
       <CategoryNav categories={categories} />
 
       {/* 2.2 Featured */}

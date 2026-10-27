@@ -34,7 +34,7 @@ export default async function Home() {
         <div className="grid gap-14 lg:grid-cols-12">
           <Reveal img className="lg:col-span-5">
             <figure>
-              <img src={sized(categories[1]?.image, 1100)} alt="Palace mandap prepared for a wedding" className="aspect-[4/5] w-full object-cover" />
+              <img src={sized(categories[1]?.image || s.heroPoster, 1100)} alt="Palace mandap prepared for a wedding" className="aspect-[4/5] w-full object-cover" />
               <figcaption className="mt-3 flex justify-between text-xs text-ink-mute">
                 <span className="font-display italic">A palace wedding, Rajasthan</span>
                 <span className="label text-[10px]">Lit Concierge</span>
@@ -92,7 +92,7 @@ export default async function Home() {
           />
           <CategoryShowcase categories={categories} counts={counts} />
 
-          <div className="mt-28">
+          {featured.length > 0 && <div className="mt-28">
             <Reveal className="mb-10 flex items-end justify-between gap-6 border-b border-ink/15 pb-5">
               <h3 className="display text-3xl md:text-4xl">Featured <em className="serif-i text-rani">packages</em></h3>
               <Link href="/events" className="link hidden sm:inline-flex">View all <ArrowUpRight className="h-3.5 w-3.5" /></Link>
@@ -104,7 +104,7 @@ export default async function Home() {
                 </Reveal>
               ))}
             </div>
-          </div>
+          </div>}
         </div>
       </section>
 
@@ -161,7 +161,7 @@ export default async function Home() {
       </section>
 
       {/* 1.4 Testimonials — rani block */}
-      <section className="bg-rani py-24 text-white md:py-36">
+      {testimonials.length > 0 && <section className="bg-rani py-24 text-white md:py-36">
         <div className="wrap">
           <div className="mb-14 flex items-center gap-4 text-white/75">
             <span className="font-display text-sm italic">(05)</span>
@@ -170,10 +170,10 @@ export default async function Home() {
           </div>
           <Testimonials items={testimonials} />
         </div>
-      </section>
+      </section>}
 
       {/* 1.6 Gallery */}
-      <section className="wrap py-24 md:py-36">
+      {gallery.length > 0 && <section className="wrap py-24 md:py-36">
         <SectionHead
           index="06"
           label="Gallery"
@@ -182,7 +182,7 @@ export default async function Home() {
           action={<Link href="/gallery" className="link">Full gallery <ArrowUpRight className="h-3.5 w-3.5" /></Link>}
         />
         <GalleryCollage items={gallery} />
-      </section>
+      </section>}
 
       {/* 1.7 Story / journey */}
       <section className="border-t border-ink/15 bg-paper-2 py-24 md:py-36">
@@ -216,7 +216,7 @@ export default async function Home() {
       </section>
 
       {/* 1.8 Journal */}
-      <section className="wrap py-24 md:py-36">
+      {blogs.length > 0 && <section className="wrap py-24 md:py-36">
         <SectionHead
           index="08"
           label="The journal"
@@ -229,7 +229,7 @@ export default async function Home() {
             <Reveal key={b.slug} delay={i * 110}><JournalCard b={b} rating={ratings[b.slug]} /></Reveal>
           ))}
         </div>
-      </section>
+      </section>}
 
       {/* 1.9 CTA — enquiry & booking on peacock */}
       <section id="enquire" className="bg-peacock text-white">
@@ -264,7 +264,7 @@ export default async function Home() {
       </section>
 
       {/* 1.10 FAQs */}
-      <section className="wrap grid gap-14 py-24 md:py-36 lg:grid-cols-12">
+      {faqs.length > 0 && <section className="wrap grid gap-14 py-24 md:py-36 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <SectionHead index="10" label="Questions" title="Good to" italic="know." className="!mb-8" />
           <p className="max-w-sm text-ink-mute">Can't find your answer? Our planners are a call away.</p>
@@ -273,7 +273,7 @@ export default async function Home() {
         <div className="lg:col-span-8">
           <Faqs items={faqs} />
         </div>
-      </section>
+      </section>}
     </>
   );
 }
