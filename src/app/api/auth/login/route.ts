@@ -10,10 +10,17 @@ async function _POST(req: NextRequest) {
   if (!email || !password) return fail("Email and password are required.");
   const user: any = await withDb(() => AdminUser.findOne({ email: String(email).toLowerCase().trim() }).lean());
   if (!user || !(await bcrypt.compare(String(password), user.passwordHash))) return fail("Invalid email or password.", 401);
-  const token = await signSession({ id: String(user._id), email: user.email, name: user.name });
+  let token: string;
+  try {
+    token = await signSession({ id: String(user._id), email: user.email, name: user.name });
+  } catch (e) {
+    console.error("[auth]", e);
+    return fail("Admin login is not configured on this server (JWT_SECRET missing).", 500);
+  }
   const res = json({ ok: true });
   res.cookies.set(SESSION_COOKIE, token, {
-    httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 24 * 7,
+    httpOnly: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 7,
+    secure: (req.headers.get("x-forwarded-proto") || req.nextUrl.protocol.replace(":", "")) === "https",
   });
   return res;
 }
