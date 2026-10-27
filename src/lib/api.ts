@@ -12,6 +12,9 @@ export function rateLimited(req: NextRequest, key: string, max = 8, windowMs = 6
   const list = (hits.get(id) || []).filter((t) => now - t < windowMs);
   list.push(now);
   hits.set(id, list);
+  if (hits.size > 5000) {
+    for (const [k, v] of hits) if (!v.some((t) => now - t < windowMs)) hits.delete(k);
+  }
   return list.length > max;
 }
 
@@ -33,6 +36,7 @@ export function clean(body: any, fields: string[], max = 2000) {
 export function requireFields(data: Record<string, any>, fields: string[]) {
   for (const f of fields) if (!data[f]) return `Please provide your ${f}.`;
   if (data.email && !EMAIL.test(data.email)) return "Please enter a valid email address.";
+  if (data.phone && (data.phone.match(/\d/g) || []).length < 6) return "Please enter a valid phone number.";
   return null;
 }
 
