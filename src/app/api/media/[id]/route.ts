@@ -15,6 +15,9 @@ async function _GET(req: NextRequest, { params }: { params: Promise<{ id: string
     "Content-Type": doc.contentType,
     "Cache-Control": "public, max-age=31536000, immutable",
     "Accept-Ranges": "bytes",
+    // Uploaded files are never allowed to run scripts on our origin (e.g. a crafted SVG).
+    "Content-Security-Policy": "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self'; sandbox",
+    "X-Content-Type-Options": "nosniff",
   };
   // Range support so uploaded videos can stream / seek.
   const range = req.headers.get("range");
