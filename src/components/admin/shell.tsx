@@ -19,6 +19,20 @@ export function AdminShell({ user, children }: { user: { name: string; email: st
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [pathname]);
 
+  // If the session expires mid-use, any admin API call returns 401 — send the user back to login.
+  useEffect(() => {
+    const original = window.fetch;
+    window.fetch = async (...args) => {
+      const res = await original(...args);
+      const url = typeof args[0] === "string" ? args[0] : args[0] instanceof Request ? args[0].url : String(args[0]);
+      if (res.status === 401 && url.includes("/api/admin")) {
+        window.location.href = `/admin/login?next=${encodeURIComponent(window.location.pathname)}`;
+      }
+      return res;
+    };
+    return () => { window.fetch = original; };
+  }, []);
+
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
     router.replace("/admin/login");
