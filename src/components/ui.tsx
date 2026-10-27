@@ -38,13 +38,14 @@ export function SectionHead({
   );
 }
 
-export function formatPrice(n?: number, currency = "$") {
+/** Formats an amount with Indian digit grouping, e.g. ₹45,00,000. */
+export function formatPrice(n?: number, currency = "₹") {
   if (n == null) return "";
-  return `${currency}${n.toLocaleString("en-US")}`;
+  return `${currency}${n.toLocaleString("en-IN")}`;
 }
 
 /** Package card: image on top, editorial caption beneath. */
-export function PackageCard({ e, currency = "$", categoryName, ratio = "aspect-[4/5]" }: { e: any; currency?: string; categoryName?: string; ratio?: string }) {
+export function PackageCard({ e, currency = "₹", categoryName, ratio = "aspect-[4/5]" }: { e: any; currency?: string; categoryName?: string; ratio?: string }) {
   return (
     <Link href={`/events/${e.slug}`} className="group block">
       <div className={`relative overflow-hidden bg-paper-3 ${ratio}`}>
