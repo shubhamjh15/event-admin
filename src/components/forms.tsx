@@ -92,7 +92,7 @@ export function EnquiryForm({ eventTypes, source = "contact", compact = false, d
           <Field tone={tone} label="Budget">
             <select name="budget" className={f} defaultValue="">
               <option value="">Select a range</option>
-              {["Under $25k", "$25k – $50k", "$50k – $100k", "$100k – $250k", "$250k+"].map((b) => <option key={b}>{b}</option>)}
+              {["Under ₹10 lakh", "₹10 – 25 lakh", "₹25 – 50 lakh", "₹50 lakh – 1 crore", "₹1 crore+"].map((b) => <option key={b}>{b}</option>)}
             </select>
           </Field>
           <Field tone={tone} label="Destination"><input name="destination" className={f} placeholder="City or country" /></Field>
