@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { docMetadata, getCategory, getEvent, getEvents, getSettings } from "@/lib/data";
 import { renderMarkdown } from "@/lib/markdown";
 import { Reveal } from "@/components/reveal";
+import { jsonLd as jsonLdString } from "@/lib/jsonld";
 import { Breadcrumbs, CtaBlock, ImageHero, PackageCard, formatPrice } from "@/components/ui";
 import { PhotoStrip } from "@/components/interactive";
 
@@ -43,7 +44,7 @@ export default async function EventDetail({ params }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
       <ImageHero image={e.heroImage}>
         <Breadcrumbs items={[{ label: "Events", href: "/events" }, ...(cat ? [{ label: cat.name, href: `/events?category=${cat.slug}` }] : []), { label: e.title }]} />
         <h1 className="display mt-6 max-w-5xl text-[3.2rem] sm:text-7xl lg:text-[6rem]">{e.title}</h1>
@@ -117,8 +118,8 @@ export default async function EventDetail({ params }: Props) {
 
         <aside className="lg:col-span-4 lg:pl-4">
           <div className="border border-ink/15 bg-white/50 p-8 lg:sticky lg:top-28">
-            <p className="label text-[10px] text-ink-mute">Starting from</p>
-            <p className="display mt-3 text-6xl">{formatPrice(e.price, s.currency)}</p>
+            <p className="label text-[10px] text-ink-mute">{e.price ? "Starting from" : "Pricing"}</p>
+            <p className="display mt-3 text-6xl">{e.price ? formatPrice(e.price, s.currency) : <em className="serif-i">On request</em>}</p>
             <p className="mt-2 text-sm text-ink-mute">{e.priceNote}</p>
             <div className="mt-8 space-y-3">
               <Link href={`/book?package=${e.slug}`} className="btn-ink w-full">Book this package</Link>

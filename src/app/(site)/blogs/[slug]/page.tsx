@@ -4,6 +4,7 @@ import { docMetadata, getBlog, getBlogs, getComments, getSettings, incrementView
 import { readingTime, renderMarkdown } from "@/lib/markdown";
 import { sized } from "@/lib/img";
 import { Reveal } from "@/components/reveal";
+import { jsonLd as jsonLdString } from "@/lib/jsonld";
 import { Breadcrumbs, JournalCard, Stars } from "@/components/ui";
 import { CommentForm } from "@/components/forms";
 
@@ -42,7 +43,7 @@ export default async function BlogPost({ params }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
       <header className="pt-[78px]">
         <div className="wrap max-w-5xl pb-14 pt-16 text-center md:pt-24">
           <div className="flex justify-center"><Breadcrumbs light={false} items={[{ label: "Journal", href: "/blogs" }, { label: b.category || "Story" }]} /></div>
