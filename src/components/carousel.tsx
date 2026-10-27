@@ -25,6 +25,7 @@ function Media({ s, active }: { s: Slide; active: boolean }) {
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
+    v.muted = true;
     if (active) v.play().catch(() => {});
     else v.pause();
   }, [active]);
@@ -45,7 +46,7 @@ export function BannerCarousel({ slides, label, height = "h-[92svh] min-h-[620px
   if (!slides.length) return null;
   const cur = slides[i];
   return (
-    <section className={`relative ${height} overflow-hidden bg-ink text-white`} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <section data-hero className={`relative ${height} overflow-hidden bg-ink text-white`} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       {slides.map((s, idx) => (
         <div key={s._id || idx} className={`absolute inset-0 transition-opacity duration-[1600ms] ease-out ${idx === i ? "opacity-100" : "opacity-0"}`} aria-hidden={idx !== i}>
           <Media s={s} active={idx === i} />
@@ -94,6 +95,16 @@ export function HeroVideo({ video, poster, since, lines }: { video: string; post
   const [muted, setMuted] = useState(true);
   const { i } = useAutoplay(lines.length, 5000);
 
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = true;
+    v.play().catch(() => setPlaying(false));
+  }, []);
+  useEffect(() => {
+    if (ref.current) ref.current.muted = muted;
+  }, [muted]);
+
   const toggle = () => {
     const v = ref.current;
     if (!v) return;
@@ -101,7 +112,7 @@ export function HeroVideo({ video, poster, since, lines }: { video: string; post
   };
 
   return (
-    <section className="relative h-[100svh] min-h-[680px] overflow-hidden bg-ink text-white">
+    <section data-hero className="relative h-[100svh] min-h-[680px] overflow-hidden bg-ink text-white">
       <img src={sized(poster, 2400, 85)} alt="" className="absolute inset-0 h-full w-full object-cover" />
       {video && (
         <video ref={ref} src={video} autoPlay muted={muted} loop playsInline onError={(e) => (e.currentTarget.style.display = "none")} className="absolute inset-0 h-full w-full object-cover" />
