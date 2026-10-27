@@ -66,9 +66,16 @@ export async function ensureAdmin() {
   await M.AdminUser.create({ name: "Administrator", email, passwordHash });
 }
 
+const isDuplicate = (e: any) => e?.code === 11000 || e?.writeErrors?.every?.((w: any) => w.code === 11000);
+
 export async function seedIfEmpty() {
-  await ensureAdmin();
-  if ((await M.Settings.countDocuments()) === 0) await seedContent();
+  try {
+    await ensureAdmin();
+    if ((await M.Settings.countDocuments()) === 0) await seedContent();
+  } catch (e) {
+    // Another instance seeded at the same moment — the data is there, carry on.
+    if (!isDuplicate(e)) throw e;
+  }
 }
 
 /** Wipe all content (not admin users or media) and re-seed demo data. */
