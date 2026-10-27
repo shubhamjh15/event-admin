@@ -112,7 +112,7 @@ export const resources: Resource[] = [
       { name: "destination", label: "Destination", type: "text", half: true },
       { name: "duration", label: "Duration", type: "text", half: true },
       { name: "guests", label: "Guest range", type: "text", half: true },
-      { name: "price", label: "Price (from)", type: "number", half: true },
+      { name: "price", label: "Price from (₹)", type: "number", half: true },
       { name: "priceNote", label: "Price note", type: "text", half: true },
       { name: "summary", label: "Summary", type: "textarea" },
       { name: "description", label: "Description", type: "markdown" },

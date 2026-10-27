@@ -80,7 +80,7 @@ export function ResourceList({ resourceKey }: { resourceKey: string }) {
       case "date":
         return v ? <span className="whitespace-nowrap text-ink-mute">{new Date(v).toLocaleDateString()}</span> : null;
       case "price":
-        return v != null ? <span className="font-semibold">${Number(v).toLocaleString("en-US")}</span> : null;
+        return v != null ? <span className="font-semibold">₹{Number(v).toLocaleString("en-IN")}</span> : null;
       default:
         return <span className="line-clamp-2 max-w-[320px]">{Array.isArray(v) ? v.join(", ") : String(v ?? "")}</span>;
     }
