@@ -39,7 +39,7 @@ export default async function EventDetail({ params }: Props) {
     description: e.summary,
     image: [e.heroImage, ...(e.gallery || [])],
     brand: { "@type": "Brand", name: s.siteName },
-    offers: e.price ? { "@type": "Offer", price: e.price, priceCurrency: "USD", availability: "https://schema.org/InStock" } : undefined,
+    offers: e.price ? { "@type": "Offer", price: e.price, priceCurrency: "INR", availability: "https://schema.org/InStock" } : undefined,
   };
 
   return (
@@ -117,9 +117,9 @@ export default async function EventDetail({ params }: Props) {
         </div>
 
         <aside className="lg:col-span-4 lg:pl-4">
-          <div className="border border-ink/15 bg-white/50 p-8 lg:sticky lg:top-28">
+          <div className="border border-ink/15 bg-white/50 p-8 [container-type:inline-size] lg:sticky lg:top-28">
             <p className="label text-[10px] text-ink-mute">{e.price ? "Starting from" : "Pricing"}</p>
-            <p className="display mt-3 text-6xl">{e.price ? formatPrice(e.price, s.currency) : <em className="serif-i">On request</em>}</p>
+            <p className="display mt-3 whitespace-nowrap text-[min(3.75rem,18cqw)] leading-none">{e.price ? formatPrice(e.price, s.currency) : <em className="serif-i">On request</em>}</p>
             <p className="mt-2 text-sm text-ink-mute">{e.priceNote}</p>
             <div className="mt-8 space-y-3">
               <Link href={`/book?package=${e.slug}`} className="btn-ink w-full">Book this package</Link>
