@@ -38,7 +38,7 @@ Works on Vercel, Render, Railway, a VPS with PM2, or any Node 20+ host.
 
 `npm run seed` wipes the content in the database at `MONGODB_URI` and re-seeds it with the demo data. Admin users and uploads are kept. The same action is available in the admin panel: **Settings → Danger zone**.
 
-Uploaded images and videos are stored in MongoDB (`Media` collection) and served from `/api/media/:id`, with range support for video. They work on serverless hosts with no extra storage service. Maximum upload size is 12 MB per file. For long hero videos, paste a hosted MP4 URL instead.
+Uploaded images and videos are stored in MongoDB (`Media` collection) and served from `/api/media/:id`, with range support for video. They work on serverless hosts with no extra storage service. Maximum upload size is 4 MB per file (Vercel limits request bodies to 4.5 MB). Compress photos before uploading; for hero videos, paste a hosted MP4 URL.
 
 ## What's included
 
