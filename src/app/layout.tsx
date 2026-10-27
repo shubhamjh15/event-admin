@@ -23,6 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&!t.dataset.fb){t.dataset.fb="1";t.removeAttribute("srcset");t.src="/fallback.svg"}},true);`,
           }}
         />
+        <noscript>
+          <style>{`.reveal,.reveal-img{opacity:1!important;transform:none!important;clip-path:none!important}`}</style>
+        </noscript>
         {children}
       </body>
     </html>
