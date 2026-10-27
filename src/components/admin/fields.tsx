@@ -6,12 +6,11 @@ import type { Field } from "@/lib/resources";
 import { slugify } from "@/lib/resources";
 import { toast } from "./toast";
 
-const optionsCache = new Map<string, Promise<any[]>>();
-function loadOptions(resource: string) {
-  if (!optionsCache.has(resource)) {
-    optionsCache.set(resource, fetch(`/api/admin/r/${resource}?all=1`).then((r) => r.json()).then((d) => d.items || []));
-  }
-  return optionsCache.get(resource)!;
+function loadOptions(resource: string): Promise<any[]> {
+  return fetch(`/api/admin/r/${resource}?all=1`)
+    .then((r) => (r.ok ? r.json() : { items: [] }))
+    .then((d) => d.items || [])
+    .catch(() => []);
 }
 
 async function upload(file: File): Promise<string | null> {
