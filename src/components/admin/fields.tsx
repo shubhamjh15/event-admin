@@ -32,6 +32,10 @@ function MediaInput({ value, onChange, video = false }: { value?: string; onChan
   const ref = useRef<HTMLInputElement>(null);
   async function onFile(f?: File) {
     if (!f) return;
+    if (f.size > 4 * 1024 * 1024) {
+      toast(`"${f.name}" is ${(f.size / 1048576).toFixed(1)} MB — max 4 MB. Compress it, or paste a hosted URL.`, "error");
+      return;
+    }
     setBusy(true);
     const url = await upload(f);
     setBusy(false);
