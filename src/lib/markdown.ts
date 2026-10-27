@@ -6,7 +6,9 @@ marked.setOptions({ gfm: true, breaks: false });
 export function renderMarkdown(src?: string) {
   if (!src) return "";
   const escaped = src.replace(/<(?=[a-zA-Z/!])/g, "&lt;");
-  return marked.parse(escaped, { async: false }) as string;
+  const html = marked.parse(escaped, { async: false }) as string;
+  // Neutralise script-capable link targets (javascript:, vbscript:, data:).
+  return html.replace(/(href|src)="\s*(?:javascript|vbscript|data):[^"]*"/gi, '$1="#"');
 }
 
 export function readingTime(src?: string) {
