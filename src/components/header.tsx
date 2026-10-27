@@ -36,7 +36,19 @@ export function Header({ phone, since }: { phone: string; since: string }) {
     document.body.style.overflow = open ? "hidden" : "";
   }, [open]);
 
-  const overHero = DARK_HERO.test(pathname) && !scrolled && !open;
+  // Start from the route pattern (correct on first paint), then confirm against the DOM —
+  // covers error pages, missing banners and any future page layouts.
+  const [hasHero, setHasHero] = useState(DARK_HERO.test(pathname));
+  useEffect(() => {
+    const check = () => setHasHero(!!document.querySelector("[data-hero]"));
+    check();
+    const main = document.querySelector("main");
+    if (!main) return;
+    const mo = new MutationObserver(check);
+    mo.observe(main, { childList: true, subtree: true });
+    return () => mo.disconnect();
+  }, [pathname]);
+  const overHero = hasHero && !scrolled && !open;
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
   const navCls = (href: string) =>
     `relative py-2 text-[11px] font-semibold uppercase tracking-[0.2em] transition-colors ${

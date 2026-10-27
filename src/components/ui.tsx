@@ -167,7 +167,7 @@ export function Breadcrumbs({ items, light = true }: { items: { label: string; h
 /** Static full-bleed image hero for detail pages. */
 export function ImageHero({ image, children, height = "h-[88svh] min-h-[600px]" }: { image: string; children: React.ReactNode; height?: string }) {
   return (
-    <section className={`relative ${height} overflow-hidden bg-ink`}>
+    <section data-hero className={`relative ${height} overflow-hidden bg-ink`}>
       <img src={sized(image, 2400, 85)} alt="" className="absolute inset-0 h-full w-full animate-slow-zoom object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/35" />
       <div className="wrap relative flex h-full flex-col justify-end pb-14 pt-36 text-white md:pb-20">{children}</div>
