@@ -102,11 +102,11 @@ export const settings = {
   tagline: "Luxury events, lit up since 1989",
   since: "1989",
   currency: "₹",
-  phone: "+1 (800) 548-1989",
-  whatsapp: "+18005481989",
+  phone: "+91 98765 43210",
+  whatsapp: "+919876543210",
   email: "hello@litconcierge.com",
-  address: "One Grand Avenue, Suite 1989, New York, NY 10001",
-  hours: "Mon – Sat · 9:00 AM – 8:00 PM · 24/7 onsite support",
+  address: "C-Scheme, Jaipur, Rajasthan 302001, India",
+  hours: "Mon – Sat · 10:00 AM – 7:00 PM IST · 24/7 onsite support",
   socials: {
     instagram: "https://instagram.com",
     facebook: "https://facebook.com",
@@ -143,20 +143,20 @@ export const settings = {
   signatureTouches: [
     { title: "Giveaways & Hampers", text: "Curated return gifts, wedding hampers and branded goodies your guests will treasure.", image: IMG.gifts },
     { title: "Designer Wear", text: "Access to couture designers and stylists for the couple, family and hosts.", image: IMG.fashion },
-    { title: "Menu Selection & Tasting", text: "Private chef consultations and full food tastings before you finalise a single dish.", image: IMG.chef },
+    { title: "Menu Selection & Tasting", text: "Private chef consultations and full food tastings before you finalise a single dish.", image: IMG.catering },
     { title: "Event Insurance", text: "Comprehensive event cover for weather, cancellation, liability and vendor failure.", image: IMG.weddingFlowers },
   ],
   footerAbout: "Luxury weddings, incentives, corporate events, concerts and celebrations — anywhere in the world. Licensed · Bonded · Insured · Since 1989.",
 };
 
 export const categories = [
-  { name: "Weddings", slug: "weddings", icon: "Heart", tagline: "Love stories, beautifully told", image: IMG.weddingConfetti, description: "From intimate vows to grand multi-day celebrations, we design weddings full of colour, culture and emotion — with menu tastings, designer wear, décor and guest hospitality handled end-to-end.", order: 1 },
+  { name: "Weddings", slug: "weddings", icon: "Heart", tagline: "Love stories, beautifully told", image: IMG.weddingFlowers, description: "From intimate vows to grand multi-day celebrations, we design weddings full of colour, culture and emotion — with menu tastings, designer wear, décor and guest hospitality handled end-to-end.", order: 1 },
   { name: "Destination Weddings", slug: "destination-weddings", icon: "Plane", tagline: "Say 'I do' anywhere in the world", image: IMG.mandap, description: "Palaces in Jaipur, cliffs in Santorini, beaches in Bali. We move your entire wedding — guests, vendors, décor and all — to any destination on earth.", order: 2 },
-  { name: "Corporate Meetings", slug: "corporate-meetings", icon: "Briefcase", tagline: "Meetings that move business forward", image: IMG.summit, description: "Board retreats, leadership summits, product launches and conferences with flawless AV, registration and rooming management.", order: 3 },
+  { name: "Corporate Meetings", slug: "corporate-meetings", icon: "Briefcase", tagline: "Meetings that move business forward", image: IMG.auditorium, description: "Board retreats, leadership summits, product launches and conferences with flawless AV, registration and rooming management.", order: 3 },
   { name: "Incentives", slug: "incentives", icon: "Trophy", tagline: "Reward your best like the best", image: IMG.maldives, description: "Incentive group travel that motivates — curated luxury trips, gala dinners and exclusive experiences for top performers.", order: 4 },
-  { name: "Sales Force Trainings", slug: "sales-force-trainings", icon: "GraduationCap", tagline: "Train, energise, perform", image: IMG.auditorium, description: "Immersive sales kick-offs and trainings with breakout rooms, team-building activities and motivational stage production.", order: 5 },
+  { name: "Sales Force Trainings", slug: "sales-force-trainings", icon: "GraduationCap", tagline: "Train, energise, perform", image: IMG.stage, description: "Immersive sales kick-offs and trainings with breakout rooms, team-building activities and motivational stage production.", order: 5 },
   { name: "Concerts", slug: "concerts", icon: "Music", tagline: "Stages that light up the night", image: IMG.concertLights, description: "Private concerts, festival hospitality and artist bookings with production, security and VIP access managed by us.", order: 6 },
-  { name: "Birthdays", slug: "birthdays", icon: "Cake", tagline: "Milestones worth celebrating", image: IMG.partyLights, description: "Sweet sixteens, 50th galas and surprise parties — themed, styled and catered to perfection.", order: 7 },
+  { name: "Birthdays", slug: "birthdays", icon: "Cake", tagline: "Milestones worth celebrating", image: IMG.balloons, description: "Sweet sixteens, 50th galas and surprise parties — themed, styled and catered to perfection.", order: 7 },
   { name: "Family Reunions", slug: "family-reunions", icon: "Users", tagline: "Generations, together again", image: IMG.family, description: "Villas, resorts and multi-generational itineraries that bring the whole family together without the stress.", order: 8 },
   { name: "Group Travel", slug: "group-travel", icon: "Map", tagline: "Groups of every size, handled", image: IMG.friends, description: "Friends' getaways, associations, alumni and incentive groups with flights, hotels and activities negotiated below online rates.", order: 9 },
   { name: "Cruises", slug: "cruises", icon: "Ship", tagline: "Celebrate at sea", image: IMG.cruiseBeach, description: "Full ship buyouts, private yacht charters and group cruise celebrations with onboard events and shore experiences.", order: 10 },
@@ -169,7 +169,7 @@ export const events = [
     title: "Royal Rajasthan Palace Wedding", slug: "royal-rajasthan-palace-wedding", category: "destination-weddings", featured: true,
     summary: "A three-day palace wedding in Jaipur with mehndi, sangeet, baraat and a candlelit reception.",
     description: "Celebrate in a heritage palace in the Pink City. Our Jaipur team handles venue buyout, rooming, décor, couture, catering, entertainment and guest hospitality so you can simply arrive and celebrate.",
-    heroImage: IMG.mandap, gallery: [IMG.jaipur, IMG.jaipur2, IMG.weddingProcession, IMG.udaipur, IMG.ballroom, IMG.fireworks],
+    heroImage: IMG.mandap, gallery: [IMG.jaipur, IMG.jaipur2, IMG.tajMahal, IMG.udaipur, IMG.ballroom, IMG.fireworks],
     destination: "Jaipur, India", duration: "4 days / 3 nights", guests: "100 – 600 guests", price: 4500000, priceNote: "starting from, per wedding",
     inclusions: ["Palace venue buyout", "Guest rooming management", "Mehndi, Sangeet & Reception design", "Designer wear consultation", "Menu selection & food tasting", "Wedding hampers & return gifts", "Airport VIP transfers", "Event insurance"],
     itinerary: it([
@@ -183,7 +183,7 @@ export const events = [
     title: "Santorini Sunset Elopement", slug: "santorini-sunset-elopement", category: "destination-weddings",
     summary: "An intimate clifftop ceremony overlooking the caldera, with private yacht dinner.",
     description: "For couples who want romance without the crowd. Clifftop vows, a photographer, a private chef aboard a catamaran and a suite with a plunge pool.",
-    heroImage: IMG.santorini, gallery: [IMG.weddingVeil, IMG.rings, IMG.speedYacht, IMG.bouquet, IMG.seaTerrace],
+    heroImage: IMG.santorini, gallery: [IMG.cinqueTerre, IMG.rings, IMG.speedYacht, IMG.bouquet, IMG.seaTerrace],
     destination: "Santorini, Greece", duration: "5 days / 4 nights", guests: "2 – 30 guests", price: 1800000, priceNote: "starting from, per couple",
     inclusions: ["Clifftop ceremony venue", "Officiant & legal paperwork", "Photographer & videographer", "Catamaran sunset dinner", "Bridal styling", "Luxury suite"],
     itinerary: it([
@@ -197,7 +197,7 @@ export const events = [
     title: "Grand Ballroom Wedding", slug: "grand-ballroom-wedding", category: "weddings", featured: true,
     summary: "A black-tie ballroom celebration with couture florals, live orchestra and a seven-course dinner.",
     description: "Timeless glamour meets vibrant colour. We transform a five-star ballroom into your dream setting, with chef-led menu tastings, designer florals and seamless guest management.",
-    heroImage: IMG.ballroom, gallery: [IMG.weddingConfetti, IMG.weddingFlowers, IMG.weddingCake, IMG.weddingTable, IMG.sparklers],
+    heroImage: IMG.ballroom, gallery: [IMG.mandap, IMG.weddingFlowers, IMG.weddingCake, IMG.weddingTable, IMG.sparklers],
     destination: "Your city", duration: "1 day + rehearsal", guests: "150 – 800 guests", price: 2800000, priceNote: "starting from",
     inclusions: ["Five-star venue sourcing", "Floral & lighting design", "Menu selection & tasting", "Live orchestra & DJ", "Guest hampers", "Day-of coordination team"],
     itinerary: it([
@@ -210,7 +210,7 @@ export const events = [
     title: "Executive Leadership Summit", slug: "executive-leadership-summit", category: "corporate-meetings", featured: true,
     summary: "A three-day C-suite summit with keynote production, breakouts and a gala dinner.",
     description: "Everything your leadership team needs to think big: registration, rooming, AV, speaker management, breakout facilitation and a closing gala.",
-    heroImage: IMG.summit, gallery: [IMG.burjAlArab, IMG.dubai, IMG.auditorium, IMG.stage, IMG.galaTable],
+    heroImage: IMG.dubai, gallery: [IMG.burjAlArab, IMG.auditorium, IMG.stage, IMG.galaTable, IMG.meeting],
     destination: "Dubai, UAE", duration: "3 days", guests: "50 – 1,000 delegates", price: 65000, priceNote: "per delegate, starting from",
     inclusions: ["Registration & rooming management", "AV & stage production", "Speaker & agenda management", "Breakout rooms", "Gala dinner", "Onsite staff & security"],
     itinerary: it([
@@ -223,8 +223,8 @@ export const events = [
     title: "Board Retreat in the Hills", slug: "board-retreat-in-the-hills", category: "corporate-meetings",
     summary: "A private villa buyout for focused board sessions, wellness and fine dining.",
     description: "Disconnect to reconnect. A private estate, secure meeting rooms, curated menus and wellness programming for boards of up to 30.",
-    heroImage: IMG.meeting, gallery: [IMG.villaModern, IMG.chef, IMG.feast, IMG.highFive],
-    destination: "Napa Valley, USA", duration: "2 days", guests: "8 – 30 guests", price: 2500000, priceNote: "starting from, full buyout",
+    heroImage: IMG.meeting, gallery: [IMG.villaModern, IMG.catering, IMG.feast, IMG.plates],
+    destination: "Rishikesh, India", duration: "2 days", guests: "8 – 30 guests", price: 2500000, priceNote: "starting from, full buyout",
     inclusions: ["Private villa buyout", "Secure meeting suite", "Private chef", "Wellness sessions", "Chauffeured transfers"],
     itinerary: it([
       ["Day 1", "Strategy Day", "Morning sessions, vineyard lunch, chef's table dinner."],
@@ -263,8 +263,8 @@ export const events = [
     title: "Sales Kick-Off Experience", slug: "sales-kick-off-experience", category: "sales-force-trainings", featured: true,
     summary: "High-energy annual SKO with stage production, workshops and team-building.",
     description: "Launch the year with momentum: motivational keynotes, role-play workshops, gamified team challenges and an awards party.",
-    heroImage: IMG.auditorium, gallery: [IMG.training, IMG.presentation, IMG.highFive, IMG.stageLights, IMG.dj],
-    destination: "Las Vegas, USA", duration: "3 days", guests: "100 – 3,000 attendees", price: 45000, priceNote: "per attendee, starting from",
+    heroImage: IMG.stage, gallery: [IMG.auditorium, IMG.presentation, IMG.stageLights, IMG.dj, IMG.concertStage],
+    destination: "Goa, India", duration: "3 days", guests: "100 – 3,000 attendees", price: 45000, priceNote: "per attendee, starting from",
     inclusions: ["Venue & rooming", "Stage, AV & lighting", "Workshop facilitation", "Team-building", "Awards party", "Registration app"],
     itinerary: it([
       ["Day 1", "Kick-Off", "Arrivals, opening keynote, welcome party."],
@@ -285,7 +285,7 @@ export const events = [
     title: "Festival VIP Hospitality", slug: "festival-vip-hospitality", category: "concerts",
     summary: "Backstage access, VIP cabanas and chauffeured transfers to the world's top festivals.",
     description: "Skip the queues with VIP passes, luxury accommodation and on-call concierge at Coachella, Tomorrowland and more.",
-    heroImage: IMG.concertConfetti, gallery: [IMG.concert, IMG.concertCrowd, IMG.confettiCrowd, IMG.jetLounge],
+    heroImage: IMG.concertConfetti, gallery: [IMG.concert, IMG.concertCrowd, IMG.confettiCrowd, IMG.jet],
     destination: "Worldwide", duration: "3 days", guests: "2 – 100 guests", price: 350000, priceNote: "per guest, starting from",
     inclusions: ["VIP passes", "Luxury lodging", "Chauffeured transfers", "Backstage experiences", "Concierge on call"],
     itinerary: it([["Day 1", "Arrive", "Check-in and welcome dinner."], ["Day 2–3", "Festival", "VIP cabana, artist meet-and-greets, transfers."]]),
@@ -294,7 +294,7 @@ export const events = [
     title: "Milestone Birthday Gala", slug: "milestone-birthday-gala", category: "birthdays", featured: true,
     summary: "A themed black-tie birthday gala with entertainment, cake artistry and guest gifting.",
     description: "Turning 30, 50 or 80? We create themed galas — Great Gatsby, Bollywood, Monte Carlo — with immersive décor and performers.",
-    heroImage: IMG.partyLights, gallery: [IMG.galaTable, IMG.birthdayDessert, IMG.sparklers, IMG.balloons, IMG.bar],
+    heroImage: IMG.galaTable, gallery: [IMG.birthdayDessert, IMG.sparklers, IMG.balloons, IMG.bar, IMG.confetti],
     destination: "Your city", duration: "1 evening", guests: "30 – 400 guests", price: 600000, priceNote: "starting from",
     inclusions: ["Theme design", "Venue styling", "Entertainment", "Cake artistry", "Return gifts & goodies", "Photography"],
     itinerary: it([["Evening", "Arrival & Reveal", "Themed arrival, surprise reveal and toasts."], ["Night", "Party", "Dinner, performances, cake moment and dance floor."]]),
@@ -313,13 +313,13 @@ export const events = [
     summary: "A private villa estate with activities for every age, from grandparents to grandkids.",
     description: "Private chefs, kids' clubs, family portraits and a heritage dinner — the reunion everyone will talk about for years.",
     heroImage: IMG.family, gallery: [IMG.villaTropical, IMG.feast, IMG.friends, IMG.beachSunset],
-    destination: "Tuscany, Italy", duration: "5 days", guests: "15 – 80 guests", price: 225000, priceNote: "per guest, starting from",
+    destination: "Udaipur, India", duration: "5 days", guests: "15 – 80 guests", price: 225000, priceNote: "per guest, starting from",
     inclusions: ["Villa buyout", "Private chef", "Kids' activities", "Family photo session", "Group flights negotiation", "Reunion T-shirts & gifts"],
     itinerary: it([
       ["Day 1", "Welcome Home", "Arrivals and welcome feast."],
-      ["Day 2", "Family Olympics", "Games, pool party and pizza night."],
+      ["Day 2", "Family Olympics", "Games, pool party and a chaat-and-kulfi night."],
       ["Day 3", "Heritage Dinner", "Family portrait session and heritage storytelling dinner."],
-      ["Day 4–5", "Explore & Farewell", "Wine tasting, Florence day trip, farewell brunch."],
+      ["Day 4–5", "Explore & Farewell", "City Palace tour, a Lake Pichola boat ride and a farewell brunch."],
     ]),
   },
   {
@@ -349,8 +349,8 @@ export const events = [
     title: "Private Superyacht Charter Party", slug: "private-superyacht-charter-party", category: "cruises",
     summary: "Charter a superyacht for an exclusive celebration on the water.",
     description: "Crewed superyachts with chefs, DJs and water toys — perfect for birthdays, proposals and VIP clients.",
-    heroImage: IMG.yacht, gallery: [IMG.speedYacht, IMG.yacht2, IMG.cocktail, IMG.chef],
-    destination: "Monaco · Miami · Dubai", duration: "1 – 7 days", guests: "2 – 120 guests", price: 2000000, priceNote: "per day, starting from",
+    heroImage: IMG.yacht, gallery: [IMG.speedYacht, IMG.yacht2, IMG.cocktail, IMG.plates],
+    destination: "Mumbai · Goa · Dubai", duration: "1 – 7 days", guests: "2 – 120 guests", price: 2000000, priceNote: "per day, starting from",
     inclusions: ["Crewed superyacht", "Private chef", "DJ & sound", "Water toys", "Fuel & port fees"],
     itinerary: it([["Day", "Cast Off", "Boarding, cruise, swim stops, sunset dinner on deck."]]),
   },
@@ -372,14 +372,14 @@ export const destinations = [
 export const services = [
   { title: "Complete Event Planning", slug: "complete-event-planning", icon: "ClipboardList", image: IMG.ballroom, summary: "Planning, logistics, sourcing, design, hosting coordination and onsite management.", points: ["Concept & creative design", "Vendor sourcing & logistics", "Hosting coordination", "Onsite management"], description: "One team, one point of contact, every detail. We take your event from first idea to final farewell — concept, design, vendor sourcing, logistics, run-of-show and onsite management by our own experienced crew." },
   { title: "Registration & Rooming", slug: "registration-and-rooming", icon: "BedDouble", image: IMG.hotelLobby, summary: "Guest registration, rooming lists and hotel block management.", points: ["Custom registration sites", "Rooming lists", "Hotel block management", "Guest communications"], description: "Branded registration, real-time rooming lists, hotel block management and guest communications — so nobody is ever without a room or a badge." },
-  { title: "Budgeting & Costing", slug: "budgeting-and-costing", icon: "Calculator", image: IMG.officeMeeting, summary: "Transparent budgets and detailed costing from day one.", points: ["Line-item budgets", "Cost tracking", "No hidden markups", "Reconciliation"], description: "Clear, line-item budgets with live cost tracking and final reconciliation. You'll always know exactly where every dollar goes." },
+  { title: "Budgeting & Costing", slug: "budgeting-and-costing", icon: "Calculator", image: IMG.meeting, summary: "Transparent budgets and detailed costing from day one.", points: ["Line-item budgets", "Cost tracking", "No hidden markups", "Reconciliation"], description: "Clear, line-item budgets with live cost tracking and final reconciliation. You'll always know exactly where every dollar goes." },
   { title: "Price Negotiation", slug: "price-negotiation", icon: "BadgePercent", image: IMG.jet, summary: "Rates lower than online for hotels, jets, villas, yachts, venues, AV, transport and flights.", points: ["Hotel stays", "Private jets", "Villas", "Yachts", "Event spaces", "AV equipment", "Transportation", "Flights"], description: "Thirty-five years of relationships mean real buying power. We negotiate hotel stays, private jets, villas, yachts, event spaces, AV equipment, transportation and flights — consistently below published online prices." },
-  { title: "Customisation", slug: "customisation", icon: "Palette", image: IMG.chef, summary: "Custom menus, onsite catering, activities and agendas.", points: ["Menus & food tasting", "Onsite catering", "Activities", "Agendas"], description: "Your event, your way. Bespoke menus with private tastings, onsite catering, curated activities and agendas designed around your guests." },
+  { title: "Customisation", slug: "customisation", icon: "Palette", image: IMG.catering, summary: "Custom menus, onsite catering, activities and agendas.", points: ["Menus & food tasting", "Onsite catering", "Activities", "Agendas"], description: "Your event, your way. Bespoke menus with private tastings, onsite catering, curated activities and agendas designed around your guests." },
   { title: "Onsite Staff & Security", slug: "onsite-staff-and-security", icon: "ShieldCheck", image: IMG.concertStage, summary: "Trained event staff and professional security teams.", points: ["Event hosts", "Crowd management", "Close protection", "Accreditation"], description: "Professional hosts, coordinators and licensed security personnel — from crowd management to close protection for VIPs." },
-  { title: "VIP White-Glove Concierge", slug: "vip-white-glove-concierge", icon: "Crown", image: IMG.jetLounge, summary: "White-glove assistance and 24/7 concierge for VIPs and guests.", points: ["Airport meet & greet", "Personal concierge", "Chauffeur services", "Reservations"], description: "Dedicated concierges for your VIPs: airport meet-and-greet, chauffeurs, reservations, personal shopping and anything else they can dream up." },
+  { title: "VIP White-Glove Concierge", slug: "vip-white-glove-concierge", icon: "Crown", image: IMG.resortNight, summary: "White-glove assistance and 24/7 concierge for VIPs and guests.", points: ["Airport meet & greet", "Personal concierge", "Chauffeur services", "Reservations"], description: "Dedicated concierges for your VIPs: airport meet-and-greet, chauffeurs, reservations, personal shopping and anything else they can dream up." },
   { title: "Access to Special Events", slug: "access-to-special-events", icon: "Ticket", image: IMG.concertCrowd, summary: "Exclusive access to sold-out shows, premieres and VIP experiences.", points: ["Sold-out concerts", "Sporting finals", "Fashion weeks", "Private premieres"], description: "Front-row seats, backstage passes and invitations to the world's most exclusive happenings — sporting finals, fashion weeks, galas and premieres." },
   { title: "Event Insurance", slug: "event-insurance", icon: "Umbrella", image: IMG.hotelLobby, summary: "Comprehensive event insurance for complete peace of mind.", points: ["Cancellation cover", "Weather protection", "Liability", "Vendor failure"], description: "We arrange comprehensive event insurance covering cancellation, adverse weather, liability and vendor failure — because we are licensed, bonded and insured ourselves." },
-  { title: "Sponsor Management", slug: "sponsor-management", icon: "Handshake", image: IMG.highFive, summary: "We work with sponsors to elevate your event and offset costs.", points: ["Sponsor sourcing", "Activation design", "Brand integration", "ROI reporting"], description: "We source sponsors, design activations and integrate partner brands seamlessly — elevating the experience while offsetting your costs." },
+  { title: "Sponsor Management", slug: "sponsor-management", icon: "Handshake", image: IMG.presentation, summary: "We work with sponsors to elevate your event and offset costs.", points: ["Sponsor sourcing", "Activation design", "Brand integration", "ROI reporting"], description: "We source sponsors, design activations and integrate partner brands seamlessly — elevating the experience while offsetting your costs." },
   { title: "Gifting, Hampers & Goodies", slug: "gifting-hampers-and-goodies", icon: "Gift", image: IMG.gifts, summary: "Customer giveaways, wedding hampers and return gifts.", points: ["Wedding hampers", "Return gifts", "Corporate giveaways", "Welcome amenities"], description: "Thoughtful, beautifully packaged gifting — wedding hampers, return gifts, welcome amenities and branded corporate giveaways." },
   { title: "Designer Wear & Styling", slug: "designer-wear-and-styling", icon: "Shirt", image: IMG.fashion, summary: "Designer clothing, stylists and fittings for every occasion.", points: ["Couture designers", "Personal stylists", "Fittings", "Family coordination"], description: "Access to leading designers and stylists for couples, families, hosts and performers — with fittings and wardrobe coordination handled for you." },
 ].map((s, i) => ({ ...s, order: i + 1 }));
@@ -392,28 +392,28 @@ export const banners = [
   { page: "events", mediaType: "image", url: IMG.mandap, title: "Events for every story", subtitle: "Weddings, incentives, summits, concerts and celebrations", ctaLabel: "Plan my event", ctaLink: "/contact", order: 1 },
   { page: "events", mediaType: "video", url: CONCERT_VIDEO, poster: IMG.concertLights, title: "Stages that light up the night", subtitle: "Private concerts & festival VIP hospitality", ctaLabel: "Concerts", ctaLink: "/events?category=concerts", order: 2 },
   { page: "events", mediaType: "image", url: IMG.maldives, title: "Reward your stars", subtitle: "Incentive travel that motivates", ctaLabel: "Incentives", ctaLink: "/events?category=incentives", order: 3 },
-  { page: "events", mediaType: "image", url: IMG.summit, title: "Meetings that matter", subtitle: "Corporate summits & sales trainings", ctaLabel: "Corporate", ctaLink: "/events?category=corporate-meetings", order: 4 },
+  { page: "events", mediaType: "image", url: IMG.meeting, title: "Meetings that matter", subtitle: "Corporate summits & sales trainings", ctaLabel: "Corporate", ctaLink: "/events?category=corporate-meetings", order: 4 },
   { page: "events", mediaType: "image", url: IMG.cruiseBeach, title: "Celebrate at sea", subtitle: "Cruise buyouts & superyacht charters", ctaLabel: "Cruises", ctaLink: "/events?category=cruises", order: 5 },
   { page: "services", mediaType: "image", url: IMG.ballroom, title: "White-glove, end to end", subtitle: "Planning, negotiation, logistics and concierge", ctaLabel: "Get a quote", ctaLink: "/contact", order: 1 },
   { page: "services", mediaType: "image", url: IMG.jet, title: "Jets, yachts & villas", subtitle: "Negotiated below online prices", ctaLabel: "Enquire", ctaLink: "/contact", order: 2 },
-  { page: "services", mediaType: "image", url: IMG.chef, title: "Menus, tastings & catering", subtitle: "Customised to every palate", ctaLabel: "Book a tasting", ctaLink: "/book", order: 3 },
+  { page: "services", mediaType: "image", url: IMG.catering, title: "Menus, tastings & catering", subtitle: "Customised to every palate", ctaLabel: "Book a tasting", ctaLink: "/book", order: 3 },
   { page: "about", mediaType: "image", url: IMG.fireworks, title: "Lighting up celebrations since 1989", subtitle: "Licensed · Bonded · Insured", order: 1 },
   { page: "about", mediaType: "image", url: IMG.ballroom, title: "Thirty-five years of joy", subtitle: "6,500+ events across 48 countries", order: 2 },
-  { page: "about", mediaType: "image", url: IMG.weddingConfetti, title: "Every guest, the guest of honour", subtitle: "White-glove hospitality, always", order: 3 },
-  { page: "blogs", mediaType: "image", url: IMG.partyLights, title: "The Lit Journal", subtitle: "Ideas, inspiration and insider tips", order: 1 },
+  { page: "about", mediaType: "image", url: IMG.weddingFlowers, title: "Every guest, the guest of honour", subtitle: "White-glove hospitality, always", order: 3 },
+  { page: "blogs", mediaType: "image", url: IMG.sparklers, title: "The Lit Journal", subtitle: "Ideas, inspiration and insider tips", order: 1 },
 ];
 
 export const gallery = [
   { title: "Palace mandap", image: IMG.mandap, category: "Weddings" },
   { title: "Fireworks finale", image: IMG.fireworks, category: "Parties" },
   { title: "Rooftop concert", image: IMG.concertLights, category: "Concerts" },
-  { title: "Leadership summit", image: IMG.summit, category: "Corporate" },
-  { title: "Confetti send-off", image: IMG.weddingConfetti, category: "Weddings" },
+  { title: "The boardroom", image: IMG.meeting, category: "Corporate" },
+  { title: "The Taj Mahal, Agra", image: IMG.tajMahal, category: "Destinations" },
   { title: "Superyacht party", image: IMG.yacht, category: "Luxury" },
   { title: "Grand ballroom", image: IMG.ballroom, category: "Weddings" },
-  { title: "Celebration toast", image: IMG.partyLights, category: "Parties" },
+  { title: "Confetti burst", image: IMG.confetti, category: "Parties" },
   { title: "Island incentive", image: IMG.maldives, category: "Incentives" },
-  { title: "Chef's table", image: IMG.chef, category: "Catering" },
+  { title: "The wedding feast", image: IMG.catering, category: "Catering" },
   { title: "Festival night", image: IMG.concertConfetti, category: "Concerts" },
   { title: "Gold-ribbon hampers", image: IMG.gifts, category: "Gifting" },
   { title: "City Palace, Udaipur", image: IMG.udaipur, category: "Destinations" },
@@ -424,27 +424,27 @@ export const gallery = [
   { title: "Sales kick-off", image: IMG.auditorium, category: "Corporate" },
   { title: "Sparkler moment", image: IMG.sparklers, category: "Parties" },
   { title: "Positano", image: IMG.amalfi, category: "Destinations" },
-  { title: "Baraat procession", image: IMG.weddingProcession, category: "Weddings" },
+  { title: "Kerala backwaters", image: IMG.kerala, category: "Destinations" },
   { title: "Signature cocktails", image: IMG.cocktail, category: "Catering" },
   { title: "Celebration cruise", image: IMG.cruiseBeach, category: "Luxury" },
   { title: "Hawa Mahal, Jaipur", image: IMG.jaipur, category: "Destinations" },
 ].map((g, i) => ({ ...g, order: i + 1 }));
 
 export const team = [
-  { name: "Victoria Hale", role: "Founder & Chief Experience Officer", photo: IMG.p1, bio: "Founded Lit Concierge in 1989 and has personally overseen more than a thousand weddings worldwide.", order: 1 },
-  { name: "Marcus Bennett", role: "Director, Corporate & Incentives", photo: IMG.p2, bio: "Leads our corporate meetings, incentives and sales-force training division.", order: 2 },
-  { name: "Aanya Mehra", role: "Head of Destination Weddings", photo: IMG.p3, bio: "Our Jaipur and Udaipur specialist — fluent in palaces, pheras and perfection.", order: 3 },
-  { name: "Daniel Okafor", role: "VP, Concierge & VIP Services", photo: IMG.p4, bio: "Private jets, yachts and impossible reservations are Daniel's daily routine.", order: 4 },
-  { name: "Sofia Laurent", role: "Creative Director", photo: IMG.p6, bio: "Brings the colour — décor, florals, lighting and design for every Lit event.", order: 5 },
-  { name: "James Whitfield", role: "Head of Operations", photo: IMG.p5, bio: "Logistics, rooming and onsite teams run like clockwork under James.", order: 6 },
+  { name: "Meera Kapoor", role: "Founder & Chief Experience Officer", photo: "", bio: "Founded Lit Concierge in 1989 and has personally overseen more than a thousand weddings worldwide.", order: 1 },
+  { name: "Arjun Malhotra", role: "Director, Corporate & Incentives", photo: "", bio: "Leads our corporate meetings, incentives and sales-force training division.", order: 2 },
+  { name: "Aanya Mehra", role: "Head of Destination Weddings", photo: "", bio: "Our Jaipur and Udaipur specialist — fluent in palaces, pheras and perfection.", order: 3 },
+  { name: "Rohan Khanna", role: "VP, Concierge & VIP Services", photo: "", bio: "Private jets, yachts and impossible reservations are Rohan's daily routine.", order: 4 },
+  { name: "Ishita Rao", role: "Creative Director", photo: "", bio: "Brings the colour — décor, florals, lighting and design for every Lit event.", order: 5 },
+  { name: "Vikram Singh Rathore", role: "Head of Operations", photo: "", bio: "Logistics, rooming and onsite teams run like clockwork under Vikram.", order: 6 },
 ];
 
 export const testimonials = [
-  { name: "Priya & Arjun Kapoor", role: "Palace wedding, Jaipur", quote: "Four hundred guests, three days, zero stress. Lit Concierge made our Jaipur wedding feel like a fairytale — and somehow came in under the budget we'd been quoted online.", rating: 5, photo: IMG.p3 },
-  { name: "Michael Tran", role: "VP Sales, Fortune 500", quote: "Our Maldives incentive was the most talked-about trip in company history. Every detail — from seaplanes to the sandbank gala — was flawless.", rating: 5, photo: IMG.p2 },
-  { name: "Elena Rossi", role: "50th birthday gala", quote: "They turned my 50th into a Monte Carlo night I'll never forget. The hampers alone had everyone talking for weeks!", rating: 5, photo: IMG.p1 },
-  { name: "The Johnson Family", role: "Family reunion, Tuscany", quote: "Sixty-two family members, four generations, one villa. They thought of everything — even the kids' activities and matching shirts.", rating: 5, photo: IMG.p4 },
-  { name: "David Chen", role: "CEO, tech scale-up", quote: "Licensed, bonded, insured and incredibly responsive. Our leadership summit in Dubai ran to the minute.", rating: 5, photo: IMG.p5 },
+  { name: "Priya & Arjun Kapoor", role: "Palace wedding, Jaipur", quote: "Four hundred guests, three days, zero stress. Lit Concierge made our Jaipur wedding feel like a fairytale — and somehow came in under the budget we'd been quoted online.", rating: 5, photo: "" },
+  { name: "Rahul Mehta", role: "VP Sales, leading consumer brand", quote: "Our Maldives incentive was the most talked-about trip in company history. Every detail — from seaplanes to the sandbank gala — was flawless.", rating: 5, photo: "" },
+  { name: "Neha Bansal", role: "50th birthday gala", quote: "They turned my 50th into a Monte Carlo night I'll never forget. The hampers alone had everyone talking for weeks!", rating: 5, photo: "" },
+  { name: "The Sharma Family", role: "Family reunion, Udaipur", quote: "Sixty-two family members, four generations, one villa. They thought of everything — even the kids' activities and matching shirts.", rating: 5, photo: "" },
+  { name: "Karan Malhotra", role: "CEO, tech scale-up", quote: "Licensed, bonded, insured and incredibly responsive. Our leadership summit in Dubai ran to the minute.", rating: 5, photo: "" },
 ].map((t, i) => ({ ...t, order: i + 1 }));
 
 export const faqs = [
@@ -459,7 +459,7 @@ export const faqs = [
 ].map((f, i) => ({ ...f, order: i + 1 }));
 
 export const milestones = [
-  { year: "1989", title: "The first spark", description: "Victoria Hale opens a boutique wedding studio with a single phone line and a big idea.", image: IMG.weddingOutdoor },
+  { year: "1989", title: "The first spark", description: "Meera Kapoor opens a boutique wedding studio with a single phone line and a big idea.", image: IMG.weddingFlowers },
   { year: "1997", title: "Going corporate", description: "Launch of our corporate meetings and incentive travel division.", image: IMG.conference },
   { year: "2004", title: "Destination weddings", description: "Our first palace wedding in Jaipur — the start of a global destination practice.", image: IMG.jaipur },
   { year: "2012", title: "Jets, yachts & villas", description: "VIP concierge division launched with private aviation and superyacht partners.", image: IMG.yacht },
@@ -495,7 +495,7 @@ Because we negotiate directly with palaces and hotels, our couples typically pay
   },
   {
     title: "10 Incentive Trip Ideas Your Top Performers Will Love", slug: "incentive-trip-ideas-top-performers", category: "Corporate", featured: true, views: 3150,
-    cover: IMG.maldives, author: "Marcus Bennett", tags: ["incentives", "corporate", "travel"],
+    cover: IMG.maldives, author: "Arjun Malhotra", tags: ["incentives", "corporate", "travel"],
     excerpt: "From Maldivian sandbanks to Amalfi yachts, these incentive trips turn targets into triumphs.",
     content: md(`
 Incentive travel is one of the most powerful motivators in sales. Here are ten ideas our clients love.
@@ -517,7 +517,7 @@ Branded gifting, personalised welcome notes and an awards night with real produc
   },
   {
     title: "How to Choose Wedding Hampers & Return Gifts", slug: "wedding-hampers-return-gifts", category: "Inspiration", views: 2210,
-    cover: IMG.gifts, author: "Sofia Laurent", tags: ["gifting", "weddings", "hampers"],
+    cover: IMG.gifts, author: "Ishita Rao", tags: ["gifting", "weddings", "hampers"],
     excerpt: "Thoughtful hamper and return-gift ideas that guests actually keep.",
     content: md(`
 Great gifts extend the joy of your celebration long after the last dance.
@@ -536,7 +536,7 @@ Colour-coordinate with your décor palette — bright, bold and beautifully lit!
   },
   {
     title: "Planning a Family Reunion Everyone Will Enjoy", slug: "planning-family-reunion", category: "Family", views: 1640,
-    cover: IMG.family, author: "James Whitfield", tags: ["family reunion", "groups"],
+    cover: IMG.family, author: "Vikram Singh Rathore", tags: ["family reunion", "groups"],
     excerpt: "Tips for multi-generational reunions — from picking the villa to keeping the kids busy.",
     content: md(`
 Bringing generations together takes planning. Here's our checklist.
@@ -553,7 +553,7 @@ Our favourite tradition: a storytelling dinner with old photos, family recipes a
   },
   {
     title: "Behind the Scenes of a Private Rooftop Concert", slug: "behind-scenes-rooftop-concert", category: "Concerts", views: 2980,
-    cover: IMG.concertLights, author: "Daniel Okafor", tags: ["concerts", "production"],
+    cover: IMG.concertLights, author: "Rohan Khanna", tags: ["concerts", "production"],
     excerpt: "Permits, power, sound and security — what it really takes to put an artist on your roof.",
     content: md(`
 A private concert looks effortless. Behind it is months of meticulous planning.
@@ -572,7 +572,7 @@ The result? A night your guests will be talking about for years.
   },
   {
     title: "Why Booking Through a Concierge Beats Booking Online", slug: "why-concierge-beats-online", category: "Insider", featured: true, views: 5210,
-    cover: IMG.jet, author: "Victoria Hale", tags: ["savings", "concierge", "travel"],
+    cover: IMG.jet, author: "Meera Kapoor", tags: ["savings", "concierge", "travel"],
     excerpt: "Lower prices, better rooms and someone on your side when things change.",
     content: md(`
 After 35 years in the business, here's the truth: booking through a well-connected concierge almost always beats booking online.
@@ -594,7 +594,7 @@ Credit card, cheque, cash or bank transfer — we accept payment in all forms.
 
 export const comments = [
   { blog: "ultimate-guide-palace-wedding-jaipur", name: "Neha S.", email: "neha@example.com", text: "This guide was so helpful — we just booked our October wedding!", rating: 5, approved: true },
-  { blog: "ultimate-guide-palace-wedding-jaipur", name: "Tom & Ria", email: "tr@example.com", text: "The haveli tip was gold for our 120-guest wedding.", rating: 5, approved: true },
+  { blog: "ultimate-guide-palace-wedding-jaipur", name: "Tanvi & Ria", email: "tr@example.com", text: "The haveli tip was gold for our 120-guest wedding.", rating: 5, approved: true },
   { blog: "why-concierge-beats-online", name: "Laura P.", email: "laura@example.com", text: "Can confirm — saved 25% on our group hotel block.", rating: 5, approved: true },
   { blog: "incentive-trip-ideas-top-performers", name: "Raj K.", email: "raj@example.com", text: "Doing the Amalfi idea next year!", rating: 4, approved: false },
 ];

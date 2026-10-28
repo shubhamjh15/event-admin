@@ -20,8 +20,8 @@ export async function seedContent() {
     M.PageSeo.insertMany(D.pageSeo),
     M.Enquiry.insertMany(demoEnquiries()),
     M.Booking.insertMany([
-      { kind: "appointment", name: "Kevin Brooks", email: "kevin@example.com", phone: "+1 555 0110", eventDate: "2026-11-04", time: "11:00", mode: "Video call", message: "Consultation for 40th birthday.", status: "confirmed" },
-      { kind: "booking", name: "Ana Lopez", email: "ana@example.com", phone: "+1 555 0111", eventPackage: "mediterranean-celebration-cruise", eventDate: "2027-06-01", guests: "24", paymentMethod: "Credit Card", status: "pending" },
+      { kind: "appointment", name: "Kevin Brooks", email: "kevin@example.com", phone: "+91 98200 0110", eventDate: "2026-11-04", time: "11:00", mode: "Video call", message: "Consultation for 40th birthday.", status: "confirmed" },
+      { kind: "booking", name: "Ana Lopez", email: "ana@example.com", phone: "+91 98200 0111", eventPackage: "mediterranean-celebration-cruise", eventDate: "2027-06-01", guests: "24", paymentMethod: "Credit Card", status: "pending" },
     ]),
   ]);
 }
@@ -29,18 +29,18 @@ export async function seedContent() {
 const DEMO_PEOPLE = [
   ["Sarah Williams", "Destination Weddings", "250", "₹50 lakh – 1 crore", "Jaipur", "Looking for a palace wedding in Jaipur for Feb 2027."],
   ["Acme Corp — HR", "Incentives", "80", "₹1 crore+", "Maldives", "Incentive trip for our top 80 sales reps."],
-  ["Daniel Price", "Birthdays", "120", "₹10 – 25 lakh", "New York", "Surprise 50th birthday gala for my wife."],
+  ["Rohit Verma", "Birthdays", "120", "₹10 – 25 lakh", "Mumbai", "Surprise 50th birthday gala for my wife."],
   ["Meera & Rohan", "Weddings", "400", "₹50 lakh – 1 crore", "Udaipur", "Three-day wedding with sangeet and reception."],
   ["Northwind Traders", "Corporate Meetings", "300", "₹50 lakh – 1 crore", "Dubai", "Annual leadership summit."],
-  ["The Garcia Family", "Family Reunions", "45", "₹25 – 50 lakh", "Tuscany", "Four-generation family reunion in a villa."],
-  ["Lena Brooks", "Concerts", "600", "₹50 lakh – 1 crore", "Miami", "Private rooftop concert for a product launch."],
-  ["Globex Sales", "Sales Force Trainings", "900", "₹1 crore+", "Las Vegas", "Sales kick-off with awards night."],
-  ["Hannah Lee", "Cruises", "30", "₹25 – 50 lakh", "Mediterranean", "Anniversary cruise with family and friends."],
-  ["Omar Haddad", "Group Travel", "18", "₹10 – 25 lakh", "Bali", "Friends' getaway for a 40th."],
+  ["The Gupta Family", "Family Reunions", "45", "₹25 – 50 lakh", "Udaipur", "Four-generation family reunion in a villa."],
+  ["Simran Kaur", "Concerts", "600", "₹50 lakh – 1 crore", "Delhi", "Private rooftop concert for a product launch."],
+  ["Globex Sales", "Sales Force Trainings", "900", "₹1 crore+", "Goa", "Sales kick-off with awards night."],
+  ["Ananya Iyer", "Cruises", "30", "₹25 – 50 lakh", "Mediterranean", "Anniversary cruise with family and friends."],
+  ["Imran Qureshi", "Group Travel", "18", "₹10 – 25 lakh", "Bali", "Friends' getaway for a 40th."],
   ["Priya Nair", "Destination Weddings", "180", "₹50 lakh – 1 crore", "Santorini", "Clifftop wedding with yacht after-party."],
   ["Initech", "Incentives", "60", "₹1 crore+", "Amalfi Coast", "President's club trip."],
-  ["Chloe Martin", "Weddings", "220", "₹25 – 50 lakh", "Chicago", "Ballroom wedding, need menu tasting."],
-  ["Jake Turner", "Birthdays", "60", "Under ₹10 lakh", "Austin", "Sweet sixteen for my daughter."],
+  ["Pooja Desai", "Weddings", "220", "₹25 – 50 lakh", "Hyderabad", "Ballroom wedding, need menu tasting."],
+  ["Aditya Rao", "Birthdays", "60", "Under ₹10 lakh", "Bengaluru", "Sweet sixteen for my daughter."],
 ];
 const STATUSES = ["won", "proposal-sent", "contacted", "won", "lost", "contacted", "proposal-sent", "won", "new", "contacted", "new", "proposal-sent", "new", "new"];
 
@@ -53,7 +53,7 @@ function demoEnquiries() {
     const slug = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
     return {
       name, eventType, guests, budget, destination, message, eventDate,
-      email: `${slug}@example.com`, phone: `+1 555 01${String(i).padStart(2, "0")}`,
+      email: `${slug}@example.com`, phone: `+91 98200 01${String(i).padStart(2, "0")}`,
       source: ["home", "events", "contact", "about"][i % 4], status: STATUSES[i], createdAt, updatedAt: createdAt,
     };
   });
