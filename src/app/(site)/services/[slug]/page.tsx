@@ -49,14 +49,14 @@ export default async function ServiceDetail({ params }: Props) {
             {s.priceBadge}. Licensed, bonded and insured since {s.since}. We accept {s.paymentMethods.join(", ")}.
           </p>
         </Reveal>
-        <aside className="lg:col-span-5 lg:pl-6">
+        <div className="lg:col-span-5 lg:pl-6">
           <div className="border border-ink/15 bg-white/50 p-8 lg:sticky lg:top-28">
             <p className="label text-[10px] text-rani">Enquire</p>
             <h2 className="display mt-3 text-3xl">Ask about {sv.title.toLowerCase()}</h2>
             <p className="mb-8 mt-2 text-sm text-ink-mute">We reply within 24 hours.</p>
             <EnquiryForm eventTypes={categories.map((c) => c.name)} source={`service:${sv.slug}`} compact />
           </div>
-        </aside>
+        </div>
       </section>
 
       <section className="border-t border-ink/15 bg-paper-2 py-20 md:py-28">

@@ -43,15 +43,15 @@ export default async function BlogsPage({ searchParams }: Props) {
       {!filtering && lead && (
         <section className="wrap grid gap-16 py-20 md:py-24 lg:grid-cols-12">
           <div className="lg:col-span-8">
-            <p className="label mb-8 text-ink-mute">Featured</p>
+            <h2 className="label mb-8 text-ink-mute">Featured</h2>
             <Reveal><JournalCard b={lead} rating={ratings[lead.slug]} large /></Reveal>
             <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2">
               {rest.map((b, i) => <Reveal key={b.slug} delay={i * 100}><JournalCard b={b} rating={ratings[b.slug]} /></Reveal>)}
             </div>
           </div>
-          <aside className="lg:col-span-4 lg:border-l lg:border-ink/15 lg:pl-10">
+          <div className="lg:col-span-4 lg:border-l lg:border-ink/15 lg:pl-10">
             <div className="lg:sticky lg:top-28">
-              <p className="label mb-6 text-ink-mute">Most read</p>
+              <h2 className="label mb-6 text-ink-mute">Most read</h2>
               <ol className="border-t border-ink/15">
                 {mostRead.map((b, i) => (
                   <li key={b.slug}>
@@ -70,11 +70,11 @@ export default async function BlogsPage({ searchParams }: Props) {
               </ol>
               <div className="mt-10 bg-marigold p-7">
                 <p className="display text-2xl">Planning something special?</p>
-                <p className="mt-2 text-sm text-ink/70">A free consultation with a senior planner.</p>
+                <p className="mt-2 text-sm text-ink/85">A free consultation with a senior planner.</p>
                 <Link href="/book?type=appointment" className="btn-ink mt-6 w-full">Book a consultation</Link>
               </div>
             </div>
-          </aside>
+          </div>
         </section>
       )}
 

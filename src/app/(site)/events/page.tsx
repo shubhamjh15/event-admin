@@ -118,7 +118,7 @@ export default async function EventsPage({ searchParams }: Props) {
       <section className="bg-ink py-24 text-white md:py-32">
         <div className="wrap">
           <SectionHead index="02" label="Top destinations" title="Celebrate" italic="anywhere." light text="Distance weddings and events anywhere in the world — from the palaces of Jaipur to the cliffs of Santorini." />
-          <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-5 lg:gap-x-5 lg:gap-y-12 lg:overflow-visible lg:px-0">
+          <div tabIndex={0} role="region" aria-label="Top destinations" className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-5 lg:gap-x-5 lg:gap-y-12 lg:overflow-visible lg:px-0">
             {destinations.map((d, i) => (
               <Reveal key={d.name} delay={(i % 5) * 80} className="group w-[62%] shrink-0 snap-start sm:w-[38%] lg:w-auto">
                 <div className="overflow-hidden">

@@ -72,7 +72,7 @@ export default async function Home() {
             {s.values.map((v, i) => (
               <Reveal key={v.title} delay={i * 90} className={`border-b border-ink/15 py-10 lg:border-b-0 ${i > 0 ? "lg:border-l lg:pl-8" : ""} ${i % 2 ? "sm:border-l sm:pl-8" : "sm:pr-8"} lg:pr-8`}>
                 <span className="font-display text-sm italic text-ink-mute">{pad(i + 1)}</span>
-                <h3 className="display mt-6 text-3xl">{v.title}</h3>
+                <h2 className="display mt-6 text-3xl">{v.title}</h2>
                 <p className="mt-3 text-[15px] leading-relaxed text-ink-mute">{v.text}</p>
               </Reveal>
             ))}
@@ -97,7 +97,7 @@ export default async function Home() {
               <h3 className="display text-3xl md:text-4xl">Featured <em className="serif-i text-rani">packages</em></h3>
               <Link href="/events" className="link hidden sm:inline-flex">View all <ArrowUpRight className="h-3.5 w-3.5" /></Link>
             </Reveal>
-            <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 sm:-mx-8 sm:px-8 md:mx-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0">
+            <div tabIndex={0} role="region" aria-label="Featured packages" className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 sm:-mx-8 sm:px-8 md:mx-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0">
               {featured.map((e, i) => (
                 <Reveal key={e.slug} delay={i * 120} className="w-[78%] shrink-0 snap-start sm:w-[45%] md:w-auto">
                   <PackageCard e={e} currency={s.currency} categoryName={catName[e.category]} />
@@ -113,14 +113,14 @@ export default async function Home() {
         <div className="wrap">
           <Reveal className="mb-16 grid gap-8 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-8">
-              <div className="flex items-center gap-4 text-ink/70">
+              <div className="flex items-center gap-4 text-ink/85">
                 <span className="font-display text-sm italic">(03)</span>
                 <span className="h-px w-10 bg-ink/40" />
                 <span className="label">Services</span>
               </div>
               <h2 className="display mt-6 text-[2.6rem] sm:text-6xl lg:text-[4.6rem]">White-glove, <em className="serif-i">end to end.</em></h2>
             </div>
-            <p className="text-lg leading-relaxed text-ink/75 lg:col-span-4">One team for planning, negotiation, logistics, hosting and onsite management — at prices lower than online.</p>
+            <p className="text-lg leading-relaxed text-ink/85 lg:col-span-4">One team for planning, negotiation, logistics, hosting and onsite management — at prices lower than online.</p>
           </Reveal>
           <div className="grid border-t border-ink/25 md:grid-cols-2">
             {services.slice(0, 10).map((sv, i) => (
@@ -129,12 +129,12 @@ export default async function Home() {
                 href={`/services/${sv.slug}`}
                 className={`group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 border-b border-ink/25 py-6 ${i % 2 ? "md:border-l md:pl-8" : "md:pr-8"}`}
               >
-                <span className="font-display text-sm italic text-ink/60">{pad(i + 1)}</span>
+                <span className="font-display text-sm italic text-ink/80">{pad(i + 1)}</span>
                 <span>
                   <span className="block font-display text-2xl leading-tight group-hover:italic">{sv.title}</span>
-                  <span className="mt-1 block text-sm text-ink/70">{sv.summary}</span>
+                  <span className="mt-1 block text-sm text-ink/85">{sv.summary}</span>
                 </span>
-                <ArrowUpRight className="h-5 w-5 text-ink/50 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" strokeWidth={1.4} />
+                <ArrowUpRight className="h-5 w-5 text-ink/80 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" strokeWidth={1.4} />
               </Link>
             ))}
           </div>
@@ -163,7 +163,7 @@ export default async function Home() {
       {/* 1.4 Testimonials — rani block */}
       {testimonials.length > 0 && <section className="bg-rani py-24 text-white md:py-36">
         <div className="wrap">
-          <div className="mb-14 flex items-center gap-4 text-white/75">
+          <div className="mb-14 flex items-center gap-4 text-white/90">
             <span className="font-display text-sm italic">(05)</span>
             <span className="h-px w-10 bg-white/50" />
             <span className="label">Kind words</span>
@@ -235,13 +235,13 @@ export default async function Home() {
       <section id="enquire" className="bg-peacock text-white">
         <div className="wrap grid gap-16 py-24 md:py-32 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <div className="flex items-center gap-4 text-white/70">
+            <div className="flex items-center gap-4 text-white/90">
               <span className="font-display text-sm italic">(09)</span>
               <span className="h-px w-10 bg-white/40" />
               <span className="label">Enquire & book</span>
             </div>
             <h2 className="display mt-6 text-5xl md:text-6xl">Tell us about the <em className="serif-i text-marigold">occasion.</em></h2>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-white/75">A senior planner will reply within 24 hours with ideas and a tailored proposal — free, and without obligation.</p>
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-white/90">A senior planner will reply within 24 hours with ideas and a tailored proposal — free, and without obligation.</p>
             <div className="mt-12 border-t border-white/25">
               <Link href="/book" className="group flex items-center justify-between border-b border-white/25 py-5">
                 <span className="font-display text-2xl group-hover:italic">Book an event package</span>
@@ -253,7 +253,7 @@ export default async function Home() {
               </Link>
               <a href={`tel:${s.phone.replace(/[^\d+]/g, "")}`} className="group flex items-center justify-between border-b border-white/25 py-5">
                 <span className="font-display text-2xl group-hover:italic">{s.phone}</span>
-                <span className="label text-[10px] text-white/60">Call</span>
+                <span className="label text-[10px] text-white/85">Call</span>
               </a>
             </div>
           </div>

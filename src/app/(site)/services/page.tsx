@@ -47,15 +47,15 @@ export default async function ServicesPage() {
       <section className="bg-marigold py-24 text-ink md:py-32">
         <div className="wrap grid gap-14 lg:grid-cols-12 lg:items-end">
           <Reveal className="lg:col-span-5">
-            <p className="label text-ink/70">Negotiation power</p>
+            <p className="label text-ink/85">Negotiation power</p>
             <h2 className="display mt-6 text-5xl md:text-7xl">Prices lower <em className="serif-i">than online.</em></h2>
-            <p className="mt-6 max-w-md text-lg text-ink/75">Thirty-five years of partnerships mean real buying power. We negotiate every line — and pass the savings to you.</p>
+            <p className="mt-6 max-w-md text-lg text-ink/85">Thirty-five years of partnerships mean real buying power. We negotiate every line — and pass the savings to you.</p>
             <Link href="/contact" className="btn-ink mt-10">Get my quote</Link>
           </Reveal>
           <div className="grid grid-cols-2 border-l border-t border-ink/25 lg:col-span-7">
             {NEGOTIATE.map((n, i) => (
               <Reveal key={n} delay={i * 50} className="border-b border-r border-ink/25 p-6 md:p-8">
-                <span className="font-display text-sm italic text-ink/55">{pad(i + 1)}</span>
+                <span className="font-display text-sm italic text-ink/80">{pad(i + 1)}</span>
                 <p className="display mt-6 text-2xl md:text-3xl">{n}</p>
               </Reveal>
             ))}

@@ -78,7 +78,7 @@ export default async function EventDetail({ params }: Props) {
           {e.itinerary?.length > 0 && (
             <div className="mt-24">
               <Reveal className="mb-10 flex items-center gap-4 text-ink-mute">
-                <span className="label">The itinerary</span>
+                <h2 className="label">The itinerary</h2>
                 <span className="h-px flex-1 bg-ink/15" />
                 <span className="font-display text-sm italic">{pad(e.itinerary.length)} chapters</span>
               </Reveal>
@@ -87,7 +87,7 @@ export default async function EventDetail({ params }: Props) {
                   <Reveal as="li" key={i} delay={i * 70} className="grid gap-3 border-b border-ink/15 py-9 sm:grid-cols-[10rem_1fr] sm:gap-8">
                     <div>
                       <p className="label text-[10px] text-rani">{d.day}</p>
-                      <p className="mt-1 font-display text-4xl italic text-ink/20">{pad(i + 1)}</p>
+                      <p aria-hidden className="mt-1 font-display text-4xl italic text-ink/50">{pad(i + 1)}</p>
                     </div>
                     <div>
                       <h3 className="font-display text-[1.75rem] leading-tight">{d.title}</h3>
@@ -102,7 +102,7 @@ export default async function EventDetail({ params }: Props) {
           {e.inclusions?.length > 0 && (
             <Reveal className="mt-24">
               <div className="mb-8 flex items-center gap-4 text-ink-mute">
-                <span className="label">What's included</span>
+                <h2 className="label">What's included</h2>
                 <span className="h-px flex-1 bg-ink/15" />
               </div>
               <ul className="grid gap-x-10 sm:grid-cols-2">
@@ -116,7 +116,7 @@ export default async function EventDetail({ params }: Props) {
           )}
         </div>
 
-        <aside className="lg:col-span-4 lg:pl-4">
+        <div className="lg:col-span-4 lg:pl-4">
           <div className="border border-ink/15 bg-white/50 p-8 [container-type:inline-size] lg:sticky lg:top-28">
             <p className="label text-[10px] text-ink-mute">{e.price ? "Starting from" : "Pricing"}</p>
             <p className="display mt-3 whitespace-nowrap text-[min(3.75rem,18cqw)] leading-none">{e.price ? formatPrice(e.price, s.currency) : <em className="serif-i">On request</em>}</p>
@@ -132,7 +132,7 @@ export default async function EventDetail({ params }: Props) {
             </dl>
             <a href={`tel:${s.phone.replace(/[^\d+]/g, "")}`} className="mt-8 block border-t border-ink/15 pt-6 font-display text-2xl hover:text-rani">{s.phone}</a>
           </div>
-        </aside>
+        </div>
       </section>
 
       {related.length > 0 && (

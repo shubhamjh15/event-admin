@@ -3,7 +3,7 @@ import { renderMarkdown } from "@/lib/markdown";
 import { sized } from "@/lib/img";
 import { BannerCarousel } from "@/components/carousel";
 import { CountUp, Reveal } from "@/components/reveal";
-import { CtaBlock, SectionHead } from "@/components/ui";
+import { CtaBlock, Monogram, SectionHead } from "@/components/ui";
 import { GalleryCollage } from "@/components/interactive";
 import { EnquiryForm } from "@/components/forms";
 
@@ -51,13 +51,13 @@ export default async function AboutPage() {
       <section className="grid md:grid-cols-2">
         <div className="bg-rani px-5 py-20 text-white sm:px-8 md:py-28 lg:px-12">
           <Reveal className="ml-auto max-w-[580px]">
-            <p className="label text-white/70">Our mission</p>
+            <p className="label text-white/90">Our mission</p>
             <p className="display mt-8 text-3xl leading-[1.2] md:text-[2.6rem]">{s.mission}</p>
           </Reveal>
         </div>
         <div className="bg-peacock px-5 py-20 text-white sm:px-8 md:py-28 lg:px-12">
           <Reveal delay={120} className="max-w-[580px]">
-            <p className="label text-white/70">Our vision</p>
+            <p className="label text-white/90">Our vision</p>
             <p className="display mt-8 text-3xl leading-[1.2] md:text-[2.6rem]">{s.vision}</p>
           </Reveal>
         </div>
@@ -81,7 +81,7 @@ export default async function AboutPage() {
       <section className="border-t border-ink/15 bg-paper-2 py-24 md:py-32">
         <div className="wrap">
           <SectionHead index="03" label="Our journey" title="From one phone line" italic="to 48 countries." />
-          <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-8 overflow-x-auto px-5 pb-4 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
+          <div tabIndex={0} role="region" aria-label="Our journey" className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-8 overflow-x-auto px-5 pb-4 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
             {milestones.map((m, i) => (
               <Reveal key={m.title} delay={i * 80} className="w-[78%] shrink-0 snap-start sm:w-[44%] lg:w-[30%]">
                 <div className="flex items-baseline justify-between border-t border-ink py-4">
@@ -104,7 +104,11 @@ export default async function AboutPage() {
           {team.map((t, i) => (
             <Reveal key={t.name} delay={(i % 3) * 100} className="group">
               <div className="overflow-hidden bg-paper-3">
-                <img src={sized(t.photo, 800)} alt={t.name} loading="lazy" className="img-hover aspect-[4/5] w-full object-cover grayscale transition-[filter] duration-700 group-hover:grayscale-0" />
+                {t.photo ? (
+                  <img src={sized(t.photo, 800)} alt={t.name} loading="lazy" className="img-hover aspect-[4/5] w-full object-cover grayscale transition-[filter] duration-700 group-hover:grayscale-0" />
+                ) : (
+                  <Monogram name={t.name} index={i} className="aspect-[4/5] w-full" />
+                )}
               </div>
               <div className="mt-5 flex items-baseline justify-between gap-4 border-b border-ink/15 pb-4">
                 <h3 className="font-display text-2xl">{t.name}</h3>

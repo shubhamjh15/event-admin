@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import { Stars } from "./stars";
 import { sized } from "@/lib/img";
+import { Monogram } from "./ui";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -19,22 +20,22 @@ export function Testimonials({ items }: { items: any[] }) {
   return (
     <div className="grid gap-12 lg:grid-cols-12 lg:items-end">
       <div className="lg:col-span-9">
-        <span className="font-display text-[7rem] leading-[0.5] text-white/40" aria-hidden>“</span>
+        <span className="font-display text-[7rem] leading-[0.5] text-white/60" aria-hidden>“</span>
         <blockquote key={i} className="display animate-[fadeUp_.9s_ease-out] text-[2rem] leading-[1.15] sm:text-5xl lg:text-[3.6rem]">
           {t.quote}
         </blockquote>
       </div>
       <div className="lg:col-span-3">
         <div key={`p${i}`} className="flex animate-[fadeUp_.9s_ease-out] items-center gap-4">
-          {t.photo && <img src={sized(t.photo, 300)} alt={t.name} className="h-16 w-16 object-cover grayscale" />}
+          {t.photo ? <img src={sized(t.photo, 300)} alt={t.name} className="h-16 w-16 object-cover grayscale" /> : <Monogram name={t.name} index={i} size="sm" className="h-16 w-16 !bg-white !text-rani" />}
           <div>
             <p className="font-display text-xl">{t.name}</p>
-            <p className="text-sm text-white/75">{t.role}</p>
+            <p className="text-sm text-white/90">{t.role}</p>
           </div>
         </div>
         <div className="mt-5"><Stars value={t.rating} tone="light" className="h-3.5 w-3.5" /></div>
         <div className="mt-10 flex items-center justify-between border-t border-white/30 pt-5">
-          <span className="font-display text-sm italic">{pad(i + 1)} <span className="text-white/60">/ {pad(items.length)}</span></span>
+          <span className="font-display text-sm italic">{pad(i + 1)} <span className="text-white/95">/ {pad(items.length)}</span></span>
           <div className="flex gap-2">
             <button onClick={() => setI((i - 1 + items.length) % items.length)} aria-label="Previous testimonial" className="grid h-11 w-11 place-items-center border border-white/50 transition hover:bg-white hover:text-rani"><ArrowLeft className="h-4 w-4" strokeWidth={1.4} /></button>
             <button onClick={() => setI((i + 1) % items.length)} aria-label="Next testimonial" className="grid h-11 w-11 place-items-center border border-white/50 transition hover:bg-white hover:text-rani"><ArrowRight className="h-4 w-4" strokeWidth={1.4} /></button>
@@ -131,7 +132,7 @@ export function GalleryCollage({ items }: { items: { image: string; title?: stri
       <div className="grid auto-rows-[150px] grid-cols-2 gap-3 md:auto-rows-[230px] md:grid-cols-4 md:gap-4">
         {list.map((g, i) => (
           <button key={g.image + i} onClick={() => setOpen(i)} className={`group relative overflow-hidden bg-paper-3 text-left ${spans[i]}`}>
-            <img src={sized(g.image, i === 0 ? 1400 : 900)} alt={g.title || ""} loading="lazy" className="img-hover h-full w-full object-cover" />
+            <img src={sized(g.image, i === 0 ? 1400 : 900)} alt="" loading="lazy" className="img-hover h-full w-full object-cover" />
             <span className="absolute inset-x-0 bottom-0 translate-y-full bg-paper px-4 py-3 transition-transform duration-500 group-hover:translate-y-0">
               <span className="label block text-[10px] text-rani">{g.category}</span>
               <span className="font-display text-base text-ink">{g.title}</span>
@@ -166,7 +167,7 @@ export function GalleryGrid({ items, filters = true }: { items: { image: string;
         {shown.map((g, i) => (
           <button key={g.image + i} onClick={() => setOpen(i)} className="group block w-full break-inside-avoid text-left">
             <span className="block overflow-hidden bg-paper-3">
-              <img src={sized(g.image, 900)} alt={g.title || ""} loading="lazy" className={`img-hover w-full object-cover ${["aspect-[3/4]", "aspect-[4/3]", "aspect-square", "aspect-[4/5]"][i % 4]}`} />
+              <img src={sized(g.image, 900)} alt="" loading="lazy" className={`img-hover w-full object-cover ${["aspect-[3/4]", "aspect-[4/3]", "aspect-square", "aspect-[4/5]"][i % 4]}`} />
             </span>
             <span className="mt-3 flex items-baseline justify-between gap-3">
               <span className="font-display text-base text-ink">{g.title}</span>
@@ -188,7 +189,7 @@ export function PhotoStrip({ images, title }: { images: string[]; title: string 
     <>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {images.slice(0, 5).map((src, i) => (
-          <button key={src + i} onClick={() => setOpen(i)} className={`group relative overflow-hidden bg-paper-3 ${i === 0 ? "col-span-2 row-span-2 aspect-square md:aspect-auto" : "aspect-square"}`}>
+          <button key={src + i} onClick={() => setOpen(i)} aria-label={`View photo ${i + 1} of ${images.length}`} className={`group relative overflow-hidden bg-paper-3 ${i === 0 ? "col-span-2 row-span-2 aspect-square md:aspect-auto" : "aspect-square"}`}>
             <img src={sized(src, i === 0 ? 1400 : 700)} alt="" loading="lazy" className="img-hover h-full w-full object-cover" />
             {i === 4 && images.length > 5 && <span className="absolute inset-0 grid place-items-center bg-ink/55 font-display text-2xl text-white">+{images.length - 5}</span>}
           </button>
