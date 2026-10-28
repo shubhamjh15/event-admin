@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { SESSION_COOKIE, verifySession } from "@/lib/auth";
 import { dbConnect } from "@/lib/db";
 import { getCategories, getEvents, getSettings } from "@/lib/data";
 
@@ -20,8 +21,8 @@ async function step<T>(fn: () => Promise<T>) {
   }
 }
 
-/** Health check: reports which layer fails (env, database, cached data reads). Never exposes secrets. */
-export async function GET() {
+/** Health check. Public: {ok}. Admins: which layer fails (env, database, cached reads). Never exposes secrets. */
+export async function GET(req: NextRequest) {
   const site = process.env.NEXT_PUBLIC_SITE_URL || "";
   let siteOk = false;
   try { new URL(site); siteOk = true; } catch {}
@@ -42,5 +43,8 @@ export async function GET() {
   const events = await step(async () => (await getEvents()).length);
 
   const ok = db.ok && settings.ok && categories.ok && events.ok;
-  return NextResponse.json({ ok, env, db, settings, categories, events }, { status: ok ? 200 : 500 });
+  // Anyone may ask "is the site healthy?"; the detailed breakdown is for signed-in admins only.
+  const isAdmin = !!(await verifySession(req.cookies.get(SESSION_COOKIE)?.value).catch(() => null));
+  const body = isAdmin ? { ok, env, db, settings, categories, events } : { ok };
+  return NextResponse.json(body, { status: ok ? 200 : 503, headers: { "Cache-Control": "no-store" } });
 }
