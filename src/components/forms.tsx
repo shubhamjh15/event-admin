@@ -22,7 +22,7 @@ function formData(e: React.FormEvent<HTMLFormElement>) {
 }
 
 const fieldCls = (tone: Tone) => (tone === "dark" ? "field-dark" : "field");
-const labelCls = (tone: Tone) => `field-label ${tone === "dark" ? "!text-white/60" : ""}`;
+const labelCls = (tone: Tone) => `field-label ${tone === "dark" ? "!text-white/85" : ""}`;
 
 function Field({ label, children, className = "", tone = "light" }: { label: string; children: React.ReactNode; className?: string; tone?: Tone }) {
   return (
@@ -103,7 +103,7 @@ export function EnquiryForm({ eventTypes, source = "contact", compact = false, d
       </Field>
       {status.state === "error" && <p role="alert" className={`text-sm sm:col-span-2 ${tone === "dark" ? "text-marigold" : "text-rani"}`}>{status.message}</p>}
       <div className="flex flex-col items-start gap-5 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className={`text-xs ${tone === "dark" ? "text-white/60" : "text-ink-mute"}`}>We reply within 24 hours. Your details are never shared.</p>
+        <p className={`text-xs ${tone === "dark" ? "text-white/85" : "text-ink-mute"}`}>We reply within 24 hours. Your details are never shared.</p>
         <Submit tone={tone} loading={status.state === "loading"}>Send enquiry</Submit>
       </div>
     </form>
@@ -250,7 +250,7 @@ export function NewsletterForm() {
   }
   return (
     <form onSubmit={onSubmit} className="w-full">
-      <label className="field-label !text-white/50" htmlFor="nl-email">Email address</label>
+      <label className="field-label !text-white/70" htmlFor="nl-email">Email address</label>
       <div className="flex items-end gap-4 border-b border-white/40 focus-within:border-white">
         <input id="nl-email" name="email" type="email" required placeholder="you@example.com" className="w-full border-0 bg-transparent px-0 py-3 text-lg text-white outline-none placeholder:text-white/35 focus:ring-0" />
         <button disabled={status.state === "loading"} className="label flex shrink-0 items-center gap-2 pb-3.5 text-[11px] text-white hover:text-marigold">

@@ -7,15 +7,15 @@ export default {
       colors: {
         // Editorial "Pink City" palette — flat colour blocks, no gradients.
         paper: { DEFAULT: "#FAF6EF", 2: "#F2EADC", 3: "#E9DEC9" },
-        ink: { DEFAULT: "#16130F", soft: "#3D362D", mute: "#766B5D" },
-        rani: { DEFAULT: "#D61F69", deep: "#A8134F" },
+        ink: { DEFAULT: "#16130F", soft: "#3D362D", mute: "#6B6052" },
+        rani: { DEFAULT: "#C41D61", deep: "#A01450" },
         marigold: { DEFAULT: "#F3AE00", deep: "#D99A00" },
         peacock: { DEFAULT: "#0C5A5C", deep: "#08403F" },
         vermilion: "#E04E2A",
         // Legacy names used by the admin panel, mapped onto the new palette.
         ivory: { DEFAULT: "#FAF6EF", deep: "#F2EADC" },
         gold: { DEFAULT: "#B8893B", light: "#E5C98F", dark: "#8C6726" },
-        rose: { DEFAULT: "#D61F69", light: "#F27BAA" },
+        rose: { DEFAULT: "#C41D61", light: "#F27BAA" },
         saffron: { DEFAULT: "#F3AE00", light: "#FFD466" },
         violet: { DEFAULT: "#5B3E8C", light: "#A58BD1" },
         teal: { DEFAULT: "#0C5A5C", light: "#6FB7B4" },
@@ -25,7 +25,7 @@ export default {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       backgroundImage: {
-        lit: "linear-gradient(#D61F69,#D61F69)",
+        lit: "linear-gradient(#C41D61,#C41D61)",
         "lit-cool": "linear-gradient(#0C5A5C,#0C5A5C)",
       },
       boxShadow: {

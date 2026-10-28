@@ -10,7 +10,7 @@ body {
   text-rendering: optimizeLegibility;
   font-feature-settings: "ss01", "kern";
 }
-::selection { background: #d61f69; color: #fff; }
+::selection { background: #c41d61; color: #fff; }
 
 @layer components {
   /* ---------- Public site (editorial) ---------- */
