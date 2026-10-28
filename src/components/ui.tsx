@@ -9,6 +9,24 @@ export { Stars };
 
 export { Wordmark } from "./wordmark";
 
+const MONO_TONES = ["bg-rani text-white", "bg-marigold text-ink", "bg-peacock text-white", "bg-ink text-white"];
+
+/** Typographic stand-in for a missing portrait: initials on a flat brand-colour block. */
+export function Monogram({ name, index = 0, className = "", size = "lg" }: { name: string; index?: number; className?: string; size?: "sm" | "lg" }) {
+  const initials = (name || "")
+    .replace(/^(the|mr|mrs|ms|dr)\s+/i, "")
+    .split(/[\s&]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase())
+    .join("");
+  return (
+    <div className={`grid place-items-center ${MONO_TONES[index % MONO_TONES.length]} ${className}`} role="img" aria-label={name}>
+      <span className={`font-display italic leading-none ${size === "lg" ? "text-[5.5rem] md:text-[7rem]" : "text-2xl"}`}>{initials}</span>
+    </div>
+  );
+}
+
 export function DynIcon({ name, className }: { name?: string; className?: string }) {
   const Cmp = (name && (Icons as any)[name]) || Icons.Sparkles;
   return <Cmp className={className} strokeWidth={1.4} />;
@@ -107,11 +125,11 @@ export function CtaBlock({
     <section className={`${TONES[tone]} relative overflow-hidden`}>
       <div className="wrap grid gap-12 py-20 md:py-28 lg:grid-cols-12 lg:items-center">
         <Reveal className={image ? "lg:col-span-7" : "lg:col-span-10"}>
-          <p className={`label ${dark ? "text-white/70" : "text-ink/70"}`}>{label}</p>
+          <p className={`label ${dark ? "text-white/90" : "text-ink/85"}`}>{label}</p>
           <h2 className="display mt-6 text-5xl md:text-7xl">
             {title} <em className="serif-i">{italic}</em>
           </h2>
-          {text && <p className={`mt-6 max-w-xl text-lg ${dark ? "text-white/80" : "text-ink/75"}`}>{text}</p>}
+          {text && <p className={`mt-6 max-w-xl text-lg ${dark ? "text-white/90" : "text-ink/85"}`}>{text}</p>}
           <div className="mt-10 flex flex-wrap items-center gap-6">
             <Link href={primary.href} className={dark ? "btn-paper" : "btn-ink"}>{primary.label}</Link>
             <Link href={secondary.href} className="link">{secondary.label} <ArrowUpRight className="h-3.5 w-3.5" /></Link>
