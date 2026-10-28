@@ -153,46 +153,69 @@ export function HeroVideo({ video, poster, since, lines }: { video: string; post
   );
 }
 
-/** Editorial category index: hovering a row swaps the large image beside it. */
+/**
+ * Editorial category index. The active category follows the scroll position: as each row passes
+ * the middle of the screen its photo takes over the sticky image panel. Works on touch devices too.
+ */
 export function CategoryShowcase({ categories, counts }: { categories: any[]; counts: Record<string, number> }) {
   const [active, setActive] = useState(0);
+  const rows = useRef<(HTMLLIElement | null)[]>([]);
+
+  useEffect(() => {
+    const els = rows.current.filter(Boolean) as HTMLLIElement[];
+    if (!els.length) return;
+    // A thin band across the vertical middle of the viewport decides which row is "current".
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.i));
+        }
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [categories.length]);
+
   const cur = categories[active];
   return (
-    <div className="grid gap-12 lg:grid-cols-12">
-      <div className="lg:col-span-7">
-        <ul className="border-t border-ink/15">
+    <div className="grid gap-x-12 lg:grid-cols-12">
+      {/* Sticky image panel: a wide strip under the header on phones, a tall portrait beside the list on desktop */}
+      <div className="sticky top-[78px] z-10 -mx-5 bg-paper-2 px-5 pb-4 pt-3 sm:-mx-8 sm:px-8 lg:order-2 lg:col-span-5 lg:mx-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0 lg:top-28 lg:self-start">
+        <div className="relative aspect-[16/9] overflow-hidden bg-paper-3 lg:aspect-[4/5]">
           {categories.map((c, idx) => (
-            <li key={c.slug}>
-              <Link
-                href={`/events?category=${c.slug}`}
-                onMouseEnter={() => setActive(idx)}
-                onFocus={() => setActive(idx)}
-                className="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 border-b border-ink/15 py-5 md:grid-cols-[3rem_1fr_auto] md:py-6"
-              >
-                <span className="font-display text-sm italic text-ink-mute">{pad(idx + 1)}</span>
-                <span>
-                  <span className={`display block text-[2rem] transition-colors duration-300 md:text-[2.8rem] ${active === idx ? "italic text-rani" : "text-ink"}`}>{c.name}</span>
-                  <span className="mt-1 block text-sm text-ink-mute">{c.tagline}</span>
-                </span>
-                <span className="label flex items-center gap-2 text-[10px] text-ink-mute">
-                  <span className="hidden sm:inline">{counts[c.slug] ? `${counts[c.slug]} package${counts[c.slug] > 1 ? "s" : ""}` : "Bespoke"}</span>
-                  <ArrowUpRight className={`h-4 w-4 transition ${active === idx ? "text-rani" : ""}`} strokeWidth={1.4} />
-                </span>
-              </Link>
-            </li>
+            <img
+              key={c.slug}
+              src={sized(c.image, 1100)}
+              alt={c.name}
+              className={`absolute inset-0 h-full w-full object-cover transition-all duration-[900ms] ease-out ${idx === active ? "scale-100 opacity-100" : "scale-110 opacity-0"}`}
+            />
           ))}
-        </ul>
-      </div>
-      <div className="hidden lg:col-span-5 lg:block">
-        <div className="sticky top-28">
-          <div className="relative aspect-[4/5] overflow-hidden bg-paper-3">
-            {categories.map((c, idx) => (
-              <img key={c.slug} src={sized(c.image, 1100)} alt={c.name} className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ${idx === active ? "scale-100 opacity-100" : "scale-105 opacity-0"}`} />
-            ))}
-          </div>
-          {cur && <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-mute">{cur.description}</p>}
+          <span className="label absolute left-0 top-0 bg-paper px-3 py-2 text-[10px] text-ink">
+            {pad(active + 1)} / {pad(categories.length)}
+          </span>
         </div>
+        {cur && <p className="mt-4 hidden max-w-md text-sm leading-relaxed text-ink-mute lg:block">{cur.description}</p>}
       </div>
+
+      <ul className="border-t border-ink/15 lg:col-span-7">
+        {categories.map((c, idx) => (
+          <li key={c.slug} data-i={idx} ref={(el) => { rows.current[idx] = el; }} className="flex min-h-[24vh] items-center border-b border-ink/15 lg:min-h-[19vh]">
+            <Link href={`/events?category=${c.slug}`} className="group grid w-full grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-6 md:grid-cols-[3rem_1fr_auto]">
+              <span className="font-display text-sm italic text-ink-mute">{pad(idx + 1)}</span>
+              <span>
+                <span className={`display block text-[2.1rem] transition-all duration-500 md:text-[3rem] ${active === idx ? "translate-x-2 italic text-rani" : "text-ink/60"}`}>{c.name}</span>
+                <span className={`mt-1 block text-sm transition-colors duration-500 ${active === idx ? "text-ink-mute" : "text-ink-mute"}`}>{c.tagline}</span>
+                {active === idx && <span className="mt-3 block text-sm leading-relaxed text-ink-mute lg:hidden">{c.description}</span>}
+              </span>
+              <span className="label flex items-center gap-2 text-[10px] text-ink-mute">
+                <span className="hidden sm:inline">{counts[c.slug] ? `${counts[c.slug]} package${counts[c.slug] > 1 ? "s" : ""}` : "Bespoke"}</span>
+                <ArrowUpRight className={`h-4 w-4 transition ${active === idx ? "text-rani" : ""}`} strokeWidth={1.4} />
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
