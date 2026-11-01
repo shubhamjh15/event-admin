@@ -18,6 +18,7 @@ export async function seedContent() {
     M.Blog.insertMany(D.blogs),
     M.Comment.insertMany(D.comments),
     M.PageSeo.insertMany(D.pageSeo),
+    M.CelebEvent.insertMany(D.celebEvents),
     M.Enquiry.insertMany(demoEnquiries()),
     M.Booking.insertMany([
       { kind: "appointment", name: "Kevin Brooks", email: "kevin@example.com", phone: "+91 98200 0110", eventDate: "2026-11-04", time: "11:00", mode: "Video call", message: "Consultation for 40th birthday.", status: "confirmed" },
@@ -27,20 +28,20 @@ export async function seedContent() {
 }
 
 const DEMO_PEOPLE = [
-  ["Sarah Williams", "Destination Weddings", "250", "₹50 lakh – 1 crore", "Jaipur", "Looking for a palace wedding in Jaipur for Feb 2027."],
-  ["Acme Corp — HR", "Incentives", "80", "₹1 crore+", "Maldives", "Incentive trip for our top 80 sales reps."],
-  ["Rohit Verma", "Birthdays", "120", "₹10 – 25 lakh", "Mumbai", "Surprise 50th birthday gala for my wife."],
-  ["Meera & Rohan", "Weddings", "400", "₹50 lakh – 1 crore", "Udaipur", "Three-day wedding with sangeet and reception."],
-  ["Northwind Traders", "Corporate Meetings", "300", "₹50 lakh – 1 crore", "Dubai", "Annual leadership summit."],
-  ["The Gupta Family", "Family Reunions", "45", "₹25 – 50 lakh", "Udaipur", "Four-generation family reunion in a villa."],
-  ["Simran Kaur", "Concerts", "600", "₹50 lakh – 1 crore", "Delhi", "Private rooftop concert for a product launch."],
-  ["Globex Sales", "Sales Force Trainings", "900", "₹1 crore+", "Goa", "Sales kick-off with awards night."],
-  ["Ananya Iyer", "Cruises", "30", "₹25 – 50 lakh", "Mediterranean", "Anniversary cruise with family and friends."],
-  ["Imran Qureshi", "Group Travel", "18", "₹10 – 25 lakh", "Bali", "Friends' getaway for a 40th."],
-  ["Priya Nair", "Destination Weddings", "180", "₹50 lakh – 1 crore", "Santorini", "Clifftop wedding with yacht after-party."],
-  ["Initech", "Incentives", "60", "₹1 crore+", "Amalfi Coast", "President's club trip."],
-  ["Pooja Desai", "Weddings", "220", "₹25 – 50 lakh", "Hyderabad", "Ballroom wedding, need menu tasting."],
-  ["Aditya Rao", "Birthdays", "60", "Under ₹10 lakh", "Bengaluru", "Sweet sixteen for my daughter."],
+  ["Sarah Williams", "Destination Weddings", "250", "$100k – $250k", "Jaipur", "Looking for a palace wedding in Jaipur for Feb 2027."],
+  ["Acme Corp — HR", "Incentives", "80", "$250k+", "Maldives", "Incentive trip for our top 80 sales reps."],
+  ["Rohit Verma", "Birthdays", "120", "$25k – $50k", "Mumbai", "Surprise 50th birthday gala for my wife."],
+  ["Meera & Rohan", "Weddings", "400", "$100k – $250k", "Udaipur", "Three-day wedding with sangeet and reception."],
+  ["Northwind Traders", "Corporate Meetings", "300", "$100k – $250k", "Dubai", "Annual leadership summit."],
+  ["The Gupta Family", "Family Reunions", "45", "$50k – $100k", "Udaipur", "Four-generation family reunion in a villa."],
+  ["Simran Kaur", "Concerts", "600", "$100k – $250k", "Delhi", "Private rooftop concert for a product launch."],
+  ["Globex Sales", "Sales Force Trainings", "900", "$250k+", "Goa", "Sales kick-off with awards night."],
+  ["Ananya Iyer", "Cruises", "30", "$50k – $100k", "Mediterranean", "Anniversary cruise with family and friends."],
+  ["Imran Qureshi", "Group Travel", "18", "$25k – $50k", "Bali", "Friends' getaway for a 40th."],
+  ["Priya Nair", "Destination Weddings", "180", "$100k – $250k", "Santorini", "Clifftop wedding with yacht after-party."],
+  ["Initech", "Incentives", "60", "$250k+", "Amalfi Coast", "President's club trip."],
+  ["Pooja Desai", "Weddings", "220", "$50k – $100k", "Hyderabad", "Ballroom wedding, need menu tasting."],
+  ["Aditya Rao", "Birthdays", "60", "Under $25k", "Bengaluru", "Sweet sixteen for my daughter."],
 ];
 const STATUSES = ["won", "proposal-sent", "contacted", "won", "lost", "contacted", "proposal-sent", "won", "new", "contacted", "new", "proposal-sent", "new", "new"];
 

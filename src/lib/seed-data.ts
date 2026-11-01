@@ -118,6 +118,8 @@ export const settings = {
   trustBadges: ["Licensed", "Bonded", "Insured", "In Business Since 1989"],
   paymentMethods: ["Credit Card", "Debit Card", "Cheque", "Cash", "Bank Transfer"],
   priceBadge: "Prices lower than online — guaranteed",
+  budgetRanges: ["Under $25k", "$25k – $50k", "$50k – $100k", "$100k – $250k", "$250k+"],
+  notifyEmail: "",
   expertise:
     "With our expertise, you can tailor events to meet specific needs, provide a seamless experience for attendees, and build and create memorable experiences.",
   aboutShort:
@@ -166,7 +168,7 @@ const it = (rows: [string, string, string][]) => rows.map(([day, title, details]
 
 export const events = [
   {
-    title: "Royal Rajasthan Palace Wedding", slug: "royal-rajasthan-palace-wedding", category: "destination-weddings", featured: true,
+    title: "Royal Rajasthan Palace Wedding", slug: "royal-rajasthan-palace-wedding", topDestination: true, category: "destination-weddings", featured: true,
     summary: "A three-day palace wedding in Jaipur with mehndi, sangeet, baraat and a candlelit reception.",
     description: "Celebrate in a heritage palace in the Pink City. Our Jaipur team handles venue buyout, rooming, décor, couture, catering, entertainment and guest hospitality so you can simply arrive and celebrate.",
     heroImage: IMG.mandap, gallery: [IMG.jaipur, IMG.jaipur2, IMG.tajMahal, IMG.udaipur, IMG.ballroom, IMG.fireworks],
@@ -180,7 +182,7 @@ export const events = [
     ]),
   },
   {
-    title: "Santorini Sunset Elopement", slug: "santorini-sunset-elopement", category: "destination-weddings",
+    title: "Santorini Sunset Elopement", slug: "santorini-sunset-elopement", topDestination: true, category: "destination-weddings",
     summary: "An intimate clifftop ceremony overlooking the caldera, with private yacht dinner.",
     description: "For couples who want romance without the crowd. Clifftop vows, a photographer, a private chef aboard a catamaran and a suite with a plunge pool.",
     heroImage: IMG.santorini, gallery: [IMG.cinqueTerre, IMG.rings, IMG.speedYacht, IMG.bouquet, IMG.seaTerrace],
@@ -207,7 +209,7 @@ export const events = [
     ]),
   },
   {
-    title: "Executive Leadership Summit", slug: "executive-leadership-summit", category: "corporate-meetings", featured: true,
+    title: "Executive Leadership Summit", slug: "executive-leadership-summit", topDestination: true, category: "corporate-meetings", featured: true,
     summary: "A three-day C-suite summit with keynote production, breakouts and a gala dinner.",
     description: "Everything your leadership team needs to think big: registration, rooming, AV, speaker management, breakout facilitation and a closing gala.",
     heroImage: IMG.dubai, gallery: [IMG.burjAlArab, IMG.auditorium, IMG.stage, IMG.galaTable, IMG.meeting],
@@ -232,7 +234,7 @@ export const events = [
     ]),
   },
   {
-    title: "Maldives Top Performers Incentive", slug: "maldives-top-performers-incentive", category: "incentives", featured: true,
+    title: "Maldives Top Performers Incentive", slug: "maldives-top-performers-incentive", topDestination: true, category: "incentives", featured: true,
     summary: "Overwater villas, private sandbank dinners and seaplane arrivals for your stars.",
     description: "Reward excellence with an unforgettable escape — private island resort, seaplane transfers, branded gifting and a beach gala.",
     heroImage: IMG.maldives, gallery: [IMG.resortNight, IMG.palmPool, IMG.beachSunset, IMG.speedYacht, IMG.plates],
@@ -246,7 +248,7 @@ export const events = [
     ]),
   },
   {
-    title: "Amalfi Coast Incentive Escape", slug: "amalfi-coast-incentive-escape", category: "incentives",
+    title: "Amalfi Coast Incentive Escape", slug: "amalfi-coast-incentive-escape", topDestination: true, category: "incentives",
     summary: "Limoncello, yachts and clifftop dining along Italy's most glamorous coastline.",
     description: "Cliffside hotels, private yacht days to Capri, cooking classes and a gala in a Renaissance villa.",
     heroImage: IMG.amalfi, gallery: [IMG.cinqueTerre, IMG.yacht2, IMG.seaTerrace, IMG.cocktail],
@@ -309,7 +311,7 @@ export const events = [
     itinerary: it([["Evening", "Party Night", "Arrivals, dance-off, cake and photo booth."]]),
   },
   {
-    title: "Multi-Generation Villa Reunion", slug: "multi-generation-villa-reunion", category: "family-reunions", featured: true,
+    title: "Multi-Generation Villa Reunion", slug: "multi-generation-villa-reunion", topDestination: true, category: "family-reunions", featured: true,
     summary: "A private villa estate with activities for every age, from grandparents to grandkids.",
     description: "Private chefs, kids' clubs, family portraits and a heritage dinner — the reunion everyone will talk about for years.",
     heroImage: IMG.family, gallery: [IMG.villaTropical, IMG.feast, IMG.friends, IMG.beachSunset],
@@ -323,7 +325,7 @@ export const events = [
     ]),
   },
   {
-    title: "Bali Friends Getaway", slug: "bali-friends-getaway", category: "group-travel",
+    title: "Bali Friends Getaway", slug: "bali-friends-getaway", topDestination: true, category: "group-travel",
     summary: "Cliff villas, beach clubs and temple sunsets for groups of friends.",
     description: "Group flights and villas negotiated below online prices, with a private host for the whole trip.",
     heroImage: IMG.bali, gallery: [IMG.resortPool, IMG.villaTropical, IMG.friends, IMG.cocktail],
@@ -332,7 +334,7 @@ export const events = [
     itinerary: it([["Day 1", "Arrive", "Villa check-in and welcome dinner."], ["Day 2–5", "Island Life", "Beach clubs, temples, rice terraces and spa."], ["Day 6", "Depart", "Farewell breakfast."]]),
   },
   {
-    title: "Mediterranean Celebration Cruise", slug: "mediterranean-celebration-cruise", category: "cruises", featured: true,
+    title: "Mediterranean Celebration Cruise", slug: "mediterranean-celebration-cruise", topDestination: true, category: "cruises", featured: true,
     summary: "A luxury cruise celebration with private events onboard and curated shore excursions.",
     description: "Anniversaries, vow renewals and corporate groups at sea — onboard galas, private dining and exclusive excursions.",
     heroImage: IMG.cruiseBeach, gallery: [IMG.cruise, IMG.santorini, IMG.amalfi, IMG.galaTable],
@@ -599,6 +601,41 @@ export const comments = [
   { blog: "incentive-trip-ideas-top-performers", name: "Raj K.", email: "raj@example.com", text: "Doing the Amalfi idea next year!", rating: 4, approved: false },
 ];
 
+export const celebEvents = [
+  {
+    title: "A Sangeet Under the Stars", slug: "sangeet-under-the-stars", location: "City Palace, Udaipur", date: new Date("2025-12-14"),
+    celebrities: [], cover: IMG.udaipur, featured: true,
+    summary: "A celebrated playback singer headlined an intimate lakeside sangeet for 300 guests.",
+    description: "<p>The evening opened with a candlelit boat procession across Lake Pichola before guests gathered in the palace courtyard for a live set by one of India's best-loved playback singers.</p><h3>What we handled</h3><ul><li>Artist booking, travel and green-room hospitality</li><li>Stage, sound and lighting on a heritage site</li><li>Private security and media management</li></ul>",
+    highlights: ["300 guests", "Live 90-minute set", "Lakeside stage", "Private security"],
+    gallery: [IMG.udaipur, IMG.mandap, IMG.fireworks, IMG.stageLights], videos: [], order: 1,
+  },
+  {
+    title: "Award-Night Afterparty", slug: "award-night-afterparty", location: "Mumbai", date: new Date("2025-09-06"),
+    celebrities: [], cover: IMG.concertLights, featured: true,
+    summary: "An invite-only afterparty for film and music stars following a national awards ceremony.",
+    description: "<p>We transformed a rooftop into a neon-lit lounge with a celebrity DJ, a signature cocktail bar and a discreet arrivals tunnel for VIP guests.</p>",
+    highlights: ["Invite-only", "Celebrity DJ", "VIP arrivals", "Media-free zones"],
+    gallery: [IMG.concertLights, IMG.dj, IMG.bar, IMG.cocktail], videos: [], order: 2,
+  },
+  {
+    title: "Cricket Legends Charity Gala", slug: "cricket-legends-charity-gala", location: "Jaipur", date: new Date("2025-03-22"),
+    celebrities: [], cover: IMG.ballroom, featured: false,
+    summary: "A black-tie fundraising dinner with former international cricketers and a live auction.",
+    description: "<p>Five courses, a live auction of signed memorabilia and a fireworks finale over the palace grounds — raising funds for grassroots sports academies.</p>",
+    highlights: ["Live auction", "Black tie", "Fireworks finale"],
+    gallery: [IMG.ballroom, IMG.galaTable, IMG.fireworks, IMG.jaipur], videos: [], order: 3,
+  },
+  {
+    title: "Private Yacht Birthday", slug: "private-yacht-birthday", location: "Goa", date: new Date("2024-11-30"),
+    celebrities: [], cover: IMG.yacht, featured: false,
+    summary: "A sunset superyacht celebration for a film star's milestone birthday.",
+    description: "<p>A crewed superyacht, a private chef's menu and a surprise fireworks display at sea for thirty close friends and family.</p>",
+    highlights: ["Superyacht charter", "Private chef", "Fireworks at sea"],
+    gallery: [IMG.yacht, IMG.speedYacht, IMG.sparklers, IMG.beachSunset], videos: [], order: 4,
+  },
+];
+
 export const pageSeo = [
   { page: "home", title: "Lit Concierge — Luxury Event Planning Since 1989", description: "Licensed, bonded & insured luxury event concierge. Weddings, destination weddings, corporate meetings, incentives, concerts and celebrations worldwide — at prices lower than online.", keywords: ["luxury event planner", "destination wedding planner", "corporate event management", "incentive travel"] },
   { page: "events", title: "Events & Packages — Weddings, Corporate, Incentives, Concerts", description: "Explore curated event packages with itineraries: weddings, destination weddings, corporate meetings, incentives, sales trainings, concerts, birthdays, reunions and cruises.", keywords: ["event packages", "wedding packages", "incentive trips"] },
@@ -606,5 +643,7 @@ export const pageSeo = [
   { page: "about", title: "About Lit Concierge — In Business Since 1989", description: "Licensed, bonded and insured. Meet the team that has delivered 6,500+ luxury events in 48 countries since 1989.", keywords: ["about lit concierge", "event planning company"] },
   { page: "blogs", title: "The Lit Journal — Event Ideas & Insider Tips", description: "Wedding inspiration, incentive ideas, gifting guides and insider advice from luxury event planners.", keywords: ["event blog", "wedding ideas"] },
   { page: "contact", title: "Enquire — Plan Your Event with Lit Concierge", description: "Tell us about your event and receive a tailored proposal from our planners.", keywords: ["event enquiry"] },
+  { page: "celeb-zone", title: "Celeb Zone — Celebrity Events by Lit Concierge", description: "Weddings, galas, concerts and private parties we have hosted for celebrities — discreetly, flawlessly.", keywords: ["celebrity event planner", "celebrity weddings"] },
+  { page: "testimonials", title: "Client Stories — Lit Concierge Reviews", description: "What our clients say about weddings, incentives and celebrations planned by Lit Concierge.", keywords: ["lit concierge reviews"] },
   { page: "book", title: "Book an Event or Consultation", description: "Reserve your event package or book a free consultation with a Lit Concierge planner.", keywords: ["book event planner"] },
 ];
