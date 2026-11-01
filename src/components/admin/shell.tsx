@@ -4,12 +4,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, Inbox, CalendarCheck, Mail, PartyPopper, Shapes, MapPin, Sparkles, GalleryHorizontal, Images, Newspaper, MessageSquare,
-  Users, Quote, HelpCircle, Milestone, Search, Settings, LogOut, ExternalLink, Menu, X,
+  Users, Quote, HelpCircle, Milestone, Search, Settings, LogOut, ExternalLink, Menu, X, Star,
 } from "lucide-react";
 import { resources } from "@/lib/resources";
 import { Toaster } from "./toast";
 
-const ICONS: Record<string, any> = { Inbox, CalendarCheck, Mail, PartyPopper, Shapes, MapPin, Sparkles, GalleryHorizontal, Images, Newspaper, MessageSquare, Users, Quote, HelpCircle, Milestone, Search };
+const ICONS: Record<string, any> = { Inbox, CalendarCheck, Mail, PartyPopper, Shapes, MapPin, Sparkles, GalleryHorizontal, Images, Newspaper, MessageSquare, Users, Quote, HelpCircle, Milestone, Search, Star };
 
 const groups = ["CRM", "Catalogue", "Media", "Content", "Company", "Settings"];
 
@@ -58,6 +58,7 @@ export function AdminShell({ user, children }: { user: { name: string; email: st
         <span>
           <span className="block font-display text-lg font-semibold text-white"><em className="text-lit">Lit</em> Concierge</span>
           <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Admin control</span>
+          <span className="mt-1 block text-[10px] text-white/50">Powered by Techserve Nexus</span>
         </span>
       </Link>
       <nav className="no-scrollbar flex-1 space-y-6 overflow-y-auto px-2 pb-6">
@@ -66,7 +67,7 @@ export function AdminShell({ user, children }: { user: { name: string; email: st
           <div key={g}>
             <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/30">{g}</p>
             <div className="space-y-0.5">
-              {resources.filter((r) => r.group === g).map((r) => link(`/admin/${r.key}`, r.label, ICONS[r.icon] || Sparkles))}
+              {resources.filter((r) => r.group === g && !r.hidden).map((r) => link(`/admin/${r.key}`, r.label, ICONS[r.icon] || Sparkles))}
               {g === "Settings" && link("/admin/settings", "Site Settings", Settings)}
             </div>
           </div>

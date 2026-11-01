@@ -55,7 +55,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-ink/80 via-ink/50 to-rose/40" />
         <div className="relative flex h-full flex-col justify-end p-14 text-white">
           <p className="eyebrow text-saffron-light">Admin control</p>
-          <h1 className="h-display mt-4 text-6xl">Run every event from <em className="text-lit">one place.</em></h1>
+          <p className="h-display mt-4 text-6xl">Run every event from <em className="text-lit">one place.</em></p>
           <p className="mt-4 max-w-md text-white/70">Enquiries, bookings, events, services, banners, gallery, blogs, SEO, team and settings.</p>
         </div>
       </div>
@@ -70,9 +70,10 @@ export default function LoginPage() {
               <p className="text-xs font-semibold uppercase tracking-widest text-ink-mute">Admin panel</p>
             </div>
           </div>
-          <h2 className="h-display text-4xl">Welcome back</h2>
+          <h1 className="h-display text-4xl">Welcome back</h1>
           <p className="mb-8 mt-2 text-ink-mute">Sign in to manage your website.</p>
           <Suspense><LoginForm /></Suspense>
+          <p className="mt-10 border-t border-ink/10 pt-5 text-center text-xs text-ink-mute">Powered by Techserve Nexus</p>
         </div>
       </div>
     </main>
