@@ -6,6 +6,7 @@ import { Check, ChevronLeft, ChevronRight, Download, ExternalLink, Loader2, Penc
 import { resourceMap, BOOKING_STATUS, ENQUIRY_STATUS } from "@/lib/resources";
 import { StatusBadge } from "./badges";
 import { toast } from "./toast";
+import { BulkUpload } from "./bulk-upload";
 
 export function ResourceList({ resourceKey }: { resourceKey: string }) {
   const resource = resourceMap[resourceKey];
@@ -97,6 +98,7 @@ export function ResourceList({ resourceKey }: { resourceKey: string }) {
           {["enquiries", "bookings", "subscribers", "comments"].includes(resourceKey) && (
             <a href={`/api/admin/r/${resourceKey}?format=csv&${qs}`} className="btn-soft !py-2.5"><Download className="h-4 w-4" /> Export CSV</a>
           )}
+          {resource.bulkUpload && <BulkUpload resourceKey={resourceKey} imageField={resource.bulkUpload.imageField} titleField={resource.bulkUpload.titleField} onDone={load} />}
           <Link href={`/admin/${resourceKey}/new`} className="btn-lit !py-2.5"><Plus className="h-4 w-4" /> Add {resource.singular.toLowerCase()}</Link>
         </div>
       </div>
