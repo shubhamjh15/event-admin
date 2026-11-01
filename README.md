@@ -23,13 +23,17 @@ If `MONGODB_URI` is empty in development, an **in-memory MongoDB** starts automa
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Initial admin account, created only if no admin exists |
 | `NEXT_PUBLIC_SITE_URL` | Public URL, used for canonical URLs, Open Graph tags and the sitemap |
 
+## Email
+
+Enquiries and bookings send a confirmation to the customer and an alert to the admin; testimonials alert the admin; the blog editor can push a post to newsletter subscribers. Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` and optionally `MAIL_FROM` (see `.env.example`). The alert inbox is set in **Site Settings**. Without SMTP the forms keep working, and each record's **Email delivery** field shows that sending was skipped.
+
 ## Production deployment
 
 ```bash
 npm run build && npm start
 ```
 
-Works on Vercel, Render, Railway, a VPS with PM2, or any Node 20+ host.
+Works on Vercel, Render, Railway, a VPS with PM2, or any Node 20+ host. `vercel.json` runs the functions in Mumbai (`bom1`); keep this in the same region as the database, because the distance between them directly affects page speed.
 
 1. Create a MongoDB Atlas cluster and set `MONGODB_URI`.
 2. Set a strong `JWT_SECRET` and `NEXT_PUBLIC_SITE_URL`.
