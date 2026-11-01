@@ -83,3 +83,20 @@ body {
 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @keyframes loadbar { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
+
+/* Browser autofill keeps the field's own transparent background and text colour */
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus,
+textarea:-webkit-autofill, select:-webkit-autofill {
+  -webkit-text-fill-color: currentColor;
+  caret-color: currentColor;
+  transition: background-color 99999s ease-out 0s;
+}
+
+/* Rich-text editor placeholder */
+.rich-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: rgba(22, 19, 15, .4);
+}

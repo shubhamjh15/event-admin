@@ -6,7 +6,7 @@ const cache: Cache = g.__mongo ?? (g.__mongo = { conn: null, promise: null });
 
 async function resolveUri(): Promise<string> {
   if (process.env.MONGODB_URI) return process.env.MONGODB_URI;
-  if (process.env.NODE_ENV === "production" && !process.env.ALLOW_MEMORY_DB) {
+  if (process.env.NODE_ENV === "production" && !process.env.ALLOW_MEMORY_DB && process.env.NEXT_PHASE !== "phase-production-build") {
     throw new Error("MONGODB_URI is not set");
   }
   // Local development without a database: spin up an in-memory MongoDB.

@@ -3,8 +3,6 @@ import { Footer } from "@/components/footer";
 import { getCategories, getSettings } from "@/lib/data";
 import { settings as defaultSettings } from "@/lib/seed-data";
 
-export const dynamic = "force-dynamic";
-
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const [s, categories] = await Promise.all([
     getSettings().catch(() => defaultSettings),

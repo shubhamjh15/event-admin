@@ -7,6 +7,7 @@ import { CtaBlock, Monogram, SectionHead } from "@/components/ui";
 import { GalleryCollage } from "@/components/interactive";
 import { EnquiryForm } from "@/components/forms";
 
+export const revalidate = 600;
 export const generateMetadata = () => pageMetadata("about", "/about");
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -151,7 +152,7 @@ export default async function AboutPage() {
             </dl>
           </div>
           <div className="lg:col-span-6 lg:col-start-7">
-            <EnquiryForm eventTypes={categories.map((c) => c.name)} source="about" tone="dark" />
+            <EnquiryForm eventTypes={categories.map((c) => c.name)} source="about" tone="dark" budgets={s.budgetRanges} />
           </div>
         </div>
       </section>

@@ -32,24 +32,28 @@ function Media({ s, active }: { s: Slide; active: boolean }) {
   if (s.mediaType === "video") {
     return (
       <>
-        {s.poster && <img src={sized(s.poster, 2400, 85)} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+        {s.poster && <img src={sized(s.poster, 1920, 80)} alt="" className="absolute inset-0 h-full w-full object-cover" />}
         <video ref={ref} src={s.url} muted loop playsInline preload="metadata" onError={(e) => (e.currentTarget.style.display = "none")} className="absolute inset-0 h-full w-full object-cover" />
       </>
     );
   }
-  return <img src={sized(s.url, 2400, 85)} alt={s.title || ""} className={`absolute inset-0 h-full w-full object-cover ${active ? "animate-slow-zoom" : ""}`} />;
+  return <img src={sized(s.url, 1920, 80)} alt={s.title || ""} className={`absolute inset-0 h-full w-full object-cover ${active ? "animate-slow-zoom" : ""}`} />;
 }
 
 /** Full-bleed editorial carousel for inner-page heroes. */
 export function BannerCarousel({ slides, label, height = "h-[92svh] min-h-[620px]" }: { slides: Slide[]; label?: string; height?: string }) {
   const { i, go, setPaused } = useAutoplay(slides.length, 7000);
+  // Only download a slide when it (or the one before it) is showing.
+  const seen = useRef(new Set<number>());
+  seen.current.add(i);
+  seen.current.add((i + 1) % Math.max(1, slides.length));
   if (!slides.length) return null;
   const cur = slides[i];
   return (
     <section data-hero className={`relative ${height} overflow-hidden bg-ink text-white`} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       {slides.map((s, idx) => (
         <div key={s._id || idx} className={`absolute inset-0 transition-opacity duration-[1600ms] ease-out ${idx === i ? "opacity-100" : "opacity-0"}`} aria-hidden={idx !== i}>
-          <Media s={s} active={idx === i} />
+          {seen.current.has(idx) && <Media s={s} active={idx === i} />}
         </div>
       ))}
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-black/40" />
@@ -113,7 +117,7 @@ export function HeroVideo({ video, poster, since, lines }: { video: string; post
 
   return (
     <section data-hero className="relative h-[100svh] min-h-[680px] overflow-hidden bg-ink text-white">
-      <img src={sized(poster, 2400, 85)} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <img src={sized(poster, 1920, 80)} alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
       {video && (
         <video ref={ref} src={video} autoPlay muted={muted} loop playsInline onError={(e) => (e.currentTarget.style.display = "none")} className="absolute inset-0 h-full w-full object-cover" />
       )}
@@ -186,8 +190,9 @@ export function CategoryShowcase({ categories, counts }: { categories: any[]; co
           {categories.map((c, idx) => (
             <img
               key={c.slug}
-              src={sized(c.image, 1100)}
+              src={sized(c.image, 1000)}
               alt={c.name}
+              loading={idx < 2 ? "eager" : "lazy"}
               className={`absolute inset-0 h-full w-full object-cover transition-all duration-[900ms] ease-out ${idx === active ? "scale-100 opacity-100" : "scale-110 opacity-0"}`}
             />
           ))}

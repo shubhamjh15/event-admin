@@ -2,6 +2,7 @@ import { getGallery, getSettings } from "@/lib/data";
 import { GalleryGrid } from "@/components/interactive";
 import { CtaBlock } from "@/components/ui";
 
+export const revalidate = 600;
 export const metadata = { title: "Gallery", description: "Weddings, concerts, corporate events and celebrations by Lit Concierge." };
 
 export default async function GalleryPage() {

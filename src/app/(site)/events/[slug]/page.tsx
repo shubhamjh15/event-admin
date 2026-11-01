@@ -10,6 +10,9 @@ import { PhotoStrip } from "@/components/interactive";
 
 type Props = { params: Promise<{ slug: string }> };
 
+export const revalidate = 600;
+export const generateStaticParams = async () => [];
+
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const e = await getEvent(slug);

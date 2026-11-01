@@ -9,6 +9,9 @@ import { EnquiryForm } from "@/components/forms";
 
 type Props = { params: Promise<{ slug: string }> };
 
+export const revalidate = 600;
+export const generateStaticParams = async () => [];
+
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const sv = await getService(slug);

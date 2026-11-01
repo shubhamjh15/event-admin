@@ -38,11 +38,15 @@ export const getCategory = (slug: string) => findOne(M.EventCategory, { slug });
 export const getEvents = (filter: object = {}, limit = 0) => find(M.Event, { active: { $ne: false }, ...filter }, { order: 1 }, limit);
 export const getEvent = (slug: string) => findOne(M.Event, { slug, active: { $ne: false } });
 export const getDestinations = () => find(M.Destination, { featured: { $ne: false } });
+/** Packages the admin has flagged as "Top destination". */
+export const getTopDestinationEvents = () => find(M.Event, { active: { $ne: false }, topDestination: true }, { order: 1 });
+export const getCelebEvents = (limit = 0) => find(M.CelebEvent, { published: { $ne: false } }, { order: 1, date: -1 }, limit);
+export const getCelebEvent = (slug: string) => findOne(M.CelebEvent, { slug, published: { $ne: false } });
 export const getServices = () => find(M.Service, { active: { $ne: false } });
 export const getService = (slug: string) => findOne(M.Service, { slug, active: { $ne: false } });
 export const getGallery = (limit = 0) => find(M.GalleryItem, {}, { order: 1 }, limit);
 export const getTeam = () => find(M.TeamMember);
-export const getTestimonials = () => find(M.Testimonial);
+export const getTestimonials = () => find(M.Testimonial, { approved: { $ne: false } });
 export const getFaqs = () => find(M.Faq);
 export const getMilestones = () => find(M.Milestone);
 export const getBlogs = (filter: object = {}, sort: object = { publishedAt: -1 }, limit = 0) =>

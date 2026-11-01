@@ -17,6 +17,9 @@ export const viewport: Viewport = { themeColor: "#FAF6EF" };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://images.unsplash.com" />
+      </head>
       <body className="font-sans">
         <script
           dangerouslySetInnerHTML={{

@@ -6,6 +6,7 @@ import { BannerCarousel } from "@/components/carousel";
 import { Reveal } from "@/components/reveal";
 import { CtaBlock, SectionHead } from "@/components/ui";
 
+export const revalidate = 600;
 export const generateMetadata = () => pageMetadata("services", "/services");
 
 const NEGOTIATE = ["Hotel stays", "Private jets", "Villas", "Yachts", "Event spaces", "AV equipment", "Transportation", "Flights"];

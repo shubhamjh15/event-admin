@@ -10,6 +10,7 @@ import { Credentials, JournalCard, PackageCard, SectionHead } from "@/components
 import { Faqs, GalleryCollage, Testimonials } from "@/components/interactive";
 import { EnquiryForm } from "@/components/forms";
 
+export const revalidate = 600;
 export const generateMetadata = () => pageMetadata("home", "/");
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -169,6 +170,10 @@ export default async function Home() {
             <span className="label">Kind words</span>
           </div>
           <Testimonials items={testimonials} />
+          <div className="mt-12 flex flex-wrap items-center gap-6 border-t border-white/30 pt-8">
+            <Link href="/testimonials#share" className="btn-paper">Share your experience</Link>
+            <Link href="/testimonials" className="link text-white">Read all client stories <ArrowUpRight className="h-3.5 w-3.5" /></Link>
+          </div>
         </div>
       </section>}
 
@@ -258,7 +263,7 @@ export default async function Home() {
             </div>
           </div>
           <div className="lg:col-span-6 lg:col-start-7">
-            <EnquiryForm eventTypes={categories.map((c) => c.name)} source="home" tone="dark" />
+            <EnquiryForm eventTypes={categories.map((c) => c.name)} source="home" tone="dark" budgets={s.budgetRanges} />
           </div>
         </div>
       </section>
