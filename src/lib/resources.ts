@@ -1,7 +1,7 @@
 // Client-safe admin resource definitions (no mongoose imports here).
 
 export type FieldType =
-  | "text" | "slug" | "textarea" | "markdown" | "number" | "image" | "images" | "video"
+  | "text" | "slug" | "textarea" | "markdown" | "richtext" | "number" | "image" | "images" | "video"
   | "tags" | "boolean" | "select" | "date" | "email" | "list";
 
 export type Field = {
@@ -30,6 +30,8 @@ export type Resource = {
   sort: Record<string, 1 | -1>;
   filters?: { name: string; options: string[] }[];
   readOnlyCreate?: boolean;
+  hidden?: boolean; // kept for data compatibility, not shown in the sidebar
+  bulkUpload?: { imageField: string; titleField?: string }; // enables "Bulk upload" on the list page
   publicPath?: (doc: any) => string;
 };
 
@@ -61,6 +63,7 @@ export const resources: Resource[] = [
       { name: "destination", label: "Destination", type: "text", half: true },
       { name: "message", label: "Message", type: "textarea" },
       { name: "notes", label: "Internal notes", type: "textarea" },
+      { name: "emailLog", label: "Email delivery", type: "text", section: "Notifications", help: "Filled in automatically when the enquiry arrives" },
     ],
     columns: [
       { name: "name", label: "Name" }, { name: "eventType", label: "Event" }, { name: "eventDate", label: "Date" },
@@ -85,6 +88,7 @@ export const resources: Resource[] = [
       { name: "paymentMethod", label: "Payment method", type: "select", options: PAYMENT_METHODS, half: true },
       { name: "message", label: "Message", type: "textarea" },
       { name: "notes", label: "Internal notes", type: "textarea" },
+      { name: "emailLog", label: "Email delivery", type: "text", section: "Notifications", help: "Filled in automatically when the request arrives" },
     ],
     columns: [
       { name: "name", label: "Name" }, { name: "kind", label: "Type", type: "badge" }, { name: "eventPackage", label: "Package" },
@@ -101,42 +105,6 @@ export const resources: Resource[] = [
     ],
     columns: [{ name: "email", label: "Email" }, { name: "active", label: "Subscribed", type: "boolean" }, { name: "createdAt", label: "Joined", type: "date" }],
     search: ["email"], sort: { createdAt: -1 },
-  },
-  {
-    key: "events", model: "Event", label: "Event Packages", singular: "Event package", icon: "PartyPopper", group: "Catalogue",
-    publicPath: (d) => `/events/${d.slug}`,
-    fields: [
-      { name: "title", label: "Title", type: "text", required: true, half: true },
-      { name: "slug", label: "URL slug", type: "slug", required: true, half: true },
-      { name: "category", label: "Category", type: "select", optionsFrom: { resource: "eventCategories", value: "slug", label: "name" }, half: true },
-      { name: "destination", label: "Destination", type: "text", half: true },
-      { name: "duration", label: "Duration", type: "text", half: true },
-      { name: "guests", label: "Guest range", type: "text", half: true },
-      { name: "price", label: "Price from (₹)", type: "number", half: true },
-      { name: "priceNote", label: "Price note", type: "text", half: true },
-      { name: "summary", label: "Summary", type: "textarea" },
-      { name: "description", label: "Description", type: "markdown" },
-      { name: "heroImage", label: "Hero image", type: "image" },
-      { name: "gallery", label: "Gallery", type: "images" },
-      { name: "inclusions", label: "Inclusions", type: "tags" },
-      {
-        name: "itinerary", label: "Itinerary", type: "list", section: "Itinerary",
-        fields: [
-          { name: "day", label: "Day", type: "text" },
-          { name: "title", label: "Title", type: "text" },
-          { name: "details", label: "Details", type: "textarea" },
-        ],
-      },
-      { name: "featured", label: "Featured", type: "boolean", half: true },
-      { name: "active", label: "Published", type: "boolean", half: true },
-      { name: "order", label: "Sort order", type: "number", half: true },
-      ...seo,
-    ],
-    columns: [
-      { name: "heroImage", label: "", type: "image" }, { name: "title", label: "Title" }, { name: "category", label: "Category", type: "badge" },
-      { name: "price", label: "From", type: "price" }, { name: "featured", label: "Featured", type: "boolean" }, { name: "active", label: "Live", type: "boolean" },
-    ],
-    search: ["title", "destination", "category"], sort: { order: 1 },
   },
   {
     key: "eventCategories", model: "EventCategory", label: "Event Categories", singular: "Category", icon: "Shapes", group: "Catalogue",
@@ -156,7 +124,45 @@ export const resources: Resource[] = [
     search: ["name"], sort: { order: 1 },
   },
   {
-    key: "destinations", model: "Destination", label: "Top Destinations", singular: "Destination", icon: "MapPin", group: "Catalogue",
+    key: "events", model: "Event", label: "Event Packages", singular: "Event package", icon: "PartyPopper", group: "Catalogue",
+    publicPath: (d) => `/events/${d.slug}`,
+    fields: [
+      { name: "title", label: "Title", type: "text", required: true, half: true },
+      { name: "slug", label: "URL slug", type: "slug", required: true, half: true },
+      { name: "category", label: "Category", type: "select", optionsFrom: { resource: "eventCategories", value: "slug", label: "name" }, half: true },
+      { name: "destination", label: "Destination", type: "text", half: true },
+      { name: "duration", label: "Duration", type: "text", half: true },
+      { name: "guests", label: "Guest range", type: "text", half: true },
+      { name: "price", label: "Price from", type: "number", half: true, help: "Shown with the currency symbol from Site Settings" },
+      { name: "priceNote", label: "Price note", type: "text", half: true },
+      { name: "summary", label: "Summary", type: "textarea" },
+      { name: "description", label: "Description", type: "richtext" },
+      { name: "heroImage", label: "Hero image", type: "image" },
+      { name: "gallery", label: "Gallery", type: "images" },
+      { name: "inclusions", label: "Inclusions", type: "tags" },
+      {
+        name: "itinerary", label: "Itinerary", type: "list", section: "Itinerary",
+        fields: [
+          { name: "day", label: "Day", type: "text" },
+          { name: "title", label: "Title", type: "text" },
+          { name: "details", label: "Details", type: "textarea" },
+        ],
+      },
+      { name: "featured", label: "Featured", type: "boolean", half: true },
+      { name: "topDestination", label: "Top destination", type: "boolean", half: true, help: "Show in the Top Destinations section" },
+      { name: "active", label: "Published", type: "boolean", half: true },
+      { name: "order", label: "Sort order", type: "number", half: true },
+      ...seo,
+    ],
+    columns: [
+      { name: "heroImage", label: "", type: "image" }, { name: "title", label: "Title" }, { name: "category", label: "Category", type: "badge" },
+      { name: "price", label: "From", type: "price" }, { name: "featured", label: "Featured", type: "boolean" },
+      { name: "topDestination", label: "Top dest.", type: "boolean" }, { name: "active", label: "Live", type: "boolean" },
+    ],
+    search: ["title", "destination", "category"], sort: { order: 1 },
+  },
+  {
+    key: "destinations", model: "Destination", label: "Top Destinations", singular: "Destination", icon: "MapPin", group: "Catalogue", hidden: true,
     fields: [
       { name: "name", label: "Name", type: "text", required: true, half: true },
       { name: "country", label: "Country", type: "text", half: true },
@@ -177,7 +183,7 @@ export const resources: Resource[] = [
       { name: "icon", label: "Icon (lucide name)", type: "text", half: true },
       { name: "order", label: "Sort order", type: "number", half: true },
       { name: "summary", label: "Summary", type: "textarea" },
-      { name: "description", label: "Description", type: "markdown" },
+      { name: "description", label: "Description", type: "richtext" },
       { name: "image", label: "Image", type: "image" },
       { name: "points", label: "Key points", type: "tags" },
       { name: "active", label: "Published", type: "boolean" },
@@ -206,6 +212,7 @@ export const resources: Resource[] = [
   },
   {
     key: "gallery", model: "GalleryItem", label: "Gallery", singular: "Photo", icon: "Images", group: "Media",
+    bulkUpload: { imageField: "image", titleField: "title" },
     fields: [
       { name: "image", label: "Image", type: "image", required: true },
       { name: "title", label: "Caption", type: "text", half: true },
@@ -214,6 +221,32 @@ export const resources: Resource[] = [
     ],
     columns: [{ name: "image", label: "", type: "image" }, { name: "title", label: "Caption" }, { name: "category", label: "Category", type: "badge" }],
     search: ["title", "category"], sort: { order: 1 },
+  },
+  {
+    key: "celebEvents", model: "CelebEvent", label: "Celeb Zone", singular: "Celebrity event", icon: "Star", group: "Content",
+    publicPath: (d) => `/celeb-zone/${d.slug}`,
+    fields: [
+      { name: "title", label: "Heading", type: "text", required: true, half: true },
+      { name: "slug", label: "URL slug", type: "slug", required: true, half: true },
+      { name: "location", label: "Location", type: "text", half: true },
+      { name: "date", label: "Event date", type: "date", half: true },
+      { name: "celebrities", label: "Celebrities", type: "tags", help: "Names shown on the event page" },
+      { name: "cover", label: "Card image", type: "image", required: true },
+      { name: "summary", label: "Short summary", type: "textarea" },
+      { name: "description", label: "Event details", type: "richtext" },
+      { name: "highlights", label: "Highlights", type: "tags" },
+      { name: "gallery", label: "Photos", type: "images" },
+      { name: "videos", label: "YouTube videos", type: "tags", help: "Paste YouTube links (watch, youtu.be or shorts) and press Enter" },
+      { name: "featured", label: "Featured", type: "boolean", half: true },
+      { name: "published", label: "Published", type: "boolean", half: true },
+      { name: "order", label: "Sort order", type: "number", half: true },
+      ...seo,
+    ],
+    columns: [
+      { name: "cover", label: "", type: "image" }, { name: "title", label: "Heading" }, { name: "location", label: "Location" },
+      { name: "date", label: "Date", type: "date" }, { name: "published", label: "Live", type: "boolean" },
+    ],
+    search: ["title", "location", "celebrities"], sort: { order: 1, date: -1 },
   },
   {
     key: "blogs", model: "Blog", label: "Blog Posts", singular: "Post", icon: "Newspaper", group: "Content",
@@ -227,7 +260,7 @@ export const resources: Resource[] = [
       { name: "views", label: "Views", type: "number", half: true },
       { name: "excerpt", label: "Excerpt", type: "textarea" },
       { name: "cover", label: "Cover image", type: "image" },
-      { name: "content", label: "Content (Markdown)", type: "markdown" },
+      { name: "content", label: "Content", type: "richtext" },
       { name: "tags", label: "Tags", type: "tags" },
       { name: "featured", label: "Featured", type: "boolean", half: true },
       { name: "published", label: "Published", type: "boolean", half: true },
@@ -279,9 +312,16 @@ export const resources: Resource[] = [
       { name: "photo", label: "Photo", type: "image" },
       { name: "rating", label: "Rating", type: "number", half: true },
       { name: "order", label: "Sort order", type: "number", half: true },
+      { name: "approved", label: "Approved (shown on site)", type: "boolean", half: true },
+      { name: "source", label: "Source", type: "select", options: ["admin", "public"], half: true },
+      { name: "email", label: "Submitter email (private)", type: "email" },
     ],
-    columns: [{ name: "photo", label: "", type: "image" }, { name: "name", label: "Name" }, { name: "role", label: "Event" }, { name: "rating", label: "Rating" }],
-    search: ["name", "quote"], sort: { order: 1 },
+    columns: [
+      { name: "photo", label: "", type: "image" }, { name: "name", label: "Name" }, { name: "role", label: "Event" }, { name: "rating", label: "Rating" },
+      { name: "source", label: "Source", type: "badge" }, { name: "approved", label: "Approved", type: "boolean" },
+    ],
+    search: ["name", "quote"], sort: { approved: 1, order: 1, createdAt: -1 },
+    filters: [{ name: "approved", options: ["true", "false"] }],
   },
   {
     key: "faqs", model: "Faq", label: "FAQs", singular: "FAQ", icon: "HelpCircle", group: "Company",
@@ -308,7 +348,7 @@ export const resources: Resource[] = [
   {
     key: "seo", model: "PageSeo", label: "Page SEO", singular: "Page SEO", icon: "Search", group: "Settings",
     fields: [
-      { name: "page", label: "Page key", type: "select", options: ["home", "events", "services", "about", "blogs", "contact", "book"] },
+      { name: "page", label: "Page key", type: "select", options: ["home", "events", "services", "about", "blogs", "contact", "book", "celeb-zone", "testimonials"] },
       { name: "title", label: "Meta title", type: "text", help: "Ideal length 50–60 characters" },
       { name: "description", label: "Meta description", type: "textarea", help: "Ideal length 140–160 characters" },
       { name: "keywords", label: "Keywords", type: "tags" },
@@ -329,16 +369,18 @@ export const settingsFields: Field[] = [
   { name: "priceBadge", label: "Price promise", type: "text", section: "Brand" },
   { name: "trustBadges", label: "Trust badges", type: "tags", section: "Brand" },
   { name: "paymentMethods", label: "Accepted payments", type: "tags", section: "Brand" },
+  { name: "budgetRanges", label: "Budget options (enquiry form)", type: "tags", section: "Brand", help: "Shown in the enquiry form budget dropdown" },
   { name: "heroVideo", label: "Home hero video (MP4)", type: "video", section: "Home hero" },
   { name: "heroPoster", label: "Hero poster image", type: "image", section: "Home hero" },
   { name: "phone", label: "Phone", type: "text", half: true, section: "Contact" },
   { name: "whatsapp", label: "WhatsApp number", type: "text", half: true, section: "Contact" },
   { name: "email", label: "Email", type: "email", half: true, section: "Contact" },
+  { name: "notifyEmail", label: "Send enquiry alerts to", type: "email", half: true, section: "Contact", help: "Admin inbox for new enquiries, bookings and testimonials (defaults to the email above)" },
   { name: "hours", label: "Hours", type: "text", half: true, section: "Contact" },
   { name: "address", label: "Address", type: "textarea", section: "Contact" },
   { name: "expertise", label: "Expertise statement", type: "textarea", section: "About" },
   { name: "aboutShort", label: "Short about", type: "textarea", section: "About" },
-  { name: "about", label: "Full about", type: "markdown", section: "About" },
+  { name: "about", label: "Full about", type: "richtext", section: "About" },
   { name: "mission", label: "Mission", type: "textarea", section: "About" },
   { name: "vision", label: "Vision", type: "textarea", section: "About" },
   { name: "footerAbout", label: "Footer blurb", type: "textarea", section: "About" },
