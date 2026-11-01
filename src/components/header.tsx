@@ -9,16 +9,16 @@ const LEFT = [
   { href: "/events", label: "Events" },
   { href: "/services", label: "Services" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/celeb-zone", label: "Celeb Zone" },
 ];
 const RIGHT = [
   { href: "/about", label: "About" },
   { href: "/blogs", label: "Journal" },
-  { href: "/contact", label: "Contact" },
 ];
-const ALL = [{ href: "/", label: "Home" }, ...LEFT, ...RIGHT, { href: "/book", label: "Book" }];
+const ALL = [{ href: "/", label: "Home" }, ...LEFT, ...RIGHT, { href: "/testimonials", label: "Client stories" }, { href: "/contact", label: "Enquire" }, { href: "/book", label: "Book" }];
 
 // Pages whose first section is a dark full-bleed image/video (header starts transparent & light).
-const DARK_HERO = /^\/($|events|services|about)/;
+const DARK_HERO = /^\/($|events|services|about|celeb-zone\/)/;
 
 export function Header({ phone, since }: { phone: string; since: string }) {
   const pathname = usePathname();
@@ -63,7 +63,7 @@ export function Header({ phone, since }: { phone: string; since: string }) {
         }`}
       >
         <div className="wrap grid h-[78px] grid-cols-[1fr_auto_1fr] items-center gap-6">
-          <nav className="hidden items-center gap-9 lg:flex" aria-label="Primary">
+          <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Primary">
             {LEFT.map((n) => (
               <Link key={n.href} href={n.href} className={navCls(n.href)}>
                 {n.label}
@@ -76,8 +76,8 @@ export function Header({ phone, since }: { phone: string; since: string }) {
 
           <Wordmark light={overHero} />
 
-          <div className="flex items-center justify-end gap-9">
-            <nav className="hidden items-center gap-9 lg:flex" aria-label="Secondary">
+          <div className="flex items-center justify-end gap-6 xl:gap-9">
+            <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Secondary">
               {RIGHT.map((n) => (
                 <Link key={n.href} href={n.href} className={navCls(n.href)}>
                   {n.label}
@@ -85,14 +85,24 @@ export function Header({ phone, since }: { phone: string; since: string }) {
                 </Link>
               ))}
             </nav>
-            <Link
-              href="/book"
-              className={`hidden px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] transition-colors xl:inline-flex ${
-                overHero ? "bg-white text-ink hover:bg-marigold" : "bg-ink text-paper hover:bg-rani"
-              }`}
-            >
-              Book now
-            </Link>
+            <div className="hidden items-center gap-2 lg:flex">
+              <Link
+                href="/contact"
+                className={`border px-4 py-[11px] text-[11px] font-semibold uppercase tracking-[0.2em] transition-colors xl:px-5 ${
+                  overHero ? "border-white/70 text-white hover:bg-white hover:text-ink" : "border-ink/70 text-ink hover:bg-ink hover:text-paper"
+                } ${pathname.startsWith("/contact") ? (overHero ? "bg-white !text-ink" : "bg-ink !text-paper") : ""}`}
+              >
+                Enquire
+              </Link>
+              <Link
+                href="/book"
+                className={`px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] transition-colors xl:px-5 ${
+                  overHero ? "bg-white text-ink hover:bg-marigold" : "bg-ink text-paper hover:bg-rani"
+                }`}
+              >
+                Book now
+              </Link>
+            </div>
             <button
               onClick={() => setOpen((o) => !o)}
               aria-expanded={open}
@@ -112,16 +122,16 @@ export function Header({ phone, since }: { phone: string; since: string }) {
       {/* Mobile / tablet full-screen menu */}
       <div className={`fixed inset-0 z-40 bg-paper transition-[opacity,visibility] duration-500 lg:hidden ${open ? "visible opacity-100" : "invisible opacity-0"}`}>
         <div className="wrap flex h-full flex-col pb-10 pt-[110px]">
-          <nav className="flex-1">
+          <nav className="no-scrollbar -mx-1 flex-1 overflow-y-auto px-1" aria-label="Mobile">
             {ALL.map((n, i) => (
               <Link
                 key={n.href}
                 href={n.href}
                 style={{ transitionDelay: open ? `${80 + i * 45}ms` : "0ms" }}
-                className={`flex items-baseline gap-5 border-b border-ink/10 py-3.5 transition-all duration-700 ${open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
+                className={`flex items-baseline gap-5 border-b border-ink/10 py-2.5 transition-all duration-700 ${open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
               >
                 <span className="w-6 font-display text-sm italic text-ink-mute">{String(i + 1).padStart(2, "0")}</span>
-                <span className={`display text-[2.4rem] ${isActive(n.href) ? "italic text-rani" : "text-ink"}`}>{n.label}</span>
+                <span className={`display text-[1.85rem] sm:text-[2.2rem] ${isActive(n.href) ? "italic text-rani" : "text-ink"}`}>{n.label}</span>
               </Link>
             ))}
           </nav>
@@ -130,7 +140,10 @@ export function Header({ phone, since }: { phone: string; since: string }) {
               <p className="label text-[10px] text-ink-mute">Est. {since} · Licensed · Bonded · Insured</p>
               <a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="mt-2 block font-display text-2xl">{phone}</a>
             </div>
-            <Link href="/contact" className="btn-ink !px-5">Enquire <ArrowUpRight className="h-3.5 w-3.5" /></Link>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Link href="/contact" className="btn-outline !px-5">Enquire</Link>
+              <Link href="/book" className="btn-ink !px-5">Book <ArrowUpRight className="h-3.5 w-3.5" /></Link>
+            </div>
           </div>
         </div>
       </div>
