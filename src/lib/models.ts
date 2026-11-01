@@ -56,6 +56,7 @@ export const Event = model(
       inclusions: [String],
       itinerary: [{ day: String, title: String, details: String }],
       featured: { type: Boolean, default: false },
+      topDestination: { type: Boolean, default: false },
       active: { type: Boolean, default: true },
       order: { type: Number, default: 0 },
       ...seoFields,
@@ -131,6 +132,8 @@ export const Blog = model(
       published: { type: Boolean, default: true },
       publishedAt: { type: Date, default: Date.now },
       views: { type: Number, default: 0 },
+      pushedAt: Date, // when the post was emailed to newsletter subscribers
+      pushedCount: Number,
       ...seoFields,
     },
     opts,
@@ -159,7 +162,20 @@ export const TeamMember = model(
 
 export const Testimonial = model(
   "Testimonial",
-  new Schema({ name: String, role: String, quote: String, rating: { type: Number, default: 5 }, photo: String, order: { type: Number, default: 0 } }, opts),
+  new Schema(
+    {
+      name: String,
+      role: String,
+      quote: String,
+      rating: { type: Number, default: 5 },
+      photo: String,
+      email: String, // only for public submissions; never displayed
+      source: { type: String, default: "admin" }, // admin | public
+      approved: { type: Boolean, default: true },
+      order: { type: Number, default: 0 },
+    },
+    opts,
+  ),
 );
 
 export const Faq = model("Faq", new Schema({ question: String, answer: String, order: { type: Number, default: 0 } }, opts));
@@ -185,6 +201,7 @@ export const Enquiry = model(
       source: String,
       status: { type: String, default: "new" },
       notes: String,
+      emailLog: String,
     },
     opts,
   ),
@@ -207,6 +224,31 @@ export const Booking = model(
       message: String,
       status: { type: String, default: "pending" },
       notes: String,
+      emailLog: String,
+    },
+    opts,
+  ),
+);
+
+export const CelebEvent = model(
+  "CelebEvent",
+  new Schema(
+    {
+      title: { type: String, required: true },
+      slug: { type: String, required: true, unique: true },
+      celebrities: [String],
+      location: String,
+      date: Date,
+      cover: String,
+      summary: String,
+      description: String,
+      highlights: [String],
+      gallery: [String],
+      videos: [String], // YouTube URLs
+      published: { type: Boolean, default: true },
+      featured: { type: Boolean, default: false },
+      order: { type: Number, default: 0 },
+      ...seoFields,
     },
     opts,
   ),
