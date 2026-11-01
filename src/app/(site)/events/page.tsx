@@ -98,6 +98,7 @@ export default async function EventsPage({ searchParams }: Props) {
 
   /* ---------- All events ---------- */
   const featured = events.filter((e) => e.featured).slice(0, 6);
+  const topPackages = events.filter((e) => e.topDestination);
   const ctaTones = ["marigold", "peacock", "rani"] as const;
 
   return (
@@ -119,16 +120,29 @@ export default async function EventsPage({ searchParams }: Props) {
         <div className="wrap">
           <SectionHead index="02" label="Top destinations" title="Celebrate" italic="anywhere." light text="Distance weddings and events anywhere in the world — from the palaces of Jaipur to the cliffs of Santorini." />
           <div tabIndex={0} role="region" aria-label="Top destinations" className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-5 lg:gap-x-5 lg:gap-y-12 lg:overflow-visible lg:px-0">
-            {destinations.map((d, i) => (
-              <Reveal key={d.name} delay={(i % 5) * 80} className="group w-[62%] shrink-0 snap-start sm:w-[38%] lg:w-auto">
-                <div className="overflow-hidden">
-                  <img src={sized(d.image, 700)} alt={d.name} loading="lazy" className="img-hover aspect-[3/4] w-full object-cover" />
-                </div>
-                <p className="label mt-4 text-[10px] text-marigold">{d.country}</p>
-                <p className="mt-1 font-display text-2xl">{d.name}</p>
-                <p className="mt-1 text-sm text-white/60">{d.description}</p>
-              </Reveal>
-            ))}
+            {topPackages.length
+              ? topPackages.map((e, i) => (
+                  <Reveal key={e.slug} delay={(i % 5) * 80} className="w-[62%] shrink-0 snap-start sm:w-[38%] lg:w-auto">
+                    <Link href={`/events/${e.slug}`} className="group block">
+                      <div className="overflow-hidden">
+                        <img src={sized(e.heroImage, 700)} alt="" loading="lazy" className="img-hover aspect-[3/4] w-full object-cover" />
+                      </div>
+                      <p className="label mt-4 text-[10px] text-marigold">{e.destination}</p>
+                      <p className="mt-1 font-display text-2xl group-hover:underline">{e.title}</p>
+                      <p className="mt-1 line-clamp-2 text-sm text-white/80">{e.summary}</p>
+                    </Link>
+                  </Reveal>
+                ))
+              : destinations.map((d, i) => (
+                  <Reveal key={d.name} delay={(i % 5) * 80} className="group w-[62%] shrink-0 snap-start sm:w-[38%] lg:w-auto">
+                    <div className="overflow-hidden">
+                      <img src={sized(d.image, 700)} alt={d.name} loading="lazy" className="img-hover aspect-[3/4] w-full object-cover" />
+                    </div>
+                    <p className="label mt-4 text-[10px] text-marigold">{d.country}</p>
+                    <p className="mt-1 font-display text-2xl">{d.name}</p>
+                    <p className="mt-1 text-sm text-white/80">{d.description}</p>
+                  </Reveal>
+                ))}
           </div>
         </div>
       </section>
