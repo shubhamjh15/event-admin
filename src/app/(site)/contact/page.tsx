@@ -42,7 +42,7 @@ export default async function ContactPage({ searchParams }: Props) {
             <div className="border border-ink/15 bg-white/50 p-7 md:p-12">
               <h2 className="display text-3xl md:text-4xl">Tell us about your event</h2>
               <p className="mb-10 mt-3 text-ink-mute">A senior planner replies within 24 hours with ideas and a tailored proposal.</p>
-              <EnquiryForm eventTypes={categories.map((c) => c.name)} source="contact" defaultType={type} />
+              <EnquiryForm eventTypes={categories.map((c) => c.name)} source="contact" defaultType={type} budgets={s.budgetRanges} />
             </div>
           </Reveal>
         </div>

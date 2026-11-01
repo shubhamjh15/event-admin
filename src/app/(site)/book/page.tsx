@@ -1,4 +1,5 @@
-import { getEvents, getSettings, pageMetadata } from "@/lib/data";
+import { getCategories, getEvents, getSettings, pageMetadata } from "@/lib/data";
+import { formatPrice } from "@/components/ui";
 import { sized } from "@/lib/img";
 import { BookingForm } from "@/components/forms";
 
@@ -8,7 +9,8 @@ type Props = { searchParams: Promise<{ package?: string; type?: string }> };
 
 export default async function BookPage({ searchParams }: Props) {
   const sp = await searchParams;
-  const [s, events] = await Promise.all([getSettings(), getEvents()]);
+  const [s, events, categories] = await Promise.all([getSettings(), getEvents(), getCategories()]);
+  const catName = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
   const selected = events.find((e) => e.slug === sp.package);
   const perks = [
     ["Free consultation", "No obligation — just ideas, honesty and a plan."],
@@ -17,7 +19,7 @@ export default async function BookPage({ searchParams }: Props) {
     ["Pay your way", `We accept ${s.paymentMethods.join(", ")}.`],
   ];
   return (
-    <section className="grid min-h-screen lg:grid-cols-2">
+    <section className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
       <div className="relative min-h-[560px] overflow-hidden bg-ink text-white">
         <img src={sized(selected?.heroImage || s.heroPoster, 1600, 85)} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/40" />
@@ -36,11 +38,19 @@ export default async function BookPage({ searchParams }: Props) {
           </dl>
         </div>
       </div>
-      <div className="px-5 pb-20 pt-16 sm:px-8 lg:px-12 lg:pt-[140px]">
+      <div className="min-w-0 px-5 pb-20 pt-16 sm:px-8 lg:px-12 lg:pt-[140px]">
         <div className="mx-auto max-w-xl">
           <p className="mb-6 text-ink-mute">Request a booking for any event package, or schedule a free consultation with a senior planner.</p>
           <BookingForm
-            events={events.map((e) => ({ slug: e.slug, title: e.title }))}
+            events={events.map((e) => ({
+              slug: e.slug,
+              title: e.title,
+              image: sized(e.heroImage, 240),
+              category: catName[e.category] || "Packages",
+              destination: e.destination,
+              duration: e.duration,
+              price: e.price ? formatPrice(e.price, s.currency) : undefined,
+            }))}
             payments={s.paymentMethods}
             defaultPackage={sp.package}
             defaultKind={sp.type === "appointment" ? "appointment" : "booking"}
