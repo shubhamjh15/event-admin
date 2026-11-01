@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { Booking } from "@/lib/models";
 import { clean, fail, json, rateLimited, readJson, requireFields, withDb, route } from "@/lib/api";
+import { notifyBooking } from "@/lib/notify";
 
 async function _POST(req: NextRequest) {
   if (rateLimited(req, "booking")) return fail("Too many requests. Please try again shortly.", 429);
@@ -14,7 +15,10 @@ async function _POST(req: NextRequest) {
   const yesterday = new Date(Date.now() - 86400000);
   if (Number.isNaN(day.getTime())) return fail("Please choose a valid date.");
   if (day < yesterday) return fail("Please choose a date in the future.");
-  const doc = await withDb(() => Booking.create({ ...data, status: "pending" }));
+  data.email = data.email.toLowerCase();
+  const doc: any = await withDb(() => Booking.create({ ...data, status: "pending" }));
+  const log = await notifyBooking({ ...data, _id: doc._id }).catch((e) => `Email error: ${e?.message || e}`);
+  await Booking.updateOne({ _id: doc._id }, { $set: { emailLog: log } }).catch(() => {});
   return json({ ok: true, id: String(doc._id) }, 201);
 }
 
