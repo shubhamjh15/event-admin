@@ -1,10 +1,16 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { marked } from "marked";
-import { ArrowDown, ArrowUp, Eye, Loader2, Pencil, Plus, Trash2, Upload, X, ImageIcon } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Images, Link2, Loader2, Plus, Trash2, Upload, X, ImageIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import type { Field } from "@/lib/resources";
 import { slugify } from "@/lib/resources";
 import { toast } from "./toast";
+
+// The editor is heavy and browser-only — load it on demand.
+const RichTextEditor = dynamic(() => import("./rich-text").then((m) => m.RichTextEditor), {
+  ssr: false,
+  loading: () => <div className="h-[310px] animate-pulse rounded-md border border-ink/15 bg-white" />,
+});
 
 function loadOptions(resource: string): Promise<any[]> {
   return fetch(`/api/admin/r/${resource}?all=1`)
@@ -13,16 +19,103 @@ function loadOptions(resource: string): Promise<any[]> {
     .catch(() => []);
 }
 
-async function upload(file: File): Promise<string | null> {
+export const MAX_UPLOAD = 4 * 1024 * 1024;
+
+export async function upload(file: File, quiet = false): Promise<string | null> {
+  if (file.size > MAX_UPLOAD) {
+    if (!quiet) toast(`"${file.name}" is ${(file.size / 1048576).toFixed(1)} MB — max 4 MB. Compress it, or paste a hosted URL.`, "error");
+    return null;
+  }
   const fd = new FormData();
   fd.append("file", file);
   const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    toast(data.error || "Upload failed", "error");
+    if (!quiet) toast(data.error || "Upload failed", "error");
     return null;
   }
   return data.url;
+}
+
+/** Upload many files, three at a time, reporting progress. Returns the successful URLs in order. */
+export async function uploadMany(files: File[], onProgress?: (done: number, total: number) => void) {
+  const out: (string | null)[] = new Array(files.length).fill(null);
+  let next = 0, done = 0, failed: string[] = [];
+  async function worker() {
+    while (next < files.length) {
+      const i = next++;
+      out[i] = await upload(files[i], true);
+      if (!out[i]) failed.push(files[i].name);
+      onProgress?.(++done, files.length);
+    }
+  }
+  await Promise.all([worker(), worker(), worker()]);
+  if (failed.length) toast(`${failed.length} file${failed.length > 1 ? "s" : ""} skipped (over 4 MB or unsupported): ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "error");
+  return out.map((u, i) => ({ url: u, file: files[i] })).filter((x) => x.url) as { url: string; file: File }[];
+}
+
+/** Image list with bulk upload (multi-select or drag & drop), reordering and paste-by-URL. */
+function ImagesInput({ value, onChange }: { value?: string[]; onChange: (v: string[]) => void }) {
+  const list = (value || []).filter((x) => x !== undefined);
+  const ref = useRef<HTMLInputElement>(null);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const [over, setOver] = useState(false);
+
+  async function add(files: FileList | File[] | null | undefined) {
+    const arr = Array.from(files || []).filter((f) => /^(image|video)\//.test(f.type));
+    if (!arr.length) return;
+    setProgress({ done: 0, total: arr.length });
+    const res = await uploadMany(arr, (done, total) => setProgress({ done, total }));
+    setProgress(null);
+    if (res.length) {
+      onChange([...list.filter(Boolean), ...res.map((r) => r.url)]);
+      toast(`${res.length} image${res.length > 1 ? "s" : ""} added`);
+    }
+  }
+  const move = (i: number, d: number) => {
+    const next = [...list];
+    const [x] = next.splice(i, 1);
+    next.splice(i + d, 0, x);
+    onChange(next);
+  };
+  const addUrl = () => {
+    const u = window.prompt("Image URL");
+    if (u && u.trim()) onChange([...list, u.trim()]);
+  };
+
+  return (
+    <div
+      onDragOver={(e) => { e.preventDefault(); setOver(true); }}
+      onDragLeave={() => setOver(false)}
+      onDrop={(e) => { e.preventDefault(); setOver(false); add(e.dataTransfer.files); }}
+      className={`rounded-md border border-dashed p-3 transition ${over ? "border-rose bg-rose/5" : "border-ink/15 bg-white"}`}
+    >
+      {list.length > 0 && (
+        <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+          {list.map((src, i) => (
+            <div key={src + i} className="group relative aspect-square overflow-hidden rounded bg-[#F6F3F8]">
+              {src ? <img src={src} alt="" className="h-full w-full object-cover" /> : <span className="grid h-full place-items-center text-ink/30"><ImageIcon className="h-6 w-6" /></span>}
+              <span className="absolute left-1 top-1 rounded bg-ink/70 px-1.5 text-[10px] font-semibold text-white">{i + 1}</span>
+              <div className="absolute inset-x-0 bottom-0 flex justify-between bg-ink/70 p-1 opacity-0 transition group-hover:opacity-100 group-focus-within:opacity-100">
+                <button type="button" disabled={i === 0} onClick={() => move(i, -1)} className="grid h-6 w-6 place-items-center rounded text-white hover:bg-white/20 disabled:opacity-30" aria-label="Move earlier"><ArrowLeft className="h-3.5 w-3.5" /></button>
+                <button type="button" onClick={() => onChange(list.filter((_, j) => j !== i))} className="grid h-6 w-6 place-items-center rounded text-white hover:bg-rose" aria-label="Remove image"><Trash2 className="h-3.5 w-3.5" /></button>
+                <button type="button" disabled={i === list.length - 1} onClick={() => move(i, 1)} className="grid h-6 w-6 place-items-center rounded text-white hover:bg-white/20 disabled:opacity-30" aria-label="Move later"><ArrowRight className="h-3.5 w-3.5" /></button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="button" disabled={!!progress} onClick={() => ref.current?.click()} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-semibold text-white hover:bg-ink-soft disabled:opacity-60">
+          {progress ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Images className="h-3.5 w-3.5" />}
+          {progress ? `Uploading ${progress.done}/${progress.total}…` : "Upload images"}
+        </button>
+        <button type="button" onClick={addUrl} className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-ink-soft hover:bg-ink/5"><Link2 className="h-3.5 w-3.5" /> Add by URL</button>
+        <span className="text-xs text-ink-mute">Select or drop several at once · max 4 MB each</span>
+      </div>
+      <input ref={ref} type="file" multiple hidden accept="image/*" onChange={(e) => { add(e.target.files); e.target.value = ""; }} />
+    </div>
+  );
 }
 
 const isVideo = (url?: string) => !!url && /\.(mp4|webm|mov)(\?|$)/i.test(url);
@@ -97,24 +190,6 @@ function TagsInput({ value = [], onChange }: { value?: string[]; onChange: (v: s
   );
 }
 
-function MarkdownInput({ value, onChange }: { value?: string; onChange: (v: string) => void }) {
-  const [preview, setPreview] = useState(false);
-  return (
-    <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white">
-      <div className="flex items-center gap-1 border-b border-ink/5 bg-[#FBF9FC] px-2 py-1.5 text-xs">
-        <button type="button" onClick={() => setPreview(false)} className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 font-semibold ${!preview ? "bg-white shadow-sm" : "text-ink-mute"}`}><Pencil className="h-3 w-3" /> Write</button>
-        <button type="button" onClick={() => setPreview(true)} className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 font-semibold ${preview ? "bg-white shadow-sm" : "text-ink-mute"}`}><Eye className="h-3 w-3" /> Preview</button>
-        <span className="ml-auto pr-2 text-ink-mute">Markdown: ## Heading, **bold**, - list, &gt; quote</span>
-      </div>
-      {preview ? (
-        <div className="prose-lux max-h-[520px] min-h-[240px] overflow-y-auto p-5 !text-base" dangerouslySetInnerHTML={{ __html: marked.parse((value || "").replace(/<(?=[a-zA-Z/!])/g, "&lt;"), { async: false }) as string }} />
-      ) : (
-        <textarea value={value || ""} onChange={(e) => onChange(e.target.value)} rows={14} className="block w-full resize-y p-5 font-mono text-sm outline-none" />
-      )}
-    </div>
-  );
-}
-
 function ListInput({ field, value = [], onChange }: { field: Field; value?: any[]; onChange: (v: any[]) => void }) {
   const set = (i: number, k: string, v: any) => onChange(value.map((row, j) => (j === i ? { ...row, [k]: v } : row)));
   const move = (i: number, d: number) => {
@@ -172,7 +247,8 @@ export function FieldInput({ field, value, onChange, all }: { field: Field; valu
     case "textarea":
       return <textarea value={value ?? ""} onChange={(e) => onChange(e.target.value)} rows={4} className="input-lux resize-y" />;
     case "markdown":
-      return <MarkdownInput value={value} onChange={onChange} />;
+    case "richtext":
+      return <RichTextEditor value={value} onChange={onChange} />;
     case "number":
       return <input type="number" value={value ?? ""} onChange={(e) => onChange(e.target.value)} className="input-lux" />;
     case "date":
@@ -196,20 +272,8 @@ export function FieldInput({ field, value, onChange, all }: { field: Field; valu
       return <MediaInput value={value} onChange={onChange} />;
     case "video":
       return <MediaInput value={value} onChange={onChange} video />;
-    case "images": {
-      const list: string[] = value || [];
-      return (
-        <div className="space-y-3">
-          {list.map((src, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <div className="flex-1"><MediaInput value={src} onChange={(v) => onChange(list.map((x, j) => (j === i ? v : x)))} /></div>
-              <button type="button" onClick={() => onChange(list.filter((_, j) => j !== i))} className="mt-3 grid h-9 w-9 place-items-center rounded-xl text-rose hover:bg-rose/10" aria-label="Remove image"><Trash2 className="h-4 w-4" /></button>
-            </div>
-          ))}
-          <button type="button" onClick={() => onChange([...list, ""])} className="inline-flex items-center gap-2 rounded-full border border-dashed border-rose/40 px-4 py-2.5 text-sm font-semibold text-rose hover:bg-rose/5"><Plus className="h-4 w-4" /> Add image</button>
-        </div>
-      );
-    }
+    case "images":
+      return <ImagesInput value={value} onChange={onChange} />;
     case "list":
       return <ListInput field={field} value={value} onChange={onChange} />;
     case "slug":
