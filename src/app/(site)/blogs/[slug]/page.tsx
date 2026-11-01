@@ -1,14 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { docMetadata, getBlog, getBlogs, getComments, getSettings, incrementViews } from "@/lib/data";
+import { docMetadata, getBlog, getBlogs, getComments, getSettings } from "@/lib/data";
 import { readingTime, renderMarkdown } from "@/lib/markdown";
 import { sized } from "@/lib/img";
 import { Reveal } from "@/components/reveal";
 import { jsonLd as jsonLdString } from "@/lib/jsonld";
 import { Breadcrumbs, JournalCard, Stars } from "@/components/ui";
-import { CommentForm } from "@/components/forms";
+import { CommentForm, ViewBeacon } from "@/components/forms";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const revalidate = 600;
+export const generateStaticParams = async () => [];
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
@@ -22,7 +25,7 @@ export default async function BlogPost({ params }: Props) {
   const b = await getBlog(slug);
   if (!b) notFound();
   const [s, comments, related] = await Promise.all([
-    getSettings(), getComments(slug), getBlogs({ slug: { $ne: slug } }, { publishedAt: -1 }, 3), incrementViews(slug).catch(() => {}),
+    getSettings(), getComments(slug), getBlogs({ slug: { $ne: slug } }, { publishedAt: -1 }, 3),
   ]);
   const rated = comments.filter((c) => c.rating);
   const avg = rated.length ? rated.reduce((a, c) => a + c.rating, 0) / rated.length : 0;
@@ -43,6 +46,7 @@ export default async function BlogPost({ params }: Props) {
 
   return (
     <>
+      <ViewBeacon slug={slug} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
       <header className="pt-[78px]">
         <div className="wrap max-w-5xl pb-14 pt-16 text-center md:pt-24">
@@ -57,6 +61,7 @@ export default async function BlogPost({ params }: Props) {
             <span>{readingTime(b.content)} min read</span>
             {rated.length > 0 && (<><span className="h-px w-5 bg-ink/30" /><span className="flex items-center gap-2"><Stars value={avg} className="h-3.5 w-3.5" /> {avg.toFixed(1)}</span></>)}
           </div>
+          <a href="#comments" className="btn-outline mt-8">Rate &amp; comment{comments.length ? ` (${comments.length})` : ""}</a>
         </div>
         <Reveal img className="wrap">
           <img src={sized(b.cover, 2000, 85)} alt={b.title} className="aspect-[16/9] w-full object-cover" />
