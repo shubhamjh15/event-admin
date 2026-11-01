@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import { Stars } from "./stars";
 import { sized } from "@/lib/img";
-import { Monogram } from "./ui";
+import { Monogram } from "./monogram";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 

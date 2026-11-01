@@ -9,23 +9,7 @@ export { Stars };
 
 export { Wordmark } from "./wordmark";
 
-const MONO_TONES = ["bg-rani text-white", "bg-marigold text-ink", "bg-peacock text-white", "bg-ink text-white"];
-
-/** Typographic stand-in for a missing portrait: initials on a flat brand-colour block. */
-export function Monogram({ name, index = 0, className = "", size = "lg" }: { name: string; index?: number; className?: string; size?: "sm" | "lg" }) {
-  const initials = (name || "")
-    .replace(/^(the|mr|mrs|ms|dr)\s+/i, "")
-    .split(/[\s&]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase())
-    .join("");
-  return (
-    <div className={`grid place-items-center ${MONO_TONES[index % MONO_TONES.length]} ${className}`} role="img" aria-label={name}>
-      <span className={`font-display italic leading-none ${size === "lg" ? "text-[5.5rem] md:text-[7rem]" : "text-2xl"}`}>{initials}</span>
-    </div>
-  );
-}
+export { Monogram } from "./monogram";
 
 export function DynIcon({ name, className }: { name?: string; className?: string }) {
   const Cmp = (name && (Icons as any)[name]) || Icons.Sparkles;
@@ -56,10 +40,10 @@ export function SectionHead({
   );
 }
 
-/** Formats an amount with Indian digit grouping, e.g. ₹45,00,000. */
+/** Formats an amount: Indian digit grouping for rupees (₹45,00,000), otherwise $4,500,000. */
 export function formatPrice(n?: number, currency = "₹") {
   if (n == null) return "";
-  return `${currency}${n.toLocaleString("en-IN")}`;
+  return `${currency}${n.toLocaleString(currency === "₹" ? "en-IN" : "en-US")}`;
 }
 
 /** Package card: image on top, editorial caption beneath. */
@@ -187,7 +171,7 @@ export function Breadcrumbs({ items, light = true }: { items: { label: string; h
 export function ImageHero({ image, children, height = "h-[88svh] min-h-[600px]" }: { image: string; children: React.ReactNode; height?: string }) {
   return (
     <section data-hero className={`relative ${height} overflow-hidden bg-ink`}>
-      <img src={sized(image, 2400, 85)} alt="" className="absolute inset-0 h-full w-full animate-slow-zoom object-cover" />
+      <img src={sized(image, 1920, 80)} alt="" className="absolute inset-0 h-full w-full animate-slow-zoom object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/35" />
       <div className="wrap relative flex h-full flex-col justify-end pb-14 pt-36 text-white md:pb-20">{children}</div>
     </section>
