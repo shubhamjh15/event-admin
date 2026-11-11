@@ -19,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <head>
         <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="alternate" type="text/markdown" title="llms.txt" href="/llms.txt" />
       </head>
       <body className="font-sans">
         <script

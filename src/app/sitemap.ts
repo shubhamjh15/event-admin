@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [events, services, blogs, categories, celebs] = await Promise.all([getEvents(), getServices(), getBlogs(), getCategories(), getCelebEvents()]);
   const now = new Date();
   return [
-    ...["", "/events", "/services", "/about", "/gallery", "/celeb-zone", "/testimonials", "/blogs", "/contact", "/book"].map((p) => ({ url: base + p, lastModified: now, priority: p ? 0.8 : 1 })),
+    ...["", "/events", "/services", "/about", "/gallery", "/celeb-zone", "/testimonials", "/blogs", "/contact", "/book", "/ai"].map((p) => ({ url: base + p, lastModified: now, priority: p ? 0.8 : 1 })),
     ...categories.map((c) => ({ url: `${base}/events?category=${c.slug}`, lastModified: new Date(c.updatedAt), priority: 0.7 })),
     ...events.map((e) => ({ url: `${base}/events/${e.slug}`, lastModified: new Date(e.updatedAt), priority: 0.7 })),
     ...services.map((s) => ({ url: `${base}/services/${s.slug}`, lastModified: new Date(s.updatedAt), priority: 0.6 })),

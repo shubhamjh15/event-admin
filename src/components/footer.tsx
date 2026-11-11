@@ -45,7 +45,7 @@ export function Footer({ s, categories }: { s: SiteSettings; categories: any[] }
           <div className="lg:col-span-2">
             <p className="label text-[10px] text-white/45">Company</p>
             <ul className="mt-6 space-y-3 text-[15px] text-white/80">
-              {[["/about", "About"], ["/services", "Services"], ["/gallery", "Gallery"], ["/celeb-zone", "Celeb Zone"], ["/blogs", "Journal"], ["/testimonials", "Client stories"], ["/contact", "Enquire"], ["/book", "Book"]].map(([h, l]) => (
+              {[["/about", "About"], ["/services", "Services"], ["/gallery", "Gallery"], ["/celeb-zone", "Celeb Zone"], ["/blogs", "Journal"], ["/testimonials", "Client stories"], ["/contact", "Enquire"], ["/book", "Book"], ["/ai", "Book with AI"]].map(([h, l]) => (
                 <li key={h}><Link href={h} className="hover:text-marigold">{l}</Link></li>
               ))}
             </ul>
