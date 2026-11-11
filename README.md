@@ -27,6 +27,29 @@ If `MONGODB_URI` is empty in development, an **in-memory MongoDB** starts automa
 
 Enquiries and bookings send a confirmation to the customer and an alert to the admin; testimonials alert the admin; the blog editor can push a post to newsletter subscribers. Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` and optionally `MAIL_FROM` (see `.env.example`). The alert inbox is set in **Site Settings**. Without SMTP the forms keep working, and each record's **Email delivery** field shows that sending was skipped.
 
+## AI-agent commerce (Claude, ChatGPT, Gemini)
+
+AI assistants can search packages, get a binding quote, negotiate and book on a customer's behalf. Customers see how it works at `/ai`.
+
+| Endpoint | Purpose |
+|---|---|
+| `/api/mcp` | MCP server (Streamable HTTP, no auth). Add it as a custom connector in Claude or ChatGPT, or in any MCP client. |
+| `/api/agent/v1/openapi.json` | The same tools as a REST API (OpenAPI 3.1), for custom GPT Actions and agent frameworks. |
+| `/llms.txt`, `/.well-known/mcp.json` | Discovery: the business, packages and booking flow in plain text, and the MCP server card. |
+| `/q/<ref>` | The customer's review-and-pay page for a quote. Agents share this link. |
+
+**Tools:** `get_business_info`, `search_packages`, `get_package`, `create_quote`, `get_quote`, `negotiate_quote`, `book_quote`, `get_booking_status`, `submit_enquiry`.
+
+**How pricing works.** Every price is calculated and stored on the server, so an agent can't set one. A quote multiplies the package price by guests or days (**Price basis** on each package, inferred from the price note when blank). It then applies group-size and early-booking discounts, adds complimentary extras by price tier, and adds tax and the deposit. Quotes expire after the validity window.
+
+**Negotiation.** Each round the price moves part of the way toward a private floor: 40% of the gap in round 1, 60% in round 2, then all of it in the final round. An offer at or above our counter is accepted at the offered price. When an agent cites a lower like-for-like competitor price, we beat it by 1% if the floor allows, and the quote is flagged for staff to verify. The floor is list price minus **Max negotiable discount %** (set per package or site-wide) and is never shown to agents.
+
+**Booking.** `book_quote` requires `customerConfirmed: true`, which the agent sends only after the customer approves. Booking claims the quote atomically, so a quote can't be booked twice. It emails the customer and the admin and returns the checkout link.
+
+**Payments.** With `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` set, customers pay the deposit by Razorpay payment link (cards, UPI, net banking). Payment is confirmed by the signed redirect and by the signed webhook (`RAZORPAY_WEBHOOK_SECRET`, event `payment_link.paid`). Either confirmation marks the booking confirmed exactly once and emails a receipt. Without Razorpay, bookings show your **Offline payment instructions**.
+
+**Admin.** **AI Quotes & Negotiations** shows every quote, its private floor, the full negotiation history and price-match claims; set a quote to *withdrawn* to stop it being booked. **Bookings** show the source, assistant, agreed total, deposit and payment status. **Settings → AI agent commerce** controls the on/off switch, discount limits, rounds, deposit, validity, tax, discount tiers and complimentary extras.
+
 ## Production deployment
 
 ```bash
