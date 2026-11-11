@@ -95,11 +95,11 @@ export function ResourceList({ resourceKey }: { resourceKey: string }) {
           <p className="mt-1 text-ink-mute">{data.total} {data.total === 1 ? resource.singular.toLowerCase() : "records"}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {["enquiries", "bookings", "subscribers", "comments"].includes(resourceKey) && (
+          {["enquiries", "bookings", "subscribers", "comments", "quotes"].includes(resourceKey) && (
             <a href={`/api/admin/r/${resourceKey}?format=csv&${qs}`} className="btn-soft !py-2.5"><Download className="h-4 w-4" /> Export CSV</a>
           )}
           {resource.bulkUpload && <BulkUpload resourceKey={resourceKey} imageField={resource.bulkUpload.imageField} titleField={resource.bulkUpload.titleField} onDone={load} />}
-          <Link href={`/admin/${resourceKey}/new`} className="btn-lit !py-2.5"><Plus className="h-4 w-4" /> Add {resource.singular.toLowerCase()}</Link>
+          {!resource.readOnlyCreate && <Link href={`/admin/${resourceKey}/new`} className="btn-lit !py-2.5"><Plus className="h-4 w-4" /> Add {resource.singular.toLowerCase()}</Link>}
         </div>
       </div>
 

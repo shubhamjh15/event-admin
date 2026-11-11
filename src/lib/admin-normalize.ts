@@ -27,6 +27,7 @@ function coerce(field: Field, v: any): any {
 export function normalize(resource: Pick<Resource, "fields">, body: any, partial = false) {
   const out: Record<string, any> = {};
   for (const f of resource.fields) {
+    if (f.readOnly) continue;
     if (partial && !(f.name in (body || {}))) continue;
     const v = coerce(f, body?.[f.name]);
     if (v !== undefined) out[f.name] = v;

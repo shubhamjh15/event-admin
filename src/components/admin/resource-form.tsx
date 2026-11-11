@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ExternalLink, Loader2, Save, Trash2, Mail, Phone, Send, Globe, EyeOff, FlaskConical } from "lucide-react";
 import { resourceMap, type Field } from "@/lib/resources";
-import { FieldInput, SeoPreview } from "./fields";
+import { FieldInput, ReadOnlyValue, SeoPreview } from "./fields";
 import { toast } from "./toast";
 
 const DEFAULTS: Record<string, any> = { active: true, published: true, featured: false, approved: true, rating: 5, mediaType: "image", kind: "booking" };
@@ -23,7 +23,7 @@ export function FieldGrid({ fields, values, set }: { fields: Field[]; values: an
               {list.map((f) => (
                 <div key={f.name} className={f.half ? "" : "md:col-span-2"}>
                   <label className="label-lux">{f.label}{f.required && <span className="text-rose"> *</span>}</label>
-                  <FieldInput field={f} value={values[f.name]} onChange={(v) => set(f.name, v)} all={values} />
+                  {f.readOnly ? <ReadOnlyValue field={f} value={values[f.name]} /> : <FieldInput field={f} value={values[f.name]} onChange={(v) => set(f.name, v)} all={values} />}
                   {f.help && <p className="mt-1.5 text-xs text-ink-mute">{f.help}</p>}
                 </div>
               ))}

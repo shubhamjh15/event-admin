@@ -53,6 +53,8 @@ export const Event = model(
       guests: String,
       price: Number,
       priceNote: String,
+      priceUnit: String, // flat | per-guest | per-day — how AI-agent quotes multiply the price (blank = inferred from priceNote)
+      maxDiscountPct: Number, // private negotiation floor for AI agents (blank = site default); never exposed publicly
       inclusions: [String],
       itinerary: [{ day: String, title: String, details: String }],
       featured: { type: Boolean, default: false },
@@ -222,6 +224,17 @@ export const Booking = model(
       mode: String, // appointment: in-person / video / phone
       paymentMethod: String,
       message: String,
+      source: String, // website | ai-agent | quote-page
+      agent: String, // AI client that placed the booking, when known
+      quoteRef: { type: String, index: true },
+      currency: String,
+      amount: Number, // agreed total incl. tax
+      deposit: Number, // amount due to confirm
+      paidAmount: Number,
+      paymentStatus: { type: String, default: "unpaid" }, // unpaid | link-created | deposit-paid | paid | failed
+      paymentLinkId: String,
+      paymentLinkUrl: String,
+      paymentId: String,
       status: { type: String, default: "pending" },
       notes: String,
       emailLog: String,
@@ -249,6 +262,49 @@ export const CelebEvent = model(
       featured: { type: Boolean, default: false },
       order: { type: Number, default: 0 },
       ...seoFields,
+    },
+    opts,
+  ),
+);
+
+export const Quote = model(
+  "Quote",
+  new Schema(
+    {
+      ref: { type: String, required: true, unique: true },
+      status: { type: String, default: "open" }, // open | booked | expired | withdrawn
+      eventPackage: String, // Event slug
+      eventTitle: String,
+      eventDate: String,
+      guests: Number,
+      days: Number,
+      priceUnit: String,
+      currency: { type: String, default: "INR" },
+      lines: [{ label: String, amount: Number, kind: String }], // kind: base | discount | negotiated | tax
+      listTotal: Number, // gross before any discount, ex-tax
+      subtotal: Number, // current price ex-tax
+      floor: Number, // lowest acceptable subtotal (private)
+      taxPct: Number,
+      taxLabel: String,
+      tax: Number,
+      total: Number,
+      depositPct: Number,
+      deposit: Number,
+      inclusions: [String],
+      perks: [String],
+      notes: [String],
+      rounds: { type: Number, default: 0 },
+      maxRounds: Number,
+      history: [{ at: Date, offer: Number, competitorPrice: Number, competitorSource: String, response: String, priceAfter: Number, message: String }],
+      priceMatchClaim: { type: Boolean, default: false },
+      requirements: String,
+      agent: String,
+      channel: String, // mcp | rest | web
+      customerName: String,
+      customerEmail: String,
+      bookingId: String,
+      expiresAt: Date,
+      adminNotes: String,
     },
     opts,
   ),

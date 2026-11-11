@@ -242,6 +242,49 @@ function SelectInput({ field, value, onChange }: { field: Field; value: any; onC
   );
 }
 
+const fmtValue = (f: Field, v: any) => {
+  if (v == null || v === "") return "—";
+  if (f.type === "number") return Number(v).toLocaleString("en-IN");
+  if (f.type === "boolean") return v ? "Yes" : "No";
+  if (f.type === "date" || /^\d{4}-\d{2}-\d{2}T/.test(String(v))) {
+    const d = new Date(v);
+    return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: /T00:00:00/.test(String(v)) ? undefined : "short" });
+  }
+  return Array.isArray(v) ? v.join(", ") : String(v);
+};
+
+/** Display-only value for system-managed fields (prices, references, negotiation logs). */
+export function ReadOnlyValue({ field, value }: { field: Field; value: any }) {
+  if (field.type === "list") {
+    const rows: any[] = Array.isArray(value) ? value : [];
+    if (!rows.length) return <p className="rounded-2xl bg-ink/[0.03] px-4 py-3 text-sm text-ink-mute">Nothing yet.</p>;
+    const cols = (field.fields || []).filter((c) => rows.some((r) => r?.[c.name] != null && r?.[c.name] !== ""));
+    return (
+      <div className="overflow-x-auto rounded-2xl ring-1 ring-ink/10">
+        <table className="w-full min-w-[520px] text-left text-sm">
+          <thead className="bg-ink/[0.03] text-[11px] uppercase tracking-wider text-ink-mute">
+            <tr>{cols.map((c) => <th key={c.name} className="px-4 py-2.5 font-semibold">{c.label}</th>)}</tr>
+          </thead>
+          <tbody className="divide-y divide-ink/5">
+            {rows.map((r, i) => (
+              <tr key={i} className="align-top">
+                {cols.map((c) => <td key={c.name} className={`px-4 py-2.5 ${c.type === "number" ? "whitespace-nowrap tabular-nums" : ""}`}>{fmtValue(c, r?.[c.name])}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  const text = fmtValue(field, value);
+  const isUrl = typeof value === "string" && /^https?:\/\//.test(value);
+  return (
+    <div className={`min-h-[46px] rounded-2xl bg-ink/[0.03] px-4 py-3 text-sm ${field.type === "number" ? "tabular-nums font-semibold" : ""} ${field.type === "textarea" ? "whitespace-pre-wrap" : "break-all"}`}>
+      {isUrl ? <a href={value} target="_blank" rel="noreferrer" className="text-rose underline">{value}</a> : text}
+    </div>
+  );
+}
+
 export function FieldInput({ field, value, onChange, all }: { field: Field; value: any; onChange: (v: any) => void; all?: any }) {
   switch (field.type) {
     case "textarea":

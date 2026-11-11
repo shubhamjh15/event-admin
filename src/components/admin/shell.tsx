@@ -4,12 +4,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, Inbox, CalendarCheck, Mail, PartyPopper, Shapes, MapPin, Sparkles, GalleryHorizontal, Images, Newspaper, MessageSquare,
-  Users, Quote, HelpCircle, Milestone, Search, Settings, LogOut, ExternalLink, Menu, X, Star,
+  Users, Quote, HelpCircle, Milestone, Search, Settings, LogOut, ExternalLink, Menu, X, Star, Bot,
 } from "lucide-react";
 import { resources } from "@/lib/resources";
 import { Toaster } from "./toast";
 
-const ICONS: Record<string, any> = { Inbox, CalendarCheck, Mail, PartyPopper, Shapes, MapPin, Sparkles, GalleryHorizontal, Images, Newspaper, MessageSquare, Users, Quote, HelpCircle, Milestone, Search, Star };
+const ICONS: Record<string, any> = { Inbox, CalendarCheck, Mail, PartyPopper, Shapes, MapPin, Sparkles, GalleryHorizontal, Images, Newspaper, MessageSquare, Users, Quote, HelpCircle, Milestone, Search, Star, Bot };
 
 const groups = ["CRM", "Catalogue", "Media", "Content", "Company", "Settings"];
 

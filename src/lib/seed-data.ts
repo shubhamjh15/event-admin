@@ -102,6 +102,7 @@ export const settings = {
   tagline: "Luxury events, lit up since 1989",
   since: "1989",
   currency: "₹",
+  currencyCode: "INR",
   phone: "+91 98765 43210",
   whatsapp: "+919876543210",
   email: "hello@litconcierge.com",
@@ -120,6 +121,31 @@ export const settings = {
   priceBadge: "Prices lower than online — guaranteed",
   budgetRanges: ["Under $25k", "$25k – $50k", "$50k – $100k", "$100k – $250k", "$250k+"],
   notifyEmail: "",
+  // AI-agent commerce (search, quote, negotiate, book). Floors and tiers are never shown to agents.
+  agentCommerceEnabled: true,
+  agentMaxDiscountPct: 12,
+  agentDepositPct: 25,
+  agentQuoteValidityHours: 72,
+  agentMaxRounds: 3,
+  agentTaxPct: 18,
+  agentTaxLabel: "GST",
+  agentVolumeTiers: [
+    { min: 50, pct: 3 },
+    { min: 100, pct: 5 },
+    { min: 250, pct: 8 },
+  ],
+  agentEarlyTiers: [
+    { min: 90, pct: 2 },
+    { min: 180, pct: 4 },
+  ],
+  agentPerks: [
+    { min: 0, perk: "Dedicated senior planner from first call to farewell" },
+    { min: 0, perk: "Curated welcome hampers for the hosts" },
+    { min: 1000000, perk: "Private menu tasting for up to 6 people" },
+    { min: 2500000, perk: "Designer-wear styling consultation" },
+    { min: 5000000, perk: "Comprehensive event insurance (weather, cancellation, liability)" },
+  ],
+  agentPaymentInstructions: "",
   expertise:
     "With our expertise, you can tailor events to meet specific needs, provide a seamless experience for attendees, and build and create memorable experiences.",
   aboutShort:
