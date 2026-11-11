@@ -61,7 +61,7 @@ export async function notifyBooking(b: Record<string, any>) {
     ["Type", isAppt ? "Free consultation" : "Event booking"], ["Name", b.name], ["Email", b.email], ["Phone", b.phone],
     ["Package", pkg?.title || (isAppt ? undefined : "Bespoke / not sure yet")], [isAppt ? "Preferred date" : "Event date", b.eventDate],
     ["Time", b.time], ["Guests", b.guests], ["Meeting", b.mode], ["Payment preference", b.paymentMethod], ["Notes", b.message],
-    ...((b.quoteRef ? [["Booking ref", b.quoteRef], ["Agreed total (incl. tax)", b.amount], ["Deposit to confirm", b.deposit], ["Booked via", b.agent ? `AI assistant (${b.agent})` : b.source === "ai-agent" ? "AI assistant" : "Online quote"]] : []) as [string, unknown][]),
+    ...((b.quoteRef ? [["Booking ref", b.quoteRef], ["Agreed total (incl. tax)", b.amount], ["Deposit to confirm", b.deposit], ["Booked via", b.source === "ai-agent" ? `AI assistant${b.agent ? ` (${b.agent})` : ""}` : "Online quote page"]] : []) as [string, unknown][]),
   ];
   const first = String(b.name || "").split(" ")[0] || "there";
   const [customer, admin] = await Promise.all([

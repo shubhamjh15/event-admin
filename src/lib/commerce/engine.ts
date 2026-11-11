@@ -64,6 +64,16 @@ async function loadConfig() {
   return { s, cfg };
 }
 
+/** Friendly assistant name from an MCP client name or user agent, or null when it isn't a known assistant. */
+export function assistantLabel(agent?: string | null): string | null {
+  const a = String(agent || "").toLowerCase();
+  const known: [RegExp, string][] = [
+    [/claude|anthropic/, "Claude"], [/chatgpt|openai|gpt/, "ChatGPT"], [/gemini|google/, "Gemini"], [/perplexity/, "Perplexity"],
+    [/copilot|microsoft/, "Copilot"], [/cursor/, "Cursor"], [/grok|xai/, "Grok"], [/meta-?ai|llama/, "Meta AI"],
+  ];
+  return known.find(([re]) => re.test(a))?.[1] ?? null;
+}
+
 export function money(n: number, cfg: { currency: string; symbol: string }) {
   return `${cfg.symbol}${Math.round(n).toLocaleString(cfg.currency === "INR" ? "en-IN" : "en-US")}`;
 }
@@ -557,7 +567,7 @@ export async function bookingStatus(input: { quoteRef?: string; email?: string }
         ? { checkoutUrl: `${SITE_URL()}/q/${ref}`, instructions: "Share this secure link with the customer to pay the deposit by card, UPI or net banking. The booking is confirmed automatically once paid." }
         : {
             checkoutUrl: `${SITE_URL()}/q/${ref}`,
-            instructions: cfg.paymentInstructions || `Your planner will send ${b.paymentMethod || "payment"} details within 24 hours. Questions: ${s.phone} · ${s.email}.`,
+            instructions: cfg.paymentInstructions || `The planner will share how to pay${b.paymentMethod ? ` by ${b.paymentMethod.toLowerCase()}` : ""} within 24 hours.${paymentsEnabled() ? " Online payment is also available at the checkout link." : ""} Questions: ${s.phone} · ${s.email}.`,
           },
     nextSteps: paid
       ? ["Your planner will be in touch within 24 hours to begin planning."]

@@ -5,7 +5,7 @@ import { Bot, Check } from "lucide-react";
 import { dbConnect } from "@/lib/db";
 import { Booking, Quote } from "@/lib/models";
 import { getEvent, getSettings } from "@/lib/data";
-import { commerceConfig, money, quoteView } from "@/lib/commerce/engine";
+import { assistantLabel, commerceConfig, money, quoteView } from "@/lib/commerce/engine";
 import { paymentsEnabled } from "@/lib/commerce/payments";
 import { sized } from "@/lib/img";
 import { QuoteBookForm } from "@/components/quote-actions";
@@ -47,18 +47,19 @@ export default async function QuotePage({ params, searchParams }: Props) {
   const fm = (n: number) => money(n, cfg);
   const notice = pay ? PAY_NOTICE[pay] || PAY_NOTICE.error : null;
   const expires = q.expiresAt ? new Date(q.expiresAt) : null;
-  const statusLabel = paid ? "Confirmed" : booking ? (booking.status === "cancelled" ? "Cancelled" : "Booked · deposit due") : q.status === "open" ? "Open" : q.status === "expired" ? "Expired" : "Closed";
+  const assistant = doc.channel !== "web" ? assistantLabel(doc.agent) : null;
+  const statusLabel = paid ? "Confirmed" : booking ? (booking.status === "cancelled" ? "Cancelled" : "Deposit due") : q.status === "open" ? "Open" : q.status === "expired" ? "Expired" : "Closed";
 
   return (
     <>
       <section className="border-b border-ink/15 bg-paper pt-[120px] md:pt-[150px]">
-        <div className="wrap grid gap-10 pb-14 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-8">
+        <div className="wrap grid grid-cols-1 gap-10 pb-14 lg:grid-cols-12 lg:items-end">
+          <div className="min-w-0 lg:col-span-8">
             <p className="label flex flex-wrap items-center gap-3 text-ink-mute">
               <span>Your quote</span><span className="h-px w-8 bg-ink/30" /><span className="font-mono tracking-normal text-ink">{q.quoteRef}</span>
-              {doc.channel !== "web" && doc.agent && <span className="inline-flex items-center gap-1.5 border border-ink/20 px-2 py-1 normal-case tracking-normal"><Bot className="h-3.5 w-3.5" /> Prepared with {doc.agent.split(" ")[0]}</span>}
+              {assistant && <span className="inline-flex items-center gap-1.5 border border-ink/20 px-2 py-1 normal-case tracking-normal"><Bot className="h-3.5 w-3.5" /> Prepared with {assistant}</span>}
             </p>
-            <h1 className="display mt-6 text-5xl md:text-7xl">{q.package.title}</h1>
+            <h1 className="display mt-6 break-words text-[2.6rem] sm:text-5xl md:text-7xl">{q.package.title}</h1>
             <dl className="mt-10 grid grid-cols-2 border-t border-ink/15 md:grid-cols-4">
               {[
                 ["Date", fmtDate(q.eventDate)],
@@ -88,7 +89,7 @@ export default async function QuotePage({ params, searchParams }: Props) {
         </div>
       )}
 
-      <section className="wrap grid gap-16 py-16 md:py-24 lg:grid-cols-12">
+      <section className="wrap grid grid-cols-1 gap-16 py-12 md:py-24 lg:grid-cols-12">
         <div className="min-w-0 lg:col-span-7">
           <div className="mb-8 flex items-center gap-4 text-ink-mute">
             <h2 className="label">The statement</h2>
@@ -110,7 +111,7 @@ export default async function QuotePage({ params, searchParams }: Props) {
           <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="label text-[10px] text-ink-mute">Total, all taxes included</p>
-              <p className="display mt-2 text-6xl md:text-7xl">{q.totalFormatted}</p>
+              <p className="display mt-2 text-[clamp(2.75rem,12vw,4.5rem)]">{q.totalFormatted}</p>
             </div>
             {q.savings > 0 && (
               <p className="bg-marigold px-4 py-2 text-sm font-semibold">You save {q.savingsFormatted}</p>
@@ -164,7 +165,7 @@ export default async function QuotePage({ params, searchParams }: Props) {
           </ul>
         </div>
 
-        <aside className="lg:col-span-5 lg:pl-6">
+        <aside className="order-first min-w-0 lg:order-none lg:col-span-5 lg:pl-6">
           <div className="border border-ink/15 bg-white/60 p-7 md:p-9 lg:sticky lg:top-28">
             {paid ? (
               <div role="status">
@@ -187,7 +188,7 @@ export default async function QuotePage({ params, searchParams }: Props) {
                     </>
                   ) : (
                     <>
-                      <p className="mt-6 whitespace-pre-line text-sm leading-relaxed text-ink-soft">{cfg.paymentInstructions || `Your planner will send ${booking.paymentMethod || "payment"} details within 24 hours.`}</p>
+                      <p className="mt-6 whitespace-pre-line text-sm leading-relaxed text-ink-soft">{cfg.paymentInstructions || `Your planner will share how to pay${booking.paymentMethod ? ` by ${booking.paymentMethod.toLowerCase()}` : ""} within 24 hours.`}</p>
                       {online && <a href={`/api/pay/${ref}`} className="btn-outline mt-6 w-full">Or pay online now</a>}
                     </>
                   )}
