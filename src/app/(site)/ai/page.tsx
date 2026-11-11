@@ -25,7 +25,7 @@ export default async function AiPage() {
     ["Ask", "Tell your assistant what you're celebrating, where, when and for how many. It searches our live packages and prices."],
     ["Quote", "It gets an exact, itemised price from us, with group and early-booking savings and complimentary extras applied automatically."],
     ["Negotiate", `It can ask for a better price on your behalf — up to ${cfg.maxRounds} rounds — and show us a lower like-for-like quote for us to beat.`],
-    ["Book", "Once you approve the total, it books for you. You pay the deposit on our secure page — never in a chat."],
+    ["Book", "Once you approve the total, it locks the price and hands you a WhatsApp link. Tap send, and a planner confirms everything with you."],
   ];
   const clients = [
     ["Claude", "Settings → Connectors → Add custom connector. Paste the server URL and save. Then ask Claude to plan your event."],
@@ -34,8 +34,8 @@ export default async function AiPage() {
   ];
   const promises = [
     ["Prices you can trust", "Every price is calculated by our system and held in writing on a quote page. An assistant can't invent a discount."],
-    ["You stay in control", "Nothing is booked until you've seen the total and deposit and said yes."],
-    ["Card details stay private", "Payment happens on our secure checkout (cards, UPI, net banking). Your assistant never sees card numbers."],
+    ["You stay in control", "Nothing is booked until you've seen the total and said yes."],
+    ["No payments in a chat", "Your assistant never takes money or card details. Your planner arranges payment with you directly on WhatsApp."],
     [`Since ${s.since}`, "Licensed, bonded and insured. A senior planner calls you within 24 hours of every booking."],
   ];
 
@@ -49,7 +49,7 @@ export default async function AiPage() {
               Let your AI <em className="serif-i text-marigold">book the party.</em>
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-white/70">
-              Claude, ChatGPT and Gemini can now search our packages, get you our best price, negotiate it down and book — directly with {s.siteName}, the way you'd ask a friend.
+              Claude, ChatGPT and Gemini can now search our packages, get you our best price, negotiate it down and book it on WhatsApp — directly with {s.siteName}, the way you'd ask a friend.
             </p>
           </div>
           <div className="min-w-0 lg:col-span-4">

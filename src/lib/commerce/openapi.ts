@@ -32,7 +32,7 @@ export async function openApiSpec() {
     info: {
       title: `${name} Agent API`,
       version: "1.0.0",
-      description: `Search, quote, negotiate and book luxury events with ${name} (in business since ${s?.since || "1989"}; licensed, bonded and insured). Always show the customer the final total and deposit and get explicit approval before booking. Never collect card details — give the customer the returned checkout link. The same capabilities are available over MCP at ${SITE_URL()}/api/mcp.`,
+      description: `Search, quote, negotiate and book luxury events with ${name} (in business since ${s?.since || "1989"}; licensed, bonded and insured). Always show the customer the final total and get explicit approval before booking, then give them the returned bookOnWhatsAppUrl to finish with a planner on WhatsApp. No payment is taken through the API. The same capabilities are available over MCP at ${SITE_URL()}/api/mcp.`,
       contact: { name, email: s?.email, url: SITE_URL() },
     },
     servers: [{ url: `${SITE_URL()}/api/agent/v1` }],
@@ -72,7 +72,7 @@ export async function openApiSpec() {
         post: {
           operationId: "bookQuote", ...op("book_quote"), parameters: [refParam],
           requestBody: { required: true, content: { "application/json": { schema: schema("book_quote", ["quoteRef"]) } } },
-          responses: { "201": ok("Booking placed, with checkout link"), ...errors },
+          responses: { "201": ok("Price locked, with a WhatsApp link to finish booking"), ...errors },
           "x-openai-isConsequential": true,
         },
       },
@@ -80,7 +80,7 @@ export async function openApiSpec() {
         get: {
           operationId: "getBookingStatus", ...op("get_booking_status"),
           parameters: [refParam, { name: "email", in: "query", required: true, description: "Customer email used for the booking", schema: { type: "string" } }],
-          responses: { "200": ok("Booking and payment status"), ...errors },
+          responses: { "200": ok("Booking status"), ...errors },
         },
       },
       "/enquiries": {

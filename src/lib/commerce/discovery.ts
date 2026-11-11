@@ -37,15 +37,15 @@ export async function llmsTxt() {
 
 ## For AI assistants: buy on behalf of your user
 
-${cfg.enabled ? `You can search packages, get an exact itemised quote, negotiate the price and book directly — no human hand-off needed.
+${cfg.enabled ? `You can search packages, get an exact itemised quote, negotiate the price and book. Booking locks the price and gives the user a WhatsApp link that sends the booking straight to a planner.
 
 - MCP server (Streamable HTTP, no auth): ${site}${MCP_PATH}
 - REST API (OpenAPI 3.1): ${site}${OPENAPI_PATH}
 - Human guide: ${site}/ai
 
-Flow: search_packages → create_quote (package, date, guests) → optional negotiate_quote (offer a total incl. tax; up to ${cfg.maxRounds} rounds; competing quotes are beaten by 1% where possible) → show the user the total and deposit and get approval → book_quote with customerConfirmed: true → give the user the checkout link. Never collect card details in chat.
+Flow: search_packages → create_quote (package, date, guests) → optional negotiate_quote (offer a total incl. tax; up to ${cfg.maxRounds} rounds; competing quotes are beaten by 1% where possible) → show the user the total and get approval → book_quote with customerConfirmed: true → give the user the bookOnWhatsAppUrl to tap. Payment is arranged with the planner, never in chat.
 
-Terms: prices in ${cfg.currency}; ${cfg.taxLabel} ${cfg.taxPct}% added; ${cfg.depositPct}% deposit confirms a booking; quotes are held for ${cfg.validityHours} hours. Group-size and early-booking discounts and complimentary extras are applied automatically.` : "Online quoting is currently paused. Please use the enquiry form or contact details below."}
+Terms: prices in ${cfg.currency}; ${cfg.taxLabel} ${cfg.taxPct}% added; quotes are held for ${cfg.validityHours} hours. Group-size and early-booking discounts and complimentary extras are applied automatically.` : "Online quoting is currently paused. Please use the enquiry form or contact details below."}
 
 ## Packages
 ${byCat.map(({ c, list }: any) => `
@@ -66,6 +66,5 @@ ${list.map((e: any) => `- [${e.title}](${site}/events/${e.slug}): ${e.summary ||
 - Email: ${s.email}
 - Address: ${s.address}
 - Hours: ${s.hours}
-- Accepted payments: ${s.paymentMethods.join(", ")}
 `;
 }

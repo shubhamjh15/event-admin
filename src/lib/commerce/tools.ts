@@ -25,7 +25,7 @@ export const tools: Tool[] = [
     name: "get_business_info",
     title: "About Lit Concierge",
     description:
-      "Who Lit Concierge is (luxury event & travel concierge, in business since 1989, licensed, bonded and insured), contact details, accepted payment methods, booking terms (deposit, quote validity, tax), event categories and services. Call this first if you need context or terms.",
+      "Who Lit Concierge is (luxury event & travel concierge, in business since 1989, licensed, bonded and insured), contact details, accepted payment methods, booking terms (quote validity, tax, how booking works), event categories and services. Call this first if you need context or terms.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
     annotations: { readOnlyHint: true, openWorldHint: false },
     run: () => businessInfo(),
@@ -62,7 +62,7 @@ export const tools: Tool[] = [
     name: "create_quote",
     title: "Get a bookable quote",
     description:
-      "Create a binding, itemised quote for a package on a date for a number of guests. Group-size and early-booking discounts are applied automatically, complimentary extras are included, and tax and deposit are shown. Returns a quoteRef used to negotiate, book or share a review-and-pay link with the customer. Quotes are valid for a limited time (see expiresAt).",
+      "Create a binding, itemised quote for a package on a date for a number of guests. Group-size and early-booking discounts are applied automatically, complimentary extras are included, and tax is shown. Returns a quoteRef used to negotiate or book, a quoteUrl to share with the customer, and a bookOnWhatsAppUrl. Quotes are valid for a limited time (see expiresAt).",
     inputSchema: {
       type: "object",
       properties: {
@@ -112,7 +112,7 @@ export const tools: Tool[] = [
     name: "book_quote",
     title: "Book (purchase) a quote",
     description:
-      "Purchase a quote at its current price for the customer. Only call after showing the customer the total, deposit, date, guests and package and receiving their explicit approval — then set customerConfirmed to true. Places the booking, emails the customer a confirmation, and returns a secure checkout link to pay the deposit (cards, UPI, net banking) or offline payment instructions.",
+      "Book a quote at its current price for the customer. Only call after showing the customer the total, date, guests and package and receiving their explicit approval — then set customerConfirmed to true. Locks the price, notifies our team, emails the customer a copy, and returns bookOnWhatsAppUrl: give it to the customer to tap, which opens WhatsApp with the booking pre-filled so a planner can confirm and arrange payment. No payment is taken online.",
     inputSchema: {
       type: "object",
       properties: {
@@ -120,7 +120,6 @@ export const tools: Tool[] = [
         name: str("Customer's full name"),
         email: str("Customer's email", { format: "email" }),
         phone: str("Customer's phone with country code, e.g. +91 98765 43210"),
-        paymentMethod: str("'Online' (secure payment link) or an accepted offline method from get_business_info, e.g. 'Bank Transfer'"),
         notes: str("Additional notes for the planner"),
         customerConfirmed: { type: "boolean", description: "Must be true: the customer has reviewed and approved this purchase" },
       },
@@ -133,7 +132,7 @@ export const tools: Tool[] = [
   {
     name: "get_booking_status",
     title: "Check a booking",
-    description: "Status of a booking and its payment, with the checkout link if the deposit is still due. Requires the booking reference and the customer's email.",
+    description: "Status of a booking (pending until a planner confirms it on WhatsApp, then confirmed), with the WhatsApp link to reach the planner. Requires the booking reference and the customer's email.",
     inputSchema: {
       type: "object",
       properties: { quoteRef: { ...quoteRef, description: "Booking reference (same as the quote reference)" }, email: str("Customer email used for the booking", { format: "email" }) },

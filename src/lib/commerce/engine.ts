@@ -5,11 +5,11 @@ import { Booking, Enquiry, Quote } from "../models";
 import { getCategories, getEvent, getEvents, getServices, getSettings, type SiteSettings } from "../data";
 import { settings as defaults } from "../seed-data";
 import { notifyBooking, notifyEnquiry } from "../notify";
-import { paymentsEnabled } from "./payments";
 
 /**
  * Agentic commerce core: everything an AI agent (Claude, ChatGPT, Gemini…) needs to search the
- * catalogue, get a binding quote, negotiate within admin-set limits and place a booking.
+ * catalogue, get a binding quote, negotiate within admin-set limits and book. Bookings are
+ * finalised with a planner on WhatsApp; no money changes hands on the site.
  * Shared by the MCP server (/api/mcp), the REST API (/api/agent/v1) and the human quote page (/q/[ref]).
  *
  * Prices are always computed and stored server-side; an agent can never set a price directly.
@@ -43,7 +43,6 @@ export function commerceConfig(s: SiteSettings) {
     currency: String(x.currencyCode || "INR").toUpperCase(),
     symbol: x.currency || "₹",
     maxDiscountPct: Math.min(60, Math.max(0, num(x.agentMaxDiscountPct, defaults.agentMaxDiscountPct))),
-    depositPct: Math.min(100, Math.max(0, num(x.agentDepositPct, defaults.agentDepositPct))),
     validityHours: Math.min(24 * 30, Math.max(1, num(x.agentQuoteValidityHours, defaults.agentQuoteValidityHours))),
     maxRounds: Math.min(10, Math.max(0, num(x.agentMaxRounds, defaults.agentMaxRounds))),
     taxPct: Math.min(50, Math.max(0, num(x.agentTaxPct, defaults.agentTaxPct))),
@@ -53,7 +52,8 @@ export function commerceConfig(s: SiteSettings) {
     perks: (Array.isArray(x.agentPerks) ? x.agentPerks : defaults.agentPerks)
       .map((p: any) => ({ min: Number(p?.min) || 0, perk: String(p?.perk || "").trim() }))
       .filter((p: any) => p.perk),
-    paymentInstructions: String(x.agentPaymentInstructions || "").trim(),
+    whatsapp: String(s.whatsapp || s.phone || "").replace(/[^\d]/g, ""),
+    siteName: s.siteName,
   };
 }
 
@@ -76,6 +76,28 @@ export function assistantLabel(agent?: string | null): string | null {
 
 export function money(n: number, cfg: { currency: string; symbol: string }) {
   return `${cfg.symbol}${Math.round(n).toLocaleString(cfg.currency === "INR" ? "en-IN" : "en-US")}`;
+}
+
+/** wa.me deep link that opens a chat with the business, with the message pre-typed. */
+export function whatsappLink(number: string, text: string) {
+  return number ? `https://wa.me/${number}?text=${encodeURIComponent(text)}` : null;
+}
+
+const fmtDay = (iso?: string) =>
+  iso ? new Date(iso + "T00:00:00Z").toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : "";
+
+/** The WhatsApp message a customer sends to book a quote: everything the planner needs at a glance. */
+export function bookingMessage(q: any, cfg: { currency: string; symbol: string; siteName?: string }, name?: string) {
+  return [
+    `Hi ${cfg.siteName || "team"}, I'd like to book this${name ? ` (${name})` : ""}:`,
+    "",
+    `*${q.eventTitle}*`,
+    `Date: ${fmtDay(q.eventDate)}`,
+    `Guests: ${q.guests}${q.days ? ` · ${q.days} days` : ""}`,
+    `Total: ${money(q.total, cfg)} incl. ${q.taxLabel}`,
+    `Quote: ${q.ref}`,
+    `${SITE_URL()}/q/${q.ref}`,
+  ].join("\n");
 }
 
 /** How a package's price multiplies. Admin can set it explicitly; otherwise inferred from the price note. */
@@ -195,14 +217,11 @@ export async function businessInfo() {
     contact: { phone: s.phone, whatsapp: s.whatsapp, email: s.email, address: s.address, hours: s.hours },
     website: SITE_URL(),
     currency: cfg.currency,
-    acceptedPayments: s.paymentMethods,
-    onlinePayment: paymentsEnabled() ? "Cards, UPI and net banking via secure payment link" : "Not enabled — planner sends payment details",
     terms: {
       quoteValidityHours: cfg.validityHours,
-      depositPercent: cfg.depositPct,
       tax: `${cfg.taxLabel} ${cfg.taxPct}% on the package price`,
       negotiation: `Agents may negotiate on a quote up to ${cfg.maxRounds} times. Volume and early-booking discounts are applied automatically.`,
-      confirmation: "A booking is held once placed and confirmed when the deposit is received. A senior planner contacts the client within 24 hours.",
+      booking: "Booking locks the quoted price. The customer then taps the WhatsApp link to send the booking to a senior planner, who confirms availability and arranges payment directly. Nothing is paid on the website or in the chat.",
     },
     eventCategories: cats.map((c: any) => ({ slug: c.slug, name: c.name, tagline: c.tagline })),
     services: services.map((x: any) => ({ slug: x.slug, title: x.title, summary: x.summary })),
@@ -236,7 +255,7 @@ function parseDate(v: unknown) {
 }
 
 /** Public quote view: no floor, no admin notes. */
-export function quoteView(q: any, cfg: { currency: string; symbol: string }) {
+export function quoteView(q: any, cfg: { currency: string; symbol: string; whatsapp?: string; siteName?: string }) {
   const expired = q.status === "open" && q.expiresAt && new Date(q.expiresAt).getTime() < Date.now();
   const status = expired ? "expired" : q.status;
   const roundsLeft = Math.max(0, (q.maxRounds ?? 0) - (q.rounds ?? 0));
@@ -256,9 +275,6 @@ export function quoteView(q: any, cfg: { currency: string; symbol: string }) {
     tax: { label: `${q.taxLabel} ${q.taxPct}%`, amount: q.tax },
     total: q.total,
     totalFormatted: money(q.total, cfg),
-    depositDue: q.deposit,
-    depositFormatted: money(q.deposit, cfg),
-    depositPercent: q.depositPct,
     includes: q.inclusions,
     complimentary: q.perks,
     notes: q.notes,
@@ -268,14 +284,14 @@ export function quoteView(q: any, cfg: { currency: string; symbol: string }) {
       history: (q.history || []).map((h: any) => ({ at: h.at, offer: h.offer, response: h.response, priceAfter: h.priceAfter, message: h.message })),
     },
     expiresAt: q.expiresAt,
-    reviewAndPayUrl: `${SITE_URL()}/q/${q.ref}`,
+    quoteUrl: `${SITE_URL()}/q/${q.ref}`,
+    bookOnWhatsAppUrl: status === "open" || status === "booked" ? whatsappLink(cfg.whatsapp || "", bookingMessage(q, cfg, q.customerName)) : null,
   };
 }
 
-function priceLines(q: { subtotal: number; listTotal: number; taxPct: number; depositPct: number }) {
+function priceLines(q: { subtotal: number; taxPct: number }) {
   const tax = Math.round((q.subtotal * q.taxPct) / 100);
-  const total = q.subtotal + tax;
-  return { tax, total, deposit: Math.round((total * q.depositPct) / 100) };
+  return { tax, total: q.subtotal + tax };
 }
 
 export async function createQuote(
@@ -332,7 +348,7 @@ export async function createQuote(
   if (early) apply(`Early booking (${early.min}+ days ahead) −${early.pct}%`, early.pct);
 
   const perks = cfg.perks.filter((p: any) => subtotal >= p.min).map((p: any) => p.perk);
-  const { tax, total, deposit } = priceLines({ subtotal, listTotal, taxPct: cfg.taxPct, depositPct: cfg.depositPct });
+  const { tax, total } = priceLines({ subtotal, taxPct: cfg.taxPct });
   notes.push("Flights, visas and items not listed under 'includes' are quoted separately on request.");
 
   await dbConnect();
@@ -342,7 +358,7 @@ export async function createQuote(
       doc = await Quote.create({
         ref: newRef(), status: "open", eventPackage: e.slug, eventTitle: e.title, eventDate: date.iso, guests, days, priceUnit: unit,
         currency: cfg.currency, lines, listTotal, subtotal, floor: effectiveFloor, taxPct: cfg.taxPct, taxLabel: cfg.taxLabel, tax, total,
-        depositPct: cfg.depositPct, deposit, inclusions: e.inclusions || [], perks, notes, rounds: 0, maxRounds: cfg.maxRounds, history: [],
+        inclusions: e.inclusions || [], perks, notes, rounds: 0, maxRounds: cfg.maxRounds, history: [],
         requirements: String(input.requirements || "").slice(0, 2000), agent: ctx.agent?.slice(0, 200), channel: ctx.channel,
         customerName: String(input.customerName || "").slice(0, 120), customerEmail: String(input.customerEmail || "").slice(0, 200).toLowerCase(),
         expiresAt: new Date(Date.now() + cfg.validityHours * 3_600_000),
@@ -454,7 +470,7 @@ export async function negotiateQuote(
     else q.lines.push({ label: "Negotiated discount", amount: -cut, kind: "negotiated" });
   }
   q.subtotal = newSub;
-  Object.assign(q, priceLines({ subtotal: newSub, listTotal: q.listTotal, taxPct: q.taxPct, depositPct: q.depositPct }));
+  Object.assign(q, priceLines({ subtotal: newSub, taxPct: q.taxPct }));
   q.rounds = response === "final" ? maxRounds : round;
   q.history.push({
     at: new Date(), offer: offer > 0 ? offer : undefined, competitorPrice: competitor, competitorSource: String(input.competitorSource || "").slice(0, 300) || undefined,
@@ -471,12 +487,12 @@ export async function negotiateQuote(
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function bookQuote(
-  input: { quoteRef?: string; name?: string; email?: string; phone?: string; paymentMethod?: string; notes?: string; customerConfirmed?: boolean },
+  input: { quoteRef?: string; name?: string; email?: string; phone?: string; notes?: string; customerConfirmed?: boolean },
   ctx: Ctx,
 ) {
-  const { s, cfg } = await loadConfig();
+  const { cfg } = await loadConfig();
   if (input.customerConfirmed !== true) {
-    throw new CommerceError("Before booking, show the customer the total, deposit and event details and get their explicit approval, then call again with customerConfirmed: true.", 400, "confirmation_required");
+    throw new CommerceError("Before booking, show the customer the total and event details and get their explicit approval, then call again with customerConfirmed: true.", 400, "confirmation_required");
   }
   const name = String(input.name || "").trim().slice(0, 120);
   const email = String(input.email || "").trim().toLowerCase().slice(0, 200);
@@ -484,14 +500,6 @@ export async function bookQuote(
   if (name.length < 2) throw new CommerceError("The customer's full name is required.", 400, "missing_name");
   if (!EMAIL.test(email)) throw new CommerceError("A valid customer email is required.", 400, "invalid_email");
   if ((phone.match(/\d/g) || []).length < 6) throw new CommerceError("A valid customer phone number (with country code) is required.", 400, "invalid_phone");
-  const methods: string[] = s.paymentMethods || [];
-  const online = paymentsEnabled();
-  let paymentMethod = String(input.paymentMethod || "").trim();
-  if (paymentMethod && !/^online$/i.test(paymentMethod) && !methods.some((m) => m.toLowerCase() === paymentMethod.toLowerCase())) {
-    throw new CommerceError(`paymentMethod must be one of: ${[online ? "Online" : null, ...methods].filter(Boolean).join(", ")}.`, 400, "invalid_payment_method");
-  }
-  if (!paymentMethod) paymentMethod = online ? "Online" : methods[0] || "Bank Transfer";
-  if (/^online$/i.test(paymentMethod)) paymentMethod = online ? "Online" : "Bank Transfer";
 
   await dbConnect();
   const ref = normaliseRef(input.quoteRef);
@@ -512,10 +520,10 @@ export async function bookQuote(
   let booking: any;
   try {
     booking = await Booking.create({
-      kind: "booking", name, email, phone, eventPackage: q.eventPackage, eventDate: q.eventDate, guests: String(q.guests), paymentMethod,
+      kind: "booking", name, email, phone, eventPackage: q.eventPackage, eventDate: q.eventDate, guests: String(q.guests),
       message: [input.notes, q.requirements].filter(Boolean).join("\n\n").slice(0, 3000) || undefined,
       source: ctx.channel === "web" ? "quote-page" : "ai-agent", agent: (ctx.agent || q.agent || "").slice(0, 200) || undefined,
-      quoteRef: q.ref, currency: q.currency, amount: q.total, deposit: q.deposit, paymentStatus: "unpaid", status: "pending",
+      quoteRef: q.ref, currency: q.currency, amount: q.total, status: "pending",
     });
   } catch (err) {
     await Quote.updateOne({ _id: q._id }, { $set: { status: "open" } }).catch(() => {});
@@ -525,53 +533,45 @@ export async function bookQuote(
   await q.save();
 
   const log = await notifyBooking({
-    kind: "booking", name, email, phone, eventPackage: q.eventPackage, eventDate: q.eventDate, guests: String(q.guests), paymentMethod,
-    message: booking.message, _id: booking._id, quoteRef: q.ref, amount: money(q.total, cfg), deposit: money(q.deposit, cfg),
-    source: booking.source, agent: booking.agent, payUrl: `${SITE_URL()}/q/${q.ref}`,
+    kind: "booking", name, email, phone, eventPackage: q.eventPackage, eventDate: q.eventDate, guests: String(q.guests),
+    message: booking.message, _id: booking._id, quoteRef: q.ref, amount: money(q.total, cfg),
+    source: booking.source, agent: booking.agent, quoteUrl: `${SITE_URL()}/q/${q.ref}`,
+    whatsappUrl: whatsappLink(cfg.whatsapp, bookingMessage(q, cfg, name)),
   }).catch((e) => `Email error: ${e?.message || e}`);
   await Booking.updateOne({ _id: booking._id }, { $set: { emailLog: log } }).catch(() => {});
 
   return {
     ...(await bookingStatus({ quoteRef: q.ref, email })),
-    message: `Booking placed and held for ${name}. A confirmation email has been sent to ${email}.`,
+    message: `Price locked for ${name} and our team has been notified. Ask the customer to tap bookOnWhatsAppUrl to send the booking to a planner on WhatsApp, who confirms availability and arranges payment. An email copy has gone to ${email}.`,
   };
 }
 
 export async function bookingStatus(input: { quoteRef?: string; email?: string }) {
-  const { s, cfg } = await loadConfig();
+  const { cfg } = await loadConfig();
   const ref = normaliseRef(input.quoteRef);
   const email = String(input.email || "").trim().toLowerCase();
   await dbConnect();
-  const b: any = await Booking.findOne({ quoteRef: ref }).sort({ createdAt: -1 }).lean();
+  const [b, q]: any[] = await Promise.all([Booking.findOne({ quoteRef: ref }).sort({ createdAt: -1 }).lean(), Quote.findOne({ ref }).lean()]);
   // Same response for "no booking" and "wrong email" so references can't be probed for personal data.
   if (!b || !email || b.email !== email) throw new CommerceError("No booking found for that reference and email.", 404, "not_found");
-  const paid = ["deposit-paid", "paid"].includes(b.paymentStatus);
-  const online = paymentsEnabled() && b.paymentMethod === "Online";
+  const confirmed = b.status === "confirmed" || b.status === "completed";
+  const cancelled = b.status === "cancelled";
   return {
     bookingRef: ref,
     status: b.status,
-    paymentStatus: b.paymentStatus,
     package: b.eventPackage,
     eventDate: b.eventDate,
     guests: b.guests,
     currency: b.currency,
     total: b.amount,
     totalFormatted: b.amount != null ? money(b.amount, cfg) : undefined,
-    depositDue: paid ? 0 : b.deposit,
-    depositFormatted: b.deposit != null ? money(b.deposit, cfg) : undefined,
-    paidAmount: b.paidAmount || 0,
-    paymentMethod: b.paymentMethod,
-    payment: paid
-      ? { instructions: "Deposit received — the booking is confirmed." }
-      : online
-        ? { checkoutUrl: `${SITE_URL()}/q/${ref}`, instructions: "Share this secure link with the customer to pay the deposit by card, UPI or net banking. The booking is confirmed automatically once paid." }
-        : {
-            checkoutUrl: `${SITE_URL()}/q/${ref}`,
-            instructions: cfg.paymentInstructions || `The planner will share how to pay${b.paymentMethod ? ` by ${b.paymentMethod.toLowerCase()}` : ""} within 24 hours.${paymentsEnabled() ? " Online payment is also available at the checkout link." : ""} Questions: ${s.phone} · ${s.email}.`,
-          },
-    nextSteps: paid
-      ? ["Your planner will be in touch within 24 hours to begin planning."]
-      : ["Pay the deposit to confirm.", "A senior planner will contact the customer within 24 hours to confirm availability and details."],
+    quoteUrl: `${SITE_URL()}/q/${ref}`,
+    bookOnWhatsAppUrl: q && !cancelled ? whatsappLink(cfg.whatsapp, bookingMessage(q, cfg, b.name)) : null,
+    nextSteps: cancelled
+      ? ["This booking was cancelled. Create a new quote to book again."]
+      : confirmed
+        ? ["Confirmed by our team. The planner will keep in touch on WhatsApp."]
+        : ["Tap the WhatsApp link to send the booking to our team, if not done already.", "A senior planner confirms availability and arranges payment directly, within 24 hours."],
   };
 }
 

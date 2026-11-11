@@ -45,7 +45,6 @@ const seo: Field[] = [
 
 export const ENQUIRY_STATUS = ["new", "contacted", "proposal-sent", "won", "lost"];
 export const BOOKING_STATUS = ["pending", "confirmed", "completed", "cancelled"];
-export const PAYMENT_STATUS = ["unpaid", "link-created", "deposit-paid", "paid", "refunded", "failed"];
 export const QUOTE_STATUS = ["open", "booked", "expired", "withdrawn"];
 export const PAYMENT_METHODS = ["Credit Card", "Debit Card", "Cheque", "Cash", "Bank Transfer"];
 export const BANNER_PAGES = ["home", "events", "services", "about", "blogs"];
@@ -91,25 +90,20 @@ export const resources: Resource[] = [
       { name: "paymentMethod", label: "Payment method", type: "select", options: PAYMENT_METHODS, half: true },
       { name: "message", label: "Message", type: "textarea" },
       { name: "notes", label: "Internal notes", type: "textarea" },
-      { name: "source", label: "Booked via", type: "text", half: true, section: "Payment", readOnly: true },
-      { name: "agent", label: "AI assistant", type: "text", half: true, section: "Payment", readOnly: true },
-      { name: "quoteRef", label: "Quote / booking ref", type: "text", half: true, section: "Payment", readOnly: true },
-      { name: "currency", label: "Currency", type: "text", half: true, section: "Payment", readOnly: true },
-      { name: "amount", label: "Agreed total (incl. tax)", type: "number", half: true, section: "Payment", readOnly: true },
-      { name: "deposit", label: "Deposit due", type: "number", half: true, section: "Payment", readOnly: true },
-      { name: "paymentStatus", label: "Payment status", type: "select", options: PAYMENT_STATUS, half: true, section: "Payment", help: "Updated automatically for online payments; set it yourself for offline ones" },
-      { name: "paidAmount", label: "Amount received", type: "number", half: true, section: "Payment" },
-      { name: "paymentId", label: "Payment ID", type: "text", half: true, section: "Payment", readOnly: true },
-      { name: "paymentLinkUrl", label: "Payment link", type: "text", half: true, section: "Payment", readOnly: true },
+      { name: "source", label: "Booked via", type: "text", half: true, section: "AI / quote booking", readOnly: true },
+      { name: "agent", label: "AI assistant", type: "text", half: true, section: "AI / quote booking", readOnly: true },
+      { name: "quoteRef", label: "Quote / booking ref", type: "text", half: true, section: "AI / quote booking", readOnly: true },
+      { name: "currency", label: "Currency", type: "text", half: true, section: "AI / quote booking", readOnly: true },
+      { name: "amount", label: "Agreed total (incl. tax)", type: "number", half: true, section: "AI / quote booking", readOnly: true },
       { name: "emailLog", label: "Email delivery", type: "text", section: "Notifications", help: "Filled in automatically when the request arrives" },
     ],
     columns: [
       { name: "name", label: "Name" }, { name: "kind", label: "Type", type: "badge" }, { name: "eventPackage", label: "Package" },
-      { name: "eventDate", label: "Date" }, { name: "amount", label: "Total", type: "price" }, { name: "paymentStatus", label: "Payment", type: "badge" },
+      { name: "eventDate", label: "Date" }, { name: "amount", label: "Total", type: "price" }, { name: "source", label: "Via", type: "badge" },
       { name: "status", label: "Status", type: "badge" },
     ],
     search: ["name", "email", "phone", "eventPackage", "quoteRef"], sort: { createdAt: -1 },
-    filters: [{ name: "kind", options: ["booking", "appointment"] }, { name: "status", options: BOOKING_STATUS }, { name: "paymentStatus", options: PAYMENT_STATUS }, { name: "source", options: ["ai-agent", "quote-page"] }],
+    filters: [{ name: "kind", options: ["booking", "appointment"] }, { name: "status", options: BOOKING_STATUS }, { name: "source", options: ["ai-agent"] }],
   },
   {
     key: "quotes", model: "Quote", label: "AI Quotes & Negotiations", singular: "Quote", icon: "Bot", group: "CRM", readOnlyCreate: true,
@@ -129,7 +123,6 @@ export const resources: Resource[] = [
       { name: "subtotal", label: "Current price (ex-tax)", type: "number", half: true, section: "Pricing", readOnly: true },
       { name: "floor", label: "Private floor (ex-tax)", type: "number", half: true, section: "Pricing", readOnly: true, help: "Never shown to assistants or customers" },
       { name: "total", label: "Total incl. tax", type: "number", half: true, section: "Pricing", readOnly: true },
-      { name: "deposit", label: "Deposit", type: "number", half: true, section: "Pricing", readOnly: true },
       { name: "rounds", label: "Negotiation rounds used", type: "number", half: true, section: "Pricing", readOnly: true },
       { name: "priceMatchClaim", label: "Price-match claim to verify", type: "boolean", half: true, section: "Pricing" },
       { name: "expiresAt", label: "Expires", type: "date", half: true, section: "Pricing" },
@@ -456,7 +449,6 @@ export const settingsFields: Field[] = [
   { name: "currencyCode", label: "Currency code (ISO)", type: "text", half: true, section: "AI agent commerce", help: "e.g. INR. Package prices are in this currency." },
   { name: "agentMaxDiscountPct", label: "Max negotiable discount %", type: "number", half: true, section: "AI agent commerce", help: "Private floor below list price (can be overridden per package)" },
   { name: "agentMaxRounds", label: "Negotiation rounds per quote", type: "number", half: true, section: "AI agent commerce", help: "0 means fixed prices" },
-  { name: "agentDepositPct", label: "Deposit to confirm %", type: "number", half: true, section: "AI agent commerce" },
   { name: "agentQuoteValidityHours", label: "Quote valid for (hours)", type: "number", half: true, section: "AI agent commerce" },
   { name: "agentTaxPct", label: "Tax %", type: "number", half: true, section: "AI agent commerce" },
   { name: "agentTaxLabel", label: "Tax label", type: "text", half: true, section: "AI agent commerce", help: "e.g. GST" },
@@ -472,7 +464,6 @@ export const settingsFields: Field[] = [
     name: "agentPerks", label: "Complimentary extras in quotes", type: "list", section: "AI agent commerce",
     fields: [{ name: "min", label: "From price (ex-tax)", type: "number" }, { name: "perk", label: "Extra", type: "text" }],
   },
-  { name: "agentPaymentInstructions", label: "Offline payment instructions", type: "textarea", section: "AI agent commerce", help: "Shown after booking when online payment isn't used, e.g. bank account details. Leave blank and your planner sends them." },
 ];
 
 export function slugify(s: string) {

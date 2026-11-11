@@ -61,7 +61,7 @@ export async function notifyBooking(b: Record<string, any>) {
     ["Type", isAppt ? "Free consultation" : "Event booking"], ["Name", b.name], ["Email", b.email], ["Phone", b.phone],
     ["Package", pkg?.title || (isAppt ? undefined : "Bespoke / not sure yet")], [isAppt ? "Preferred date" : "Event date", b.eventDate],
     ["Time", b.time], ["Guests", b.guests], ["Meeting", b.mode], ["Payment preference", b.paymentMethod], ["Notes", b.message],
-    ...((b.quoteRef ? [["Booking ref", b.quoteRef], ["Agreed total (incl. tax)", b.amount], ["Deposit to confirm", b.deposit], ["Booked via", b.source === "ai-agent" ? `AI assistant${b.agent ? ` (${b.agent})` : ""}` : "Online quote page"]] : []) as [string, unknown][]),
+    ...((b.quoteRef ? [["Booking ref", b.quoteRef], ["Agreed total (incl. tax)", b.amount], ["Booked via", b.source === "ai-agent" ? `AI assistant${b.agent ? ` (${b.agent})` : ""}` : "Online quote page"]] : []) as [string, unknown][]),
   ];
   const first = String(b.name || "").split(" ")[0] || "there";
   const [customer, admin] = await Promise.all([
@@ -72,10 +72,10 @@ export async function notifyBooking(b: Record<string, any>) {
       html: layout(s, {
         preheader: isAppt ? "We'll confirm your consultation time shortly." : "Your planner will confirm availability within 24 hours.",
         title: isAppt ? `See you soon, ${esc(first)}.` : `Request received, ${esc(first)}.`,
-        body: `<p style="margin:0 0 14px;">${isAppt ? "Thank you for booking a free consultation. We'll confirm your time by email shortly." : b.quoteRef ? "Your booking is placed and your price is locked in. Pay the deposit to confirm — your planner will be in touch within 24 hours." : "Thank you for your booking request. Your planner will confirm availability, final pricing and payment details within 24 hours."}</p>
+        body: `<p style="margin:0 0 14px;">${isAppt ? "Thank you for booking a free consultation. We'll confirm your time by email shortly." : b.quoteRef ? "Your price is locked in. If you haven't already, send us the booking on WhatsApp and your planner will confirm availability and payment there within 24 hours." : "Thank you for your booking request. Your planner will confirm availability, final pricing and payment details within 24 hours."}</p>
 <p style="margin:0 0 6px;">Your request:</p>${detailsTable(rows.filter(([k]) => !["Name", "Email"].includes(k)))}
 <p style="margin:18px 0 0;">Questions? Call <a href="tel:${esc(s.phone.replace(/[^\d+]/g, ""))}" style="color:#C41D61;">${esc(s.phone)}</a> or reply to this email.</p>`,
-        cta: b.payUrl ? { label: "Review & pay deposit", href: b.payUrl } : pkg && site() ? { label: "View your package", href: `${site()}/events/${pkg.slug}` } : undefined,
+        cta: b.whatsappUrl ? { label: "Book on WhatsApp", href: b.whatsappUrl } : b.quoteUrl ? { label: "View your quote", href: b.quoteUrl } : pkg && site() ? { label: "View your package", href: `${site()}/events/${pkg.slug}` } : undefined,
       }),
       text: `${isAppt ? "Consultation request received" : "Booking request received"}.\n\n${detailsText(rows)}\n\n${s.siteName} · ${s.phone} · ${s.email}`,
     }, s.siteName),

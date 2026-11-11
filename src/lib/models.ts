@@ -229,12 +229,6 @@ export const Booking = model(
       quoteRef: { type: String, index: true },
       currency: String,
       amount: Number, // agreed total incl. tax
-      deposit: Number, // amount due to confirm
-      paidAmount: Number,
-      paymentStatus: { type: String, default: "unpaid" }, // unpaid | link-created | deposit-paid | paid | failed
-      paymentLinkId: String,
-      paymentLinkUrl: String,
-      paymentId: String,
       status: { type: String, default: "pending" },
       notes: String,
       emailLog: String,
@@ -288,8 +282,6 @@ export const Quote = model(
       taxLabel: String,
       tax: Number,
       total: Number,
-      depositPct: Number,
-      deposit: Number,
       inclusions: [String],
       perks: [String],
       notes: [String],

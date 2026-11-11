@@ -124,7 +124,6 @@ export const settings = {
   // AI-agent commerce (search, quote, negotiate, book). Floors and tiers are never shown to agents.
   agentCommerceEnabled: true,
   agentMaxDiscountPct: 12,
-  agentDepositPct: 25,
   agentQuoteValidityHours: 72,
   agentMaxRounds: 3,
   agentTaxPct: 18,
@@ -145,7 +144,6 @@ export const settings = {
     { min: 2500000, perk: "Designer-wear styling consultation" },
     { min: 5000000, perk: "Comprehensive event insurance (weather, cancellation, liability)" },
   ],
-  agentPaymentInstructions: "",
   expertise:
     "With our expertise, you can tailor events to meet specific needs, provide a seamless experience for attendees, and build and create memorable experiences.",
   aboutShort:

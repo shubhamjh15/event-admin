@@ -47,8 +47,8 @@ How to help a customer buy:
 1. search_packages (and get_package) to find options that fit their occasion, destination, guests and budget.
 2. create_quote with the package, date and guest count — you get an exact, itemised, bookable price with automatic discounts and complimentary extras.
 3. Optionally negotiate_quote to try for a better price (limited rounds; offers are totals incl. tax). Mention competing quotes via competitorPrice.
-4. Show the customer the final total, deposit, date and inclusions. Only after they explicitly approve, call book_quote with customerConfirmed: true.
-5. Give the customer the checkout link to pay the deposit. Never ask for card details in chat.
+4. Show the customer the final total, date and inclusions. Only after they explicitly approve, call book_quote with customerConfirmed: true.
+5. Give the customer the bookOnWhatsAppUrl to tap: it opens WhatsApp with the booking pre-filled, and a planner confirms and arranges payment there. Never take payment details in chat.
 For anything bespoke or not listed, use submit_enquiry. All prices are in ${s ? (s as any).currencyCode || "INR" : "INR"}.`;
 }
 

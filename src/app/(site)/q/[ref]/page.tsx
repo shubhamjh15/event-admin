@@ -1,36 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Bot, Check } from "lucide-react";
+import { Bot, Check, Phone } from "lucide-react";
 import { dbConnect } from "@/lib/db";
 import { Booking, Quote } from "@/lib/models";
 import { getEvent, getSettings } from "@/lib/data";
 import { assistantLabel, commerceConfig, money, quoteView } from "@/lib/commerce/engine";
-import { paymentsEnabled } from "@/lib/commerce/payments";
 import { sized } from "@/lib/img";
-import { QuoteBookForm } from "@/components/quote-actions";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your quote", robots: { index: false, follow: false } };
 
-type Props = { params: Promise<{ ref: string }>; searchParams: Promise<{ pay?: string }> };
-
-const PAY_NOTICE: Record<string, [string, string]> = {
-  success: ["ok", "Payment received — thank you. Your booking is confirmed and a receipt is on its way to your inbox."],
-  cancelled: ["warn", "The payment wasn't completed. You can try again below whenever you're ready."],
-  pending: ["warn", "We're waiting for the payment provider to confirm. This page updates once it does."],
-  payments_disabled: ["warn", "Online payment isn't available right now. Your planner will send payment details."],
-  already_paid: ["ok", "This deposit has already been paid."],
-  busy: ["warn", "Too many attempts. Please wait a minute and try again."],
-  error: ["warn", "We couldn't open the payment page. Please try again, or call us."],
-};
+type Props = { params: Promise<{ ref: string }> };
 
 const fmtDate = (iso?: string) => (iso ? new Date(iso + "T00:00:00Z").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : "");
 const pad = (n: number) => String(n).padStart(2, "0");
 
-export default async function QuotePage({ params, searchParams }: Props) {
+export default async function QuotePage({ params }: Props) {
   const ref = (await params).ref.toUpperCase();
-  const { pay } = await searchParams;
   if (!/^LQ-[A-Z0-9]{8}$/.test(ref)) notFound();
   await dbConnect();
   const [doc, booking, s]: any[] = await Promise.all([
@@ -42,13 +30,13 @@ export default async function QuotePage({ params, searchParams }: Props) {
   const cfg = commerceConfig(s);
   const q = quoteView(doc, cfg);
   const event = await getEvent(q.package.slug).catch(() => null);
-  const online = paymentsEnabled();
-  const paid = booking && ["deposit-paid", "paid"].includes(booking.paymentStatus);
+  const confirmed = booking && ["confirmed", "completed"].includes(booking.status);
+  const cancelled = booking?.status === "cancelled" || q.status === "withdrawn";
   const fm = (n: number) => money(n, cfg);
-  const notice = pay ? PAY_NOTICE[pay] || PAY_NOTICE.error : null;
   const expires = q.expiresAt ? new Date(q.expiresAt) : null;
   const assistant = doc.channel !== "web" ? assistantLabel(doc.agent) : null;
-  const statusLabel = paid ? "Confirmed" : booking ? (booking.status === "cancelled" ? "Cancelled" : "Deposit due") : q.status === "open" ? "Open" : q.status === "expired" ? "Expired" : "Closed";
+  const statusLabel = confirmed ? "Confirmed" : cancelled ? "Cancelled" : booking ? "Price locked" : q.status === "open" ? "Open" : q.status === "expired" ? "Expired" : "Closed";
+  const phoneHref = `tel:${s.phone.replace(/[^\d+]/g, "")}`;
 
   return (
     <>
@@ -70,7 +58,7 @@ export default async function QuotePage({ params, searchParams }: Props) {
               ].slice(0, 4).map(([k, v], i) => (
                 <div key={k} className={`py-6 ${i % 2 ? "border-l border-ink/15 pl-5" : "pr-5"} ${i > 1 ? "border-t border-ink/15 md:border-t-0" : ""} ${i === 2 ? "md:border-l md:pl-5" : ""}`}>
                   <dt className="label text-[10px] text-ink-mute">{k}</dt>
-                  <dd className={`mt-2 font-display text-xl ${k === "Status" ? (paid ? "text-peacock" : q.status === "expired" ? "text-rani" : "") : ""}`}>{v}</dd>
+                  <dd className={`mt-2 font-display text-xl ${k === "Status" ? (confirmed ? "text-peacock" : q.status === "expired" || cancelled ? "text-rani" : "") : ""}`}>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -82,12 +70,6 @@ export default async function QuotePage({ params, searchParams }: Props) {
           )}
         </div>
       </section>
-
-      {notice && (
-        <div role="status" className={`${notice[0] === "ok" ? "bg-peacock text-white" : "bg-marigold text-ink"}`}>
-          <p className="wrap py-4 text-sm font-medium">{notice[1]}</p>
-        </div>
-      )}
 
       <section className="wrap grid grid-cols-1 gap-16 py-12 md:py-24 lg:grid-cols-12">
         <div className="min-w-0 lg:col-span-7">
@@ -117,7 +99,7 @@ export default async function QuotePage({ params, searchParams }: Props) {
               <p className="bg-marigold px-4 py-2 text-sm font-semibold">You save {q.savingsFormatted}</p>
             )}
           </div>
-          <p className="mt-4 text-sm text-ink-mute">Deposit to confirm: <strong className="text-ink">{q.depositFormatted}</strong> ({q.depositPercent}%). Balance per your planner's payment schedule.</p>
+          <p className="mt-4 text-sm text-ink-mute">Nothing to pay online. Your planner confirms availability and the payment schedule with you on WhatsApp.</p>
 
           {q.complimentary.length > 0 && (
             <div className="mt-20">
@@ -167,41 +149,33 @@ export default async function QuotePage({ params, searchParams }: Props) {
 
         <aside className="order-first min-w-0 lg:order-none lg:col-span-5 lg:pl-6">
           <div className="border border-ink/15 bg-white/60 p-7 md:p-9 lg:sticky lg:top-28">
-            {paid ? (
+            {confirmed ? (
               <div role="status">
                 <span className="grid h-14 w-14 place-items-center border border-peacock text-peacock"><Check className="h-6 w-6" strokeWidth={1.4} /></span>
                 <h2 className="display mt-6 text-4xl">You're confirmed.</h2>
-                <p className="mt-4 leading-relaxed text-ink-mute">We've received {fm(booking.paidAmount || booking.deposit)}. Your senior planner will be in touch within 24 hours to start planning.</p>
+                <p className="mt-4 leading-relaxed text-ink-mute">Your planner has confirmed this booking at {fm(booking.amount ?? q.total)} and will keep in touch on WhatsApp.</p>
+                {cfg.whatsapp && <a href={`https://wa.me/${cfg.whatsapp}`} target="_blank" rel="noreferrer" className="btn-outline mt-8 w-full"><WhatsAppIcon className="h-4 w-4" /> Message your planner</a>}
               </div>
-            ) : booking ? (
-              booking.status === "cancelled" ? (
-                <div><h2 className="display text-4xl">Booking cancelled.</h2><p className="mt-4 text-ink-mute">Questions? Call {s.phone}.</p></div>
-              ) : (
-                <div>
-                  <p className="label text-[10px] text-ink-mute">Booked · price locked</p>
-                  <h2 className="display mt-3 text-4xl">Pay the deposit to confirm.</h2>
-                  <p className="display mt-6 text-5xl">{fm(booking.deposit)}</p>
-                  {online && booking.paymentMethod === "Online" ? (
-                    <>
-                      <a href={`/api/pay/${ref}`} className="btn-ink mt-8 w-full">Pay securely</a>
-                      <p className="mt-3 text-xs text-ink-mute">Cards, UPI and net banking via Razorpay. We never see your card details.</p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="mt-6 whitespace-pre-line text-sm leading-relaxed text-ink-soft">{cfg.paymentInstructions || `Your planner will share how to pay${booking.paymentMethod ? ` by ${booking.paymentMethod.toLowerCase()}` : ""} within 24 hours.`}</p>
-                      {online && <a href={`/api/pay/${ref}`} className="btn-outline mt-6 w-full">Or pay online now</a>}
-                    </>
-                  )}
-                </div>
-              )
-            ) : q.status === "open" ? (
+            ) : cancelled ? (
               <div>
-                <p className="label text-[10px] text-ink-mute">Book at this price</p>
-                <h2 className="display mt-3 text-4xl">Lock it in.</h2>
-                {expires && <p className="mt-3 text-sm text-ink-mute">Price held until {expires.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })} IST.</p>}
-                <div className="mt-8">
-                  <QuoteBookForm quoteRef={ref} total={q.totalFormatted} deposit={q.depositFormatted} methods={s.paymentMethods} online={online} defaults={{ name: doc.customerName, email: doc.customerEmail }} />
-                </div>
+                <h2 className="display text-4xl">This booking is cancelled.</h2>
+                <p className="mt-4 leading-relaxed text-ink-mute">Ask your assistant for a fresh quote, or talk to us directly.</p>
+                <Link href={`/events/${q.package.slug}`} className="btn-outline mt-8 w-full">View the package</Link>
+              </div>
+            ) : q.bookOnWhatsAppUrl ? (
+              <div>
+                <p className="label text-[10px] text-ink-mute">{booking ? "Price locked" : "Book at this price"}</p>
+                <h2 className="display mt-3 text-4xl">{booking ? "Send it to your planner." : "Book on WhatsApp."}</h2>
+                <p className="display mt-6 text-5xl">{q.totalFormatted}</p>
+                <p className="mt-1 text-xs text-ink-mute">incl. {q.tax.label}</p>
+                <a href={q.bookOnWhatsAppUrl} target="_blank" rel="noreferrer" className="btn mt-8 w-full bg-[#1FAF54] text-white hover:bg-ink">
+                  <WhatsAppIcon className="h-4 w-4" /> Book on WhatsApp
+                </a>
+                <ol className="mt-6 space-y-2 text-sm leading-relaxed text-ink-mute">
+                  <li><span className="font-display italic text-ink">01</span>&ensp;WhatsApp opens with this quote already typed. Just tap send.</li>
+                  <li><span className="font-display italic text-ink">02</span>&ensp;A senior planner confirms availability and payment with you within 24 hours.</li>
+                </ol>
+                {expires && q.status === "open" && <p className="mt-6 border-t border-ink/15 pt-4 text-xs text-ink-mute">Price held until {expires.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })} IST.</p>}
               </div>
             ) : (
               <div>
@@ -213,7 +187,7 @@ export default async function QuotePage({ params, searchParams }: Props) {
                 </div>
               </div>
             )}
-            <a href={`tel:${s.phone.replace(/[^\d+]/g, "")}`} className="mt-8 block border-t border-ink/15 pt-6 text-sm text-ink-mute hover:text-rani">Questions? <span className="font-display text-xl text-ink">{s.phone}</span></a>
+            <a href={phoneHref} className="mt-8 flex items-center gap-3 border-t border-ink/15 pt-6 text-sm text-ink-mute hover:text-rani"><Phone className="h-4 w-4" strokeWidth={1.5} /> Prefer to call? <span className="font-display text-xl text-ink">{s.phone}</span></a>
           </div>
         </aside>
       </section>
